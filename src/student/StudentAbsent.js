@@ -1,31 +1,60 @@
-import { useRef, useEffect, useState } from "react";
+import React from "react";
 import { mdiChevronLeft, mdiMapMarkerRadius, mdiRefresh } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Link } from "react-router-dom";
 import Skeleton from "../components/Skeleton";
-import {
-  useGetStudentAbsentMutation,
-  usePostStudentAbsentMutation,
-} from "./StudentAPI";
+import { useGetStudentSubmitPresenceQuery } from "./StudentAPI";
+import { useGeolocated } from "react-geolocated";
 
 export default function StudentAbsent() {
-  const myRef = useRef();
-  const [GPSActive, setGPSActive] = useState(false);
-  const [triggerGetStudentAbsent] = useGetStudentAbsentMutation();
-  const [triggerPostStudentAbsent] = usePostStudentAbsentMutation();
+  const { coords, isGeolocationAvailable, isGeolocationEnabled } =
+    useGeolocated({
+      positionOptions: {
+        enableHighAccuracy: false,
+      },
+      userDecisionTimeout: 1,
+    });
 
-  const handleGPS = () => {
+  function getLocation(callback) {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(position => {
-        console.log(position.coords);
-      });
-    } else {
-      alert("Perangkat anda tidak mendukung GPS!");
+      navigator.geolocation.getCurrentPosition(callback);
     }
+  }
+
+  () => {
+    getLocation(function (position) {
+      var currentLatitude = position.coords.latitude;
+      var currentLongitude = position.coords.longitude;
+
+      alert("1" + currentLongitude + " and " + currentLatitude);
+      //some other codes to display the page
+      //...
+    });
   };
+
+  const geo = {
+    lat: -7.005145,
+    lng: 110.438125,
+  };
+  const { isLoading, isSuccess, data } = useGetStudentSubmitPresenceQuery(geo);
+
+  // const myRef = useRef();
+  // const [GPSActive, setGPSActive] = useState(false);
+  // const [triggerGetStudentAbsent] = useGetStudentAbsentMutation();
+  // const [triggerPostStudentAbsent] = usePostStudentAbsentMutation();
+
+  // const handleGPS = () => {
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(position => {
+  //       console.log(position.coords);
+  //     });
+  //   } else {
+  //     alert("Perangkat anda tidak mendukung GPS!");
+  //   }
+  // };
   return (
     <>
-      {/* <div className="-m-5 h-10 max-w-[150%] bg-[#6A64F1]">
+      <div className="-m-5 h-10 max-w-[150%] bg-[#6A64F1]">
         <div className="ml-1 w-10 pt-1">
           <Link to="/student/">
             <Icon path={mdiChevronLeft} size="1.9em" color="white" />
@@ -67,12 +96,14 @@ export default function StudentAbsent() {
           )}
         </div>
 
-        <div className="mx-5 mt-[40px] mb-5 space-x-3 rounded-lg  bg-white p-2">
-          <button className="rounded-full bg-red-600 px-3 text-white">
-            GPS
-          </button>
-          <span className="text-red-500">Tidak Dapat mengakses GPS</span>
-        </div>
+        {!isGeolocationEnabled && (
+          <div className="mx-5 mt-[40px] mb-5 space-x-3 rounded-lg  bg-white p-2">
+            <button className="rounded-full bg-red-600 px-3 text-white">
+              GPS
+            </button>
+            <span className="text-red-500">Tidak Dapat mengakses GPS</span>
+          </div>
+        )}
 
         <div className="mx-5 rounded-lg border bg-white px-5 py-2 ">
           <h4 className="text-[15px] tracking-wide  text-gray-500">
@@ -88,10 +119,7 @@ export default function StudentAbsent() {
               {isSuccess && data.data.address?.split(",")?.slice(0, 5).join("")}
             </span>
 
-            <button
-              className="ml-auto block focus:animate-spin"
-              onClick={handleGPS}
-            >
+            <button className="ml-auto block focus:animate-spin">
               <Icon path={mdiRefresh} size="24px" className="text-indigo-500" />
             </button>
           </div>
@@ -120,7 +148,7 @@ export default function StudentAbsent() {
             </div>
           )}
         </div>
-      </div> */}
+      </div>
     </>
   );
 }

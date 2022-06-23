@@ -1,5 +1,4 @@
 import { Routes, BrowserRouter, Route } from "react-router-dom";
-import Navbar from "../components/Navbar";
 import Home from "../home/Home";
 import ClassList from "../classroom";
 import ClassListDetail from "../classroom/ClassListDetail";
@@ -8,7 +7,6 @@ import ProtectedRouter from "./ProtectedRouter";
 import HomeStudent from "../student/HomeStudent";
 import StudentPresence from "../student/StudentPresence";
 import StudentAccount from "../student/StudentAccount";
-import Student from "../student/Student";
 import StudentStatistic from "../student/StudentStatistic";
 import StudentAbsent from "../student/StudentAbsent";
 import NewStudentHome from "../student/NewStudentHome";
@@ -25,12 +23,9 @@ export default function router() {
         <Route path="/student/statistic" element={<StudentStatistic />} />
         <Route path="/student/account" element={<StudentAccount />} />
 
-        {/* <Navbar /> */}
-        <Route element={<Student />}>
-          <Route path="/student/home" element={<HomeStudent />} />
-          <Route path="/student/presence" element={<StudentPresence />} />
-          <Route path="/student/absent" element={<StudentAbsent />} />
-        </Route>
+        <Route path="/student/home" element={<HomeStudent />} />
+        <Route path="/student/presence" element={<StudentPresence />} />
+        <Route path="/student/absent" element={<StudentAbsent />} />
 
         <Route element={<ProtectedRouter />}>
           <Route path="/instructor/classlists" element={<ClassList />} />

@@ -45,6 +45,14 @@ export const studentAPI = createApi({
         url: "/api/v1/student/history/",
       }),
     }),
+    getStudentAttendance: builder.query({
+      query: () => ({
+        headers: {
+          Authorization: `Token 7c3dbaa9a0308b987d5b8164fcdf27645af8ad80`,
+        },
+        url: "/api/v1/attendance/",
+      }),
+    }),
     postStudentAbsent: builder.mutation({
       query: ({ token, lat, lng }) => ({
         headers: {
@@ -65,4 +73,5 @@ export const {
   useGetStudentAccountQuery,
   usePostStudentAbsentMutation,
   useGetStudentSubmitGeoQuery,
+  useGetStudentAttendanceQuery,
 } = studentAPI;

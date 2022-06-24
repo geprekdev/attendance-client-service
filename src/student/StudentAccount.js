@@ -8,6 +8,8 @@ import { useGetStudentAccountQuery } from "./StudentAPI";
 export default function StudentAccount() {
   const { isLoading, isSuccess, data, isError } = useGetStudentAccountQuery();
 
+  console.log(isSuccess && data);
+
   return (
     <Layout title="Student Account" role="STUDENT">
       <div className="mx-auto mb-[56px] h-screen max-w-[444px]  border px-5 py-3 pb-24 shadow-lg">

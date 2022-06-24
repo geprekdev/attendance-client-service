@@ -11,6 +11,7 @@ import StudentStatistic from "../student/StudentStatistic";
 import StudentAbsent from "../student/StudentAbsent";
 import NewStudentHome from "../student/NewStudentHome";
 import StudentScheduled from "../student/StudentScheduled";
+import StudentAttendance from "../student/StudentAttendance";
 
 export default function router() {
   return (
@@ -26,6 +27,7 @@ export default function router() {
         <Route path="/student/home" element={<HomeStudent />} />
         <Route path="/student/presence" element={<StudentPresence />} />
         <Route path="/student/absent" element={<StudentAbsent />} />
+        <Route path="/student/attendance" element={<StudentAttendance />} />
 
         <Route element={<ProtectedRouter />}>
           <Route path="/instructor/classlists" element={<ClassList />} />

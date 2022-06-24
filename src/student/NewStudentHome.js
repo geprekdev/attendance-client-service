@@ -195,11 +195,13 @@ export default function NewStudentHome() {
 
       <div className="fixed bottom-[60px] left-0 right-0 mx-auto max-w-[440px] ">
         <div className="flex  justify-center">
-          <Icon
+	<Link to="/student/attendance">         
+ 	<Icon
             path={mdiLocationEnter}
             size="65px"
             className="cursor-pointer rounded-full border-4 border-white bg-blue-500 p-3 text-white shadow-xl"
           />
+	</Link>
         </div>
       </div>
     </Layout>

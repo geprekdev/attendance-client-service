@@ -1,4 +1,5 @@
 import Layout from "../components/Layout";
+import { useState } from "react";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import { Icon } from "@mdi/react";
 import L from 'leaflet';
@@ -9,14 +10,36 @@ import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 export default function StudentAttendance() {
+  const [GPSActive, setGPSActive] = useState(false);
+  const [GeoLoc, setGeoLoc] = useState({
+    longitude: "",
+    latitude: "",
+  });
 let DefaultIcon = L.icon({
     iconUrl: icon,
     shadowUrl: iconShadow
 });
   L.Marker.prototype.options.icon = DefaultIcon
-  const currentLocation = [6.1, -5.2];
+  
+   const handleGPS = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        setGeoLoc({
+          longitude: parseFloat(position.coords.longitude),
+          latitude: parseFloat(position.coords.latitude),
+        });
+
+        setGPSActive(true);
+      });
+    } else {
+      alert("Perangkat anda tidak mendukung GPS!");
+    }
+  };
+	if (!GPSActive){
+	 handleGPS();
+	 };
+	 
   return (
-    // ----
     <Layout title="Student Attendance" role="STUDENT">
     <link
       rel="stylesheet"
@@ -31,8 +54,8 @@ let DefaultIcon = L.icon({
         </span>
 	</Link>
         <div className="z-1 absolute h-[70%] w-full">
-          <MapContainer
-            center={currentLocation}
+			{GPSActive && (          <MapContainer
+            center={[GeoLoc.latitude, GeoLoc.longitude]}
             zoom={13}
 	    zoomControl={false}
             scrollWheelZoom={false}
@@ -41,8 +64,8 @@ let DefaultIcon = L.icon({
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <Marker position={currentLocation}></Marker>
-          </MapContainer>
+            <Marker position={[GeoLoc.latitude, GeoLoc.longitude]}></Marker>
+          </MapContainer>)}
         </div>
 
         <div className="absolute bottom-0 z-20 h-[40%] w-full rounded-t-3xl bg-white px-5 py-3 shadow-2xl">

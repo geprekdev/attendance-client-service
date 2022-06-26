@@ -47,7 +47,7 @@ export default function NewStudentHome() {
     { pathIcon: mdiNoteCheck, text: "Activity", link: "/student/activity" },
     { pathIcon: mdiSendCircle, text: "Izin", link: "/student/izin" },
   ];
-
+  console.log(data);
   return (
     <Layout title="Student" role="STUDENT">
       <div className="mx-auto mb-[56px] h-screen max-w-[444px]  border px-5 py-3 pb-24 shadow-lg">

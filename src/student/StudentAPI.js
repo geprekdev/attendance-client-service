@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const studentAPI = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_API }),
+  baseQuery: fetchBaseQuery({ baseUrl: "https:api.erpeelisme.my.id/"}),
   reducerPath: "studentAPI",
-  endpoints: builder => ({
+  endpoints: (builder) => ({
     getStudentClasses: builder.query({
       query: () => ({
         headers: {
@@ -22,7 +22,7 @@ export const studentAPI = createApi({
     }),
 
     getStudentSubmitGeo: builder.query({
-      query: geo => ({
+      query: (geo) => ({
         headers: {
           Authorization: `Token 7c3dbaa9a0308b987d5b8164fcdf27645af8ad80`,
         },
@@ -46,11 +46,20 @@ export const studentAPI = createApi({
       }),
     }),
     getStudentAttendance: builder.query({
+      query: (geo) => ({
+        headers: {
+          Authorization: `Token 7c3dbaa9a0308b987d5b8164fcdf27645af8ad80`,
+        },
+        url: `/v1/attendance?geo=${geo.latitude},${geo.longitude}`,
+      }),
+    }),
+    postStudentAttendance: builder.mutation({
       query: () => ({
         headers: {
           Authorization: `Token 7c3dbaa9a0308b987d5b8164fcdf27645af8ad80`,
         },
-        url: "/api/v1/attendance/",
+        method: "POST",
+        url: "/v1/attendance",
       }),
     }),
     postStudentAbsent: builder.mutation({
@@ -74,4 +83,5 @@ export const {
   usePostStudentAbsentMutation,
   useGetStudentSubmitGeoQuery,
   useGetStudentAttendanceQuery,
+  usePostStudentAttendanceMutation,
 } = studentAPI;

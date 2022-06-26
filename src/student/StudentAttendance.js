@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import { Icon } from "@mdi/react";
 import L from "leaflet";
 import { Link } from "react-router-dom";
-import { mdiArrowLeft } from "@mdi/js";
+import { mdiRecordCircleOutline, mdiArrowLeft } from "@mdi/js";
 import "./App.css";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
@@ -18,33 +18,33 @@ export default function StudentAttendance() {
     longitude: "",
     latitude: "",
   });
-  const [clock, setClock] = useState({
-  in: null,
-  out: null
-  });
+  const [clock, setClock] = useState(false);
+  const [attendanceType, setAttendanceType] = useState(false);
   const [triggerPostStudentAttendance] = usePostStudentAttendanceMutation();
 
   const { isLoading, isSuccess, data, isError } = useGetStudentAttendanceQuery(
     GeoLoc,
     { skip: !GPSActive }
   );
-
- // if (isSuccess && clock.in === null && clock.out === null) {
- //   setClock({
- //     in: data.clock_in,
- //     out: data.clock_out,
- //   });
- // }
+  console.log(isSuccess && data);
+  if (isSuccess && clock === false) {
+    setClock({
+      in: data.clock_in,
+      out: data.clock_out,
+    });
+    setAttendanceType("Check-In");
+  }
 
   const handleSubmitForm = async () => {
     const data = await triggerPostStudentAttendance();
-    if (data.status === 200) {
+    if (data.data.status === 200) {
       setClock({
-        in: data.clock_in,
-        out: data.clock_out,
+        in: data.data.clock_in,
+        out: data.data.clock_out,
       });
+      setAttendanceType(data.data.attendance_type);
     }
-        console.log(data, clock);
+    console.log(data);
   };
 
   const handleGPS = () => {
@@ -103,35 +103,48 @@ export default function StudentAttendance() {
           )}
         </div>
 
-        <div className="absolute bottom-0 z-20 h-[40%] w-full rounded-t-3xl bg-white px-5 py-3 shadow-2xl">
-        
-                        <div>
-                  <h2 className="text-[14px]">Clock aan</h2>
-                  <h3 className="text-[20px]">{clock.in}</h3>
-                </div>
+        <div className="absolute bottom-0 z-20 h-[40%] w-full rounded-t-3xl bg-white px-9 py-8 shadow-2xl">
           {isSuccess && (
             <>
-              <h1 className="text-[20px] font-medium">Lokasi</h1>
-              <h1 className="text-[14px]">{data.user.address}</h1>
-              <div className="grid grid-cols-2 gap-2 py-3 text-center">
+              <div className="grid grid-cols-2">
                 <div>
-                  <h2 className="text-[14px]">Clock In</h2>
-                  <h3 className="text-[20px]">{clock.in}</h3>
+                  <Icon
+                    className="text-yellow-500"
+                    path={mdiRecordCircleOutline}
+                    size="30px"
+                  />
                 </div>
-                <div>
-                  <h2 className="text-[14px]">Clock In</h2>
-                  <h3 className="text-[20px]">{clock.out}</h3>
+
+                <div className="-ml-[75%] text-sm">
+                  <h1 className="text-[14px]">
+                    {data.user.address.split(",")[0]} -{" "}
+                    {data.user.address.split(",")[1]}
+                  </h1>
+                  <span className="text-[13px] text-slate-700">
+                    {data.user.address}
+                  </span>
                 </div>
               </div>
+
+              <div className="grid grid-cols-2 gap-2 py-3 text-center">
+                <div class="py-2">
+                  <h2 className="text-sm font-semibold">Clock In</h2>
+                  <h3 className="text-lg">{clock.in}</h3>
+                </div>
+                <div class="py-2">
+                  <h2 className="text-sm font-semibold">Clock In</h2>
+                  <h3 className="text-lg">{clock.out}</h3>
+                </div>
+              </div>
+              <button
+                onClick={handleSubmitForm}
+                type="button"
+                className="ease focus:shadow-outline w-full select-none rounded-md border border-indigo-500 bg-indigo-500 py-2 font-semibold text-slate-100 shadow-xl transition duration-500 hover:bg-indigo-600 focus:outline-none"
+              >
+                {attendanceType}
+              </button>
             </>
           )}
-          <button
-            onClick={handleSubmitForm}
-            type="button"
-            className="ease focus:shadow-outline w-full select-none rounded-md border border-indigo-500 bg-indigo-500 py-3 text-white transition duration-500 hover:bg-indigo-600 focus:outline-none"
-          >
-            Clock In
-          </button>
         </div>
       </div>
     </Layout>

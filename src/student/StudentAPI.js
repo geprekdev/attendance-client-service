@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const studentAPI = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: "https:api.erpeelisme.my.id/"}),
+  baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_API }),
   reducerPath: "studentAPI",
   endpoints: (builder) => ({
     getStudentClasses: builder.query({

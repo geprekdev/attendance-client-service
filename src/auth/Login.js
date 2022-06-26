@@ -91,7 +91,7 @@ export default function Login() {
           </h2>
           <form>
             <div className="mb-4">
-              <label className="mb-1 block" for="email">
+              <label className="mb-1 block" htmlFor="email">
                 Username
               </label>
               <input
@@ -102,7 +102,7 @@ export default function Login() {
               />
             </div>
             <div className="mb-4">
-              <label className="mb-1 block" for="password">
+              <label className="mb-1 block" htmlFor="password">
                 Password
               </label>
               <input
@@ -120,7 +120,7 @@ export default function Login() {
                   className="border border-gray-300 text-red-600 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50"
                 />
                 <label
-                  for="remember_me"
+                  htmlFor="remember_me"
                   className="ml-2 block text-sm leading-5 text-gray-900"
                 >
                   Remember me
@@ -128,7 +128,10 @@ export default function Login() {
               </div>
             </div>
             <div className="mt-6">
-              <button className="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 font-semibold capitalize text-white transition hover:bg-red-700 focus:border-red-700 focus:outline-none focus:ring focus:ring-red-200 active:bg-red-700 disabled:opacity-25" onClick={() => navigate('/student/')}>
+              <button
+                className="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 font-semibold capitalize text-white transition hover:bg-red-700 focus:border-red-700 focus:outline-none focus:ring focus:ring-red-200 active:bg-red-700 disabled:opacity-25"
+                onClick={() => navigate("/student/")}
+              >
                 Sign In
               </button>
             </div>

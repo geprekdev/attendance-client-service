@@ -7,7 +7,7 @@ export default function Skeleton({
 }) {
   return (
     <div
-      className={`animate-pulse rounded-${rounded} ${color} w-[${width}] h-[${height}] ${margin}`}
+      className={`animate-pulse rounded-${rounded} ${color}  h-[${height}] ${margin}`}
     >
       &nbsp;
     </div>

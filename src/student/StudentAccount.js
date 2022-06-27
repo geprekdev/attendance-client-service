@@ -3,10 +3,13 @@ import Icon from "@mdi/react";
 import React from "react";
 import Layout from "../components/Layout";
 import Skeleton from "../components/Skeleton";
+import Cookie from "../util/Cookie";
 import { useGetStudentAccountQuery } from "./StudentAPI";
 
 export default function StudentAccount() {
-  const { isLoading, isSuccess, data } = useGetStudentAccountQuery();
+  const { isLoading, isSuccess, data } = useGetStudentAccountQuery({
+    token: Cookie.getItem("token"),
+  });
 
   return (
     <Layout title="Student Account" role="STUDENT">
@@ -47,9 +50,9 @@ export default function StudentAccount() {
 
             {isSuccess && (
               <>
-                <h1 className="text-center text-2xl">Emira Lia</h1>
+                <h1 className="text-center text-2xl"> {data.data[1].name}</h1>
                 <p className="text-center text-sm text-gray-900">
-                  @{data.data[1].name}
+                  @{data.data[1].username}
                 </p>
               </>
             )}

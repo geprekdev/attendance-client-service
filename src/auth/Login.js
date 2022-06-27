@@ -1,104 +1,125 @@
 import Layout from "../components/Layout";
 import { useEffect, useState } from "react";
-import cookie from "../util/Cookie";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useLoginMutation } from "./AuthAPI";
-import { useRef } from "react";
+import Cookie from "../util/Cookie";
 
 export default function Login() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState(null);
-
-  const navigate = useNavigate();
-  const authSlice = useSelector(state => state.authSlice.value);
+  const [role, setRole] = useState("");
 
   const [triggerLogin] = useLoginMutation();
 
+  const [data, setData] = useState({});
+
   const handleSubmit = async e => {
     e.preventDefault();
-    // const res = await triggerLogin({
-    //   username,
-    //   password,
-    // }).unwrap();
-    // cookie.setItem("s8refresh", res.refresh);
-    // navigate("/instructor/classlists", {
-    //   replace: true,
-    //   state: { cookie: res.refresh },
-    // });
 
-    window.location = "/student/";
+    const data = await triggerLogin({ username, password });
+    setData(data);
+
+    if (data?.data?.token) {
+      Cookie.setItem("token", `Token ${data.data.token}`);
+
+      setTimeout(() => {
+        role === "STUDENT" ? navigate("/student/") : navigate("/instructor");
+      }, 1000);
+    }
   };
 
-  useEffect(() => {
-    // if (cookie.getItem("s8acctkn") && cookie.getItem("s8refresh")) {
-    //   navigate("/instructor/classlists");
-    // }
-  }, []);
+  useEffect(() => {}, []);
 
   return (
-    <Layout>
-      {/* <form
-        className="mx-auto flex max-w-xl flex-col items-center gap-3"
-        onSubmit={handleSubmit}
-      >
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          className="border p-3"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          className="border p-3"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-        />
-        <div
-          className={`w-1/3 space-x-10 text-center text-2xl ${
-            !role && "text-red-500"
-          }
-          `}
-        >
-          <span
-            className={`cursor-pointer ${role === "TEACHER" && "strikeout"}`}
-            onClick={() => setRole("STUDENT")}
-          >
-            Siswa
-          </span>
-          <span>/</span>
-          <span
-            className={`cursor-pointer ${role === "STUDENT" && "strikeout"}`}
-            onClick={() => setRole("TEACHER")}
-          >
-            Guru
-          </span>
-        </div>
-        <button className="btn-primary" onSubmit={handleSubmit}>
-          Login
-        </button>
-      </form> */}
-
+    <Layout title="Login">
       <div className="flex min-h-screen w-full flex-col items-center bg-gray-50 pt-6 sm:justify-center sm:pt-0">
         <div className="mx-auto w-full p-5 sm:max-w-md">
           <h2 className="mb-12 text-center text-5xl font-extrabold">
             Welcome.
           </h2>
-          <form>
+
+          {data?.error?.data?.non_field_errors ? (
+            <div
+              className="relative mb-6 flex items-center rounded-md bg-red-100 py-3 px-5 text-sm text-red-500 "
+              role="alert"
+            >
+              <div className="mr-2 w-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016zM12 9v2m0 4h.01"
+                  />
+                </svg>
+              </div>
+              <span>Username atau Password salah</span>
+            </div>
+          ) : data?.error ? (
+            <div
+              className="relative mb-6 flex items-center rounded-md bg-red-100 py-3 px-5 text-sm text-red-500 "
+              role="alert"
+            >
+              <div className="mr-2 w-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016zM12 9v2m0 4h.01"
+                  />
+                </svg>
+              </div>
+              <span>Username atau Password tidak boleh kosong</span>
+            </div>
+          ) : (
+            <div
+              className="relative mb-4 flex items-center rounded-md bg-green-100 py-3 px-5 text-sm text-green-500 "
+              role="alert"
+            >
+              <div className="mr-2 w-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
+                  />
+                </svg>
+              </div>
+              <span>Anda berhasil login</span>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="mb-1 block" htmlFor="email">
+              <label className="mb-1 block" htmlFor="rj;">
                 Username
               </label>
               <input
-                id="email"
+                id="rj;"
                 type="text"
-                name="email"
-                className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-red-300 focus:outline-none focus:ring focus:ring-red-200 focus:ring-opacity-50 disabled:bg-gray-100"
+                name="rj;"
+                required
+                className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm invalid:animate-pulse   invalid:border-2 invalid:border-red-400 focus:border-red-300 focus:outline-none focus:ring focus:ring-red-200 focus:ring-opacity-50 disabled:bg-gray-100"
+                value={username}
+                onChange={e => setUsername(e.target.value)}
               />
             </div>
             <div className="mb-4">
@@ -109,11 +130,38 @@ export default function Login() {
                 id="password"
                 type="password"
                 name="password"
-                className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-red-300 focus:outline-none focus:ring focus:ring-red-200 focus:ring-opacity-50 disabled:bg-gray-100"
+                required
+                className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm invalid:animate-pulse invalid:border-2 invalid:border-red-400  focus:border-red-300 focus:outline-none focus:ring focus:ring-red-200 focus:ring-opacity-50 disabled:bg-gray-100"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
               />
             </div>
+
+            <div className="mx-auto flex w-[80%] justify-between text-base font-semibold">
+              <button
+                type="button"
+                className={`${
+                  role === "TEACHER" &&
+                  "rounded-lg bg-gradient-to-r from-[#ff00cc] to-indigo-700 py-2 px-5 font-semibold text-white"
+                }`}
+                onClick={() => setRole("TEACHER")}
+              >
+                Teacher
+              </button>
+              <button
+                type="button"
+                className={`${
+                  role === "STUDENT" &&
+                  "rounded-lg bg-gradient-to-r from-[#ff00cc5a] to-[#4338ca5a] py-2 px-5 font-semibold text-black"
+                }`}
+                onClick={() => setRole("STUDENT")}
+              >
+                Student
+              </button>
+            </div>
+
             <div className="mt-6 flex items-center justify-between">
-              <div className="flex items-center">
+              <div className="flex w-full items-center ">
                 <input
                   id="remember_me"
                   type="checkbox"
@@ -127,11 +175,9 @@ export default function Login() {
                 </label>
               </div>
             </div>
+
             <div className="mt-6">
-              <button
-                className="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 font-semibold capitalize text-white transition hover:bg-red-700 focus:border-red-700 focus:outline-none focus:ring focus:ring-red-200 active:bg-red-700 disabled:opacity-25"
-                onClick={() => navigate("/student/")}
-              >
+              <button className="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 font-semibold capitalize text-white transition hover:bg-blue-700 focus:border-blue-700 focus:outline-none focus:ring focus:ring-blue-200 active:bg-blue-700 disabled:opacity-25">
                 Sign In
               </button>
             </div>

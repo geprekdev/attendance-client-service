@@ -16,38 +16,24 @@ import { useGetStudentClassesQuery } from "./StudentAPI";
 import { useGetStudentAttendanceQuery } from "./StudentAPI";
 import isEmpty from "../util/EmptyObj";
 import Skeleton from "../components/Skeleton";
+import { getFullDate } from "../util/Date";
+import Cookie from "../util/Cookie";
 
 export default function NewStudentHome() {
-  const { isSuccess, isLoading, isError, data } = useGetStudentClassesQuery();
-  const attendanceQuery = useGetStudentAttendanceQuery();
-
-  const d = new Date();
-
-  const month = [
-    "Januari",
-    "Februari",
-    "Maret",
-    "April",
-    "Mei",
-    "Juni",
-    "Agustus",
-    "September",
-    "Oktober",
-    "November",
-    "Desember",
-  ];
-
-  const date = `${d.getUTCDate()} ${
-    month[d.getUTCMonth()]
-  } ${d.getUTCFullYear()}`;
+  const { isSuccess, isLoading, data } = useGetStudentClassesQuery({
+    token: Cookie.getItem("token"),
+  });
+  const attendanceQuery = useGetStudentAttendanceQuery({
+    token: Cookie.getItem("token"),
+  });
 
   const menus = [
     { pathIcon: mdiTimer, text: "Statistic", link: "/student/statistic" },
-    { pathIcon: mdiNoteText, text: "Presence", link: "/student/absent" },
+    { pathIcon: mdiNoteText, text: "Presence", link: "/student/presence" },
     { pathIcon: mdiNoteCheck, text: "Activity", link: "/student/activity" },
     { pathIcon: mdiSendCircle, text: "Izin", link: "/student/izin" },
   ];
-  console.log(data);
+  // console.log(data);
   return (
     <Layout title="Student" role="STUDENT">
       <div className="mx-auto mb-[56px] h-screen max-w-[444px]  border px-5 py-3 pb-24 shadow-lg">
@@ -98,7 +84,7 @@ export default function NewStudentHome() {
         </div>
         <div className="mt-7 flex items-center gap-3">
           <Icon path={mdiCalendarRange} size="16px" className="text-blue-500" />
-          <p className="text-sm uppercase">Today - {date}</p>
+          <p className="text-sm uppercase">Today - {getFullDate(new Date())}</p>
         </div>
         <div className="mt-7 flex flex-col rounded-md bg-white py-5 px-7 shadow-[0_12px_50px_-6px_rgb(0,0,0,0.15)]">
           <div className="mb-3 flex items-center gap-7">
@@ -111,17 +97,16 @@ export default function NewStudentHome() {
               <p>CHECK-IN</p>
               <div className="mt-1.5 text-sm text-slate-400">
                 <div className="flex items-center gap-1">
-                  Scheduled:{" "}
+                  Scheduled:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <Icon path={mdiAlarm} size="15px" className="inline" />{" "}
                   <span className="font-semibold">
                     {attendanceQuery.isSuccess &&
-                      attendanceQuery.data.data.work_time}
+                      attendanceQuery.data.work_time}
                   </span>
                 </div>
                 <p>
-                  Checked in at:{" "}
-                  {attendanceQuery.isSuccess &&
-                    attendanceQuery.data.data.clock_in}
+                  Checked in at:&nbsp;&nbsp;
+                  {attendanceQuery.isSuccess && attendanceQuery.data.clock_in}
                 </p>
               </div>
             </div>
@@ -136,21 +121,20 @@ export default function NewStudentHome() {
               className="rounded-full bg-[#ffd94e] p-2 text-white shadow-lg"
             />
             <div>
-              <p>CHECK-IN</p>
+              <p>CHECK-OUT</p>
               <div className="mt-1.5 text-sm text-slate-400">
                 <div className="flex items-center gap-1">
-                  Scheduled:
+                  Scheduled: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <Icon path={mdiAlarm} size="15px" className="inline" />{" "}
                   <span className="font-semibold">
                     {" "}
                     {attendanceQuery.isSuccess &&
-                      attendanceQuery.data.data.home_time}
+                      attendanceQuery.data.home_time}
                   </span>
                 </div>
                 <p>
-                  Checked in at:{" "}
-                  {attendanceQuery.isSuccess &&
-                    attendanceQuery.data.data.clock_out}
+                  Checked in at: &nbsp;
+                  {attendanceQuery.isSuccess && attendanceQuery.data.clock_out}
                 </p>
               </div>
             </div>
@@ -191,18 +175,6 @@ export default function NewStudentHome() {
         ) : (
           ""
         )}
-      </div>
-
-      <div className="fixed bottom-[60px] left-0 right-0 mx-auto max-w-[440px] ">
-        <div className="flex  justify-center">
-	<Link to="/student/attendance">         
- 	<Icon
-            path={mdiLocationEnter}
-            size="65px"
-            className="cursor-pointer rounded-full border-4 border-white bg-blue-500 p-3 text-white shadow-xl"
-          />
-	</Link>
-        </div>
       </div>
     </Layout>
   );

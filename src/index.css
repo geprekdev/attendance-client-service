@@ -6,16 +6,4 @@
   .btn-primary {
     @apply rounded-lg border border-blue-500 px-6 py-2 font-bold text-blue-500 transition hover:bg-blue-600 hover:text-white focus:bg-white focus:text-gray-400 focus:ring;
   }
-
-  .strikeout {
-    @apply relative;
-  }
-
-  .strikeout::after {
-    content: "";
-    height: 0.125em;
-    border-bottom: 0.125em solid rgba(255, 0, 0, 0.5);
-
-    @apply absolute top-1/2 right-0 left-0  w-20;
-  }
 }

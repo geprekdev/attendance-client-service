@@ -12,6 +12,7 @@ import {
   useGetStudentAttendanceQuery,
   usePostStudentAttendanceMutation,
 } from "./StudentAPI";
+import Cookie from "../util/Cookie";
 export default function StudentAttendance() {
   const [GPSActive, setGPSActive] = useState(false);
   const [GeoLoc, setGeoLoc] = useState({
@@ -19,37 +20,69 @@ export default function StudentAttendance() {
     latitude: "",
   });
   const [clock, setClock] = useState(false);
+  const [statusPost, setStatusPost] = useState({
+    error: false,
+    error_desc: null,
+    success: false,
+    success_desc: null,
+  });
+  const [isAttended, setAttended] = useState(false);
   const [attendanceType, setAttendanceType] = useState(false);
   const [triggerPostStudentAttendance] = usePostStudentAttendanceMutation();
 
-  const { isLoading, isSuccess, data, isError } = useGetStudentAttendanceQuery(
-    GeoLoc,
+  const { isSuccess, data } = useGetStudentAttendanceQuery(
+    {
+      token: Cookie.getItem("token"),
+      latitude: GeoLoc.latitude,
+      longitude: GeoLoc.longitude,
+    },
     { skip: !GPSActive }
   );
-  console.log(isSuccess && data);
+  console.log(data);
   if (isSuccess && clock === false) {
     setClock({
       in: data.clock_in,
       out: data.clock_out,
     });
-    setAttendanceType("Check-In");
+    if (data.attendance_type === "done") {
+      setAttended(true);
+      setAttendanceType("Done!");
+    } else if (data.attendance_type === "MRD") {
+      setAttendanceType("Clock-In");
+    } else {
+      setAttendanceType(data.attendance_type);
+    }
   }
 
   const handleSubmitForm = async () => {
-    const data = await triggerPostStudentAttendance();
-    if (data.data.status === 200) {
+    const data = await triggerPostStudentAttendance({
+      token: Cookie.getItem("token"),
+    });
+    if (data?.data?.status === 200) {
       setClock({
         in: data.data.clock_in,
         out: data.data.clock_out,
       });
-      setAttendanceType(data.data.attendance_type);
+      console.log(data);
+      if (data?.data?.attendance_type === "done") {
+        setAttended(true);
+        setAttendanceType("Done!");
+      } else {
+        setAttendanceType(data.attendance_type);
+      }
+      setStatusPost({ success: true, success_desc: data.data.message });
     }
-    console.log(data);
+
+    if (data?.data?.error) {
+      if (data?.data?.error === "invalid_post") {
+        setStatusPost({ error: true, error_desc: data.data.error_description });
+      }
+    }
   };
 
   const handleGPS = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
+      navigator.geolocation.getCurrentPosition(position => {
         setGeoLoc({
           longitude: parseFloat(position.coords.longitude),
           latitude: parseFloat(position.coords.latitude),
@@ -78,7 +111,7 @@ export default function StudentAttendance() {
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
         integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
-        crossorigin=""
+        crossOrigin=""
       />
       <div className="relative mx-auto h-screen max-w-[444px] border pb-24 shadow-lg">
         <Link to="/student">
@@ -86,6 +119,57 @@ export default function StudentAttendance() {
             <Icon path={mdiArrowLeft} size="25px" />
           </span>
         </Link>
+
+        {/* Alert */}
+        {statusPost.error && (
+          <div
+            className="absolute right-4 top-3 z-20 mb-4 flex items-center rounded-md bg-red-100 py-3 px-5 text-sm text-red-500 shadow-2xl"
+            role="alert"
+          >
+            <div className="mr-2 w-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLicecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016zM12 9v2m0 4h.01"
+                />
+              </svg>
+            </div>
+            <span>{statusPost.error_desc}</span>
+          </div>
+        )}
+
+        {statusPost.success && (
+          <div
+            className="absolute right-4 top-3 z-20 mb-4 flex items-center rounded-md bg-green-100 py-3 px-5 text-sm text-green-500 shadow-2xl"
+            role="alert"
+          >
+            <div className="mr-2 w-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokelicecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
+                />
+              </svg>
+            </div>
+            <span>{statusPost.success_desc}</span>
+          </div>
+        )}
+        {/* End Alert */}
+
         <div className="z-1 absolute h-[70%] w-full">
           {GPSActive && (
             <MapContainer
@@ -127,22 +211,31 @@ export default function StudentAttendance() {
               </div>
 
               <div className="grid grid-cols-2 gap-2 py-3 text-center">
-                <div class="py-2">
+                <div className="py-2">
                   <h2 className="text-sm font-semibold">Clock In</h2>
                   <h3 className="text-lg">{clock.in}</h3>
                 </div>
-                <div class="py-2">
-                  <h2 className="text-sm font-semibold">Clock In</h2>
+                <div className="py-2">
+                  <h2 className="text-sm font-semibold">Clock Out</h2>
                   <h3 className="text-lg">{clock.out}</h3>
                 </div>
               </div>
-              <button
-                onClick={handleSubmitForm}
-                type="button"
-                className="ease focus:shadow-outline w-full select-none rounded-md border border-indigo-500 bg-indigo-500 py-2 font-semibold text-slate-100 shadow-xl transition duration-500 hover:bg-indigo-600 focus:outline-none"
-              >
-                {attendanceType}
-              </button>
+              {isAttended ? (
+                <button
+                  type="button"
+                  className="ease focus:shadow-outline w-full cursor-not-allowed select-none rounded-md border border-green-500 bg-green-500 py-2 font-semibold text-slate-100 shadow-xl transition duration-500  focus:outline-none"
+                >
+                  {attendanceType}
+                </button>
+              ) : (
+                <button
+                  onClick={handleSubmitForm}
+                  type="button"
+                  className="ease focus:shadow-outline w-full select-none rounded-md border border-indigo-500 bg-indigo-500 py-2 font-semibold text-slate-100 shadow-xl transition duration-500 hover:bg-indigo-600 focus:outline-none"
+                >
+                  {attendanceType}
+                </button>
+              )}
             </>
           )}
         </div>

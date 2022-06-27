@@ -4,14 +4,13 @@ import ClassList from "../classroom";
 import ClassListDetail from "../classroom/ClassListDetail";
 import Login from "../auth/Login";
 import ProtectedRouter from "./ProtectedRouter";
-import HomeStudent from "../student/HomeStudent";
 import StudentPresence from "../student/StudentPresence";
 import StudentAccount from "../student/StudentAccount";
 import StudentStatistic from "../student/StudentStatistic";
-import StudentAbsent from "../student/StudentAbsent";
 import NewStudentHome from "../student/NewStudentHome";
-import StudentScheduled from "../student/StudentScheduled";
+import StudentSchedule from "../student/StudentSchedule";
 import StudentAttendance from "../student/StudentAttendance";
+import StudentNotification from "../student/StudentNotification";
 
 export default function router() {
   return (
@@ -20,14 +19,13 @@ export default function router() {
         <Route path="/" element={<Home />} />
 
         <Route path="/student/" element={<NewStudentHome />} />
-        <Route path="/student/scheduled" element={<StudentScheduled />} />
+        <Route path="/student/schedule" element={<StudentSchedule />} />
         <Route path="/student/statistic" element={<StudentStatistic />} />
         <Route path="/student/account" element={<StudentAccount />} />
 
-        <Route path="/student/home" element={<HomeStudent />} />
         <Route path="/student/presence" element={<StudentPresence />} />
-        <Route path="/student/absent" element={<StudentAbsent />} />
         <Route path="/student/attendance" element={<StudentAttendance />} />
+        <Route path="/student/notification" element={<StudentNotification />} />
 
         <Route element={<ProtectedRouter />}>
           <Route path="/instructor/classlists" element={<ClassList />} />

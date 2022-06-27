@@ -3,71 +3,71 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const studentAPI = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_API }),
   reducerPath: "studentAPI",
-  endpoints: (builder) => ({
+  endpoints: builder => ({
     getStudentClasses: builder.query({
-      query: () => ({
+      query: user => ({
         headers: {
-          Authorization: `Token 7c3dbaa9a0308b987d5b8164fcdf27645af8ad80`,
+          Authorization: user.token,
         },
         url: "/api/v1/student/",
       }),
     }),
     getStudentPresence: builder.query({
-      query: () => ({
+      query: user => ({
         headers: {
-          Authorization: `Token 7c3dbaa9a0308b987d5b8164fcdf27645af8ad80`,
+          Authorization: user.token,
         },
         url: "/api/v1/student/presences/",
       }),
     }),
 
     getStudentSubmitGeo: builder.query({
-      query: (geo) => ({
+      query: user => ({
         headers: {
-          Authorization: `Token 7c3dbaa9a0308b987d5b8164fcdf27645af8ad80`,
+          Authorization: user.token,
         },
-        url: `/api/v1/student/submit/?geo=${geo.latitude},${geo.longitude}`,
+        url: `/api/v1/student/submit/?geo=${user.latitude},${user.longitude}`,
       }),
     }),
     getStudentStatistic: builder.mutation({
-      query: () => ({
+      query: user => ({
         headers: {
-          Authorization: `Token 7c3dbaa9a0308b987d5b8164fcdf27645af8ad80`,
+          Authorization: user.token,
         },
         url: "/api/v1/student/statistic/",
       }),
     }),
     getStudentAccount: builder.query({
-      query: () => ({
+      query: user => ({
         headers: {
-          Authorization: `Token 7c3dbaa9a0308b987d5b8164fcdf27645af8ad80`,
+          Authorization: user.token,
         },
         url: "/api/v1/student/history/",
       }),
     }),
     getStudentAttendance: builder.query({
-      query: (geo) => ({
+      query: user => ({
         headers: {
-          Authorization: `Token 7c3dbaa9a0308b987d5b8164fcdf27645af8ad80`,
+          Authorization: user.token,
         },
-        url: `/v1/attendance?geo=${geo.latitude},${geo.longitude}`,
+        url: `/v1/attendance?geo=${user.latitude},${user.longitude}`,
       }),
     }),
     postStudentAttendance: builder.mutation({
-      query: () => ({
+      query: user => ({
         headers: {
-          Authorization: `Token 7c3dbaa9a0308b987d5b8164fcdf27645af8ad80`,
+          Authorization: user.token,
         },
         method: "POST",
         url: "/v1/attendance",
       }),
     }),
-    postStudentAbsent: builder.mutation({
-      query: ({ token, lat, lng }) => ({
+    postPresenceClass: builder.mutation({
+      query: user => ({
         headers: {
-          Authorization: `Token 7c3dbaa9a0308b987d5b8164fcdf27645af8ad80`,
+          Authorization: user.token,
         },
-        body: { token, lat, lng },
+        body: { token: user.bakso, lat: user.lat, lng: user.lng },
         method: "POST",
         url: "/api/v1/student/submit/",
       }),
@@ -80,7 +80,7 @@ export const {
   useGetStudentPresenceQuery,
   useGetStudentStatisticMutation,
   useGetStudentAccountQuery,
-  usePostStudentAbsentMutation,
+  usePostPresenceClassMutation,
   useGetStudentSubmitGeoQuery,
   useGetStudentAttendanceQuery,
   usePostStudentAttendanceMutation,

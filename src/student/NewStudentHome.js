@@ -21,10 +21,10 @@ import Cookie from "../util/Cookie";
 
 export default function NewStudentHome() {
   const { isSuccess, isLoading, data } = useGetStudentClassesQuery({
-    token: Cookie.getItem("token"),
+    token: Cookie.getItem("token").split(".")[0],
   });
   const attendanceQuery = useGetStudentAttendanceQuery({
-    token: Cookie.getItem("token"),
+    token: Cookie.getItem("token").split(".")[0],
   });
 
   const menus = [
@@ -33,7 +33,7 @@ export default function NewStudentHome() {
     { pathIcon: mdiNoteCheck, text: "Activity", link: "/student/activity" },
     { pathIcon: mdiSendCircle, text: "Izin", link: "/student/izin" },
   ];
-  // console.log(data);
+
   return (
     <Layout title="Student" role="STUDENT">
       <div className="mx-auto mb-[56px] h-screen max-w-[444px]  border px-5 py-3 pb-24 shadow-lg">
@@ -162,15 +162,17 @@ export default function NewStudentHome() {
               Tidak Ada Kelas
             </div>
           ) : (
-            <div className="mt-2 rounded-lg bg-gradient-to-r from-blue-700 to-[#63c2f0] px-7 py-4 text-white">
-              <h3 className="mb-2 font-bold">
-                {isSuccess && data.data?.current_lecture.subject}
-              </h3>
-              <p>{isSuccess && data.data?.current_lecture.time}</p>
-              <p className="mt-5 text-right text-sm">
-                {isSuccess && data.data?.current_lecture.teacher}
-              </p>
-            </div>
+            <Link to="/student/presence">
+              <div className="mt-2 rounded-lg bg-gradient-to-r from-blue-700 to-[#63c2f0] px-7 py-4 text-white">
+                <h3 className="mb-2 font-bold">
+                  {isSuccess && data.data?.current_lecture.subject}
+                </h3>
+                <p>{isSuccess && data.data?.current_lecture.time}</p>
+                <p className="mt-5 text-right text-sm">
+                  {isSuccess && data.data?.current_lecture.teacher}
+                </p>
+              </div>
+            </Link>
           )
         ) : (
           ""

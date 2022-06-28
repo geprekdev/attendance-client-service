@@ -12,8 +12,6 @@ export default function StudentSchedule() {
   const [showCalendar, setShowCalendar] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  console.log(showCalendar);
-
   useEffect(() => {
     const time = setInterval(() => {
       setCurrentDate(new Date());

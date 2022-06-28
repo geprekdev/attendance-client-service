@@ -18,22 +18,25 @@ export default function router() {
       <Routes>
         <Route path="/" element={<Home />} />
 
-        <Route path="/student/" element={<NewStudentHome />} />
-        <Route path="/student/schedule" element={<StudentSchedule />} />
-        <Route path="/student/statistic" element={<StudentStatistic />} />
-        <Route path="/student/account" element={<StudentAccount />} />
-
-        <Route path="/student/presence" element={<StudentPresence />} />
-        <Route path="/student/attendance" element={<StudentAttendance />} />
-        <Route path="/student/notification" element={<StudentNotification />} />
-
         <Route element={<ProtectedRouter />}>
-          <Route path="/instructor/classlists" element={<ClassList />} />
+          <Route path="/student/" element={<NewStudentHome />} />
+          <Route path="/student/schedule" element={<StudentSchedule />} />
+          <Route path="/student/statistic" element={<StudentStatistic />} />
+          <Route path="/student/account" element={<StudentAccount />} />
+
+          <Route path="/student/presence" element={<StudentPresence />} />
+          <Route path="/student/attendance" element={<StudentAttendance />} />
           <Route
-            path="/instructor/classlists/detail/:grade/:subject"
-            element={<ClassListDetail />}
+            path="/student/notification"
+            element={<StudentNotification />}
           />
         </Route>
+
+        <Route path="/instructor/classlists" element={<ClassList />} />
+        <Route
+          path="/instructor/classlists/detail/:grade/:subject"
+          element={<ClassListDetail />}
+        />
         <Route path="/auth/login" element={<Login />} />
       </Routes>
     </BrowserRouter>

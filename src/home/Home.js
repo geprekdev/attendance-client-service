@@ -8,7 +8,7 @@ export default function Home() {
     <div className="mt-48 flex h-full w-full justify-center">
       <button
         className="rounded-lg border border-blue-500 py-3 px-5 text-xl font-semibold text-blue-700 hover:bg-blue-500 hover:text-white hover:transition"
-        onClick={() => navigate("/instructor/classlists")}
+        onClick={() => navigate("/auth/login")}
       >
         Login
       </button>

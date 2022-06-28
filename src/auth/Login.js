@@ -1,11 +1,9 @@
 import Layout from "../components/Layout";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
 import { useLoginMutation } from "./AuthAPI";
 import Cookie from "../util/Cookie";
 
 export default function Login() {
-  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
@@ -21,15 +19,29 @@ export default function Login() {
     setData(data);
 
     if (data?.data?.token) {
-      Cookie.setItem("token", `Token ${data.data.token}`);
+      Cookie.setItem("token", `Token ${data.data.token}.${role}`);
 
       setTimeout(() => {
-        role === "STUDENT" ? navigate("/student/") : navigate("/instructor");
+        role === "TEACHER"
+          ? window.location.replace("/instructor")
+          : window.location.replace("/student/");
       }, 1000);
     }
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const token = Cookie.getItem("token");
+    if (token) {
+      const role = token.split(".")[1];
+
+      if (role === "uYD3z") {
+        window.location = "/student/";
+      } else if (role === "eAc4v") {
+        window.location = "/intsructor/";
+      } else {
+      }
+    }
+  }, []);
 
   return (
     <Layout title="Login">
@@ -141,20 +153,20 @@ export default function Login() {
               <button
                 type="button"
                 className={`${
-                  role === "TEACHER" &&
+                  role === "eAc4v" &&
                   "rounded-lg bg-gradient-to-r from-[#ff00cc] to-indigo-700 py-2 px-5 font-semibold text-white"
                 }`}
-                onClick={() => setRole("TEACHER")}
+                onClick={() => setRole("eAc4v")}
               >
                 Teacher
               </button>
               <button
                 type="button"
                 className={`${
-                  role === "STUDENT" &&
+                  role === "uYD3z" &&
                   "rounded-lg bg-gradient-to-r from-[#ff00cc5a] to-[#4338ca5a] py-2 px-5 font-semibold text-black"
                 }`}
-                onClick={() => setRole("STUDENT")}
+                onClick={() => setRole("uYD3z")}
               >
                 Student
               </button>

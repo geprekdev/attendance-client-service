@@ -7,6 +7,8 @@
 // import Cookie from "../util/Cookie";
 
 import { Outlet } from "react-router-dom";
+import Login from "../auth/Login";
+import Cookie from "../util/Cookie";
 
 // export default function ProtectedRouter() {
 //   const [triggerValidator] = useValidatorTokenMutation();
@@ -49,5 +51,5 @@ import { Outlet } from "react-router-dom";
 // }
 
 export default function ProtectedRoute() {
-  return <Outlet />;
+  return Cookie.getItem("token") ? <Outlet /> : <Login />;
 }

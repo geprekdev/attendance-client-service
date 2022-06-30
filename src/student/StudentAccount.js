@@ -7,9 +7,16 @@ import Cookie from "../util/Cookie";
 import { useGetStudentAccountQuery } from "./StudentAPI";
 
 export default function StudentAccount() {
-  const { isLoading, isSuccess, data } = useGetStudentAccountQuery({
-    token: Cookie.getItem("token"),
-  });
+  const { isLoading, isSuccess, data, isError, error } =
+    useGetStudentAccountQuery({
+      token: Cookie.getItem("token").split(".")[0],
+    });
+
+  if (isError && error.status === 401) {
+    Cookie.deleteItem("token");
+    window.location = "/auth/login";
+    return;
+  }
 
   return (
     <Layout title="Student Account" role="STUDENT">

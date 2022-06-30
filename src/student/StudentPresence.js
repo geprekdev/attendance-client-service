@@ -21,14 +21,15 @@ export default function StudentAbsent() {
   const [detailForm, setDetailForm] = useState("");
   const [subRes, setSubRes] = useState({});
 
-  const { isLoading, isSuccess, data, isError } = useGetStudentSubmitGeoQuery(
-    {
-      token: Cookie.getItem("token"),
-      latitude: GeoLoc.latitude,
-      longitude: GeoLoc.longitude,
-    },
-    { skip: !GPSActive }
-  );
+  const { isLoading, isSuccess, data, isError, error } =
+    useGetStudentSubmitGeoQuery(
+      {
+        token: Cookie.getItem("token").split(".")[0],
+        latitude: GeoLoc.latitude,
+        longitude: GeoLoc.longitude,
+      },
+      { skip: !GPSActive }
+    );
 
   const [triggerPresenceClass] = usePostPresenceClassMutation();
 
@@ -61,7 +62,7 @@ export default function StudentAbsent() {
     e.preventDefault();
 
     const res = await triggerPresenceClass({
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").split(".")[0],
       lat: GeoLoc.latitude,
       lng: GeoLoc.longitude,
       bakso: tokenForm,
@@ -70,14 +71,10 @@ export default function StudentAbsent() {
     setSubRes(res.data);
   };
 
-  if (!GPSActive) {
-    handleGPS();
-  }
-
-  if (isError) {
+  if (isError && error.status === 401) {
     Cookie.deleteItem("token");
-    console.log("Err");
-    console.log(Cookie.getItem("token"));
+    window.location = "/auth/login";
+    return;
   }
 
   return (
@@ -90,7 +87,7 @@ export default function StudentAbsent() {
         </div>
 
         {isSuccess && data?.error && (
-          <div className="alert mx-5 mt-4 flex flex-row items-center rounded border-b-2 border-blue-300 bg-blue-200 p-6">
+          <div className="alert mx-5 mt-14 flex flex-row items-center rounded border-b-2 border-blue-300 bg-blue-200 p-6">
             <div className="alert-icon flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-blue-500 bg-blue-100">
               <span className="text-blue-500">
                 <svg
@@ -245,8 +242,8 @@ export default function StudentAbsent() {
               size="2em"
             />
             <span className="text-md text-slate-600">
-              {isSuccess
-                ? data.user.address?.split(",")?.slice(0, 5).join("")
+              {isSuccess && !data?.error
+                ? data?.user?.address?.split(",")?.slice(0, 5).join("")
                 : "Antah Berantah"}
             </span>
 

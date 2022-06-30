@@ -20,9 +20,10 @@ import { getFullDate } from "../util/Date";
 import Cookie from "../util/Cookie";
 
 export default function NewStudentHome() {
-  const { isSuccess, isLoading, data } = useGetStudentClassesQuery({
-    token: Cookie.getItem("token").split(".")[0],
-  });
+  const { isSuccess, isLoading, data, isError, error } =
+    useGetStudentClassesQuery({
+      token: Cookie.getItem("token").split(".")[0],
+    });
   const attendanceQuery = useGetStudentAttendanceQuery({
     token: Cookie.getItem("token").split(".")[0],
   });
@@ -33,6 +34,15 @@ export default function NewStudentHome() {
     { pathIcon: mdiNoteCheck, text: "Activity", link: "/student/activity" },
     { pathIcon: mdiSendCircle, text: "Izin", link: "/student/izin" },
   ];
+
+  if (
+    (attendanceQuery.isError && attendanceQuery.error.status === 401) ||
+    (isError && error.status === 401)
+  ) {
+    Cookie.deleteItem("token");
+    window.location = "/auth/login";
+    return;
+  }
 
   return (
     <Layout title="Student" role="STUDENT">

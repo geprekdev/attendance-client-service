@@ -38,7 +38,8 @@ const cookie = {
    * @param {String} cookieName
    */
   deleteItem: cookieName => {
-    document.cookie = `${cookieName}=1; expires = Thu, 01 Jan 1970 00:00:00 GMT`;
+    document.cookie = `${cookieName}=;expires=Thu, 01 Jan 1970;path=/;SameSite=secure`;
+    console.clear();
   },
 };
 

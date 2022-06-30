@@ -21,25 +21,28 @@ export default function Login() {
     if (data?.data?.token) {
       Cookie.setItem("token", `Token ${data.data.token}.${role}`);
 
-      setTimeout(() => {
-        role === "TEACHER"
-          ? window.location.replace("/instructor")
-          : window.location.replace("/student/");
-      }, 1000);
+      // Di sini di cek return nhya
+      // navigasi berdasarkan role
+
+      role === "TEACHER"
+        ? (window.location = "/instructor")
+        : (window.location = "/student/");
     }
   };
 
   useEffect(() => {
     const token = Cookie.getItem("token");
     if (token) {
-      const role = token.split(".")[1];
+      // const role = token.split(".")[1];
 
-      if (role === "uYD3z") {
-        window.location = "/student/";
-      } else if (role === "eAc4v") {
-        window.location = "/intsructor/";
-      } else {
-      }
+      // if (role === "uYD3z") {
+      //   window.location = "/student/";
+      // } else if (role === "eAc4v") {
+      //   window.location = "/intsructor/";
+      // } else {
+      // }
+
+      window.location = "/student/";
     }
   }, []);
 
@@ -96,27 +99,7 @@ export default function Login() {
               <span>Username atau Password tidak boleh kosong</span>
             </div>
           ) : (
-            <div
-              className="relative mb-4 flex items-center rounded-md bg-green-100 py-3 px-5 text-sm text-green-500 "
-              role="alert"
-            >
-              <div className="mr-2 w-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
-                  />
-                </svg>
-              </div>
-              <span>Anda berhasil login</span>
-            </div>
+            ""
           )}
 
           <form onSubmit={handleSubmit}>

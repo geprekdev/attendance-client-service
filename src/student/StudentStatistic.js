@@ -3,18 +3,12 @@ import ProgressBar from "progressbar.js";
 import { useGetStudentStatisticMutation } from "./StudentAPI";
 import isEmpty from "../util/EmptyObj";
 import Layout from "../components/Layout";
+import Cookie from "../util/Cookie";
 
 export default function StudentStatistic() {
   const myRef = useRef(null);
   const [data, setData] = useState({});
   const [triggerStudentStatistic] = useGetStudentStatisticMutation();
-
-  const infoPresence = [
-    { text: "Hadir", percent: 80 },
-    { text: "Izin", percent: 0 },
-    { text: "Sakit", percent: 0 },
-    { text: "Alpha", percent: 20 },
-  ];
 
   function instanceProgressBar() {
     return new ProgressBar.Circle(myRef.current, {
@@ -49,17 +43,24 @@ export default function StudentStatistic() {
     const bar = instanceProgressBar();
 
     async function getData() {
-      const res = await triggerStudentStatistic().unwrap();
+      try {
+        const res = await triggerStudentStatistic({
+          token: Cookie.getItem("token").split(".")[0],
+        }).unwrap();
+        bar.animate(res.data.kehadiran);
 
-      console.log(res.data);
+        if (res.data.kehadiran === 0) {
+          bar.animate("0.005");
+        }
 
-      bar.animate(res.data.kehadiran);
-
-      if (res.data.kehadiran === 0) {
-        bar.animate("0.005");
+        setData({ ...res.data });
+      } catch (err) {
+        if (err.status === 401) {
+          Cookie.deleteItem("token");
+          window.location = "/auth/login";
+          return;
+        }
       }
-
-      setData({ ...res.data });
     }
 
     bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
@@ -67,13 +68,15 @@ export default function StudentStatistic() {
 
     getData();
 
+    setTimeout(() => {
+      console.clear();
+    }, 100);
+
     return () => {
-      try {
-        bar.destroy();
-        console.log("RAN");
-      } catch (err) {
-        console.log(err.message);
-      }
+      bar.destroy();
+      setTimeout(() => {
+        console.clear();
+      }, 100);
     };
   }, []);
 
@@ -87,26 +90,7 @@ export default function StudentStatistic() {
 
         <div className="relative mt-14  w-full rounded-xl bg-white p-10 shadow-xl">
           <div className="mb-5 flex justify-between gap-7">
-            {/* {infoPresence.map(presence => (
-            <div className="flex flex-col" key={presence.text}>
-              <h5 className="text-gray-400">{presence.text}</h5>
-              <span className="text-center">{presence.percent}%</span>
-            </div>
-          ))} */}
-
-            {isEmpty(data)
-              ? ""
-              : (() => {
-                  // console.log(data);
-                  for (const presence in data) {
-                    if (Object.hasOwnProperty.call(data, presence)) {
-                      // console.log(presence, " -> ", data[presence]);
-                      // return <>{presence}</>;
-                    }
-                  }
-                })()}
-
-            {!isEmpty(data) ? (
+            {!isEmpty(data) && (
               <>
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Kehadiran</h5>
@@ -126,15 +110,23 @@ export default function StudentStatistic() {
                   <span className="text-center">{data.alpha * 100}%</span>
                 </div>
               </>
-            ) : (
-              ""
             )}
           </div>
 
           <p className="text-justify text-sm">
-            Kehadiranmu telah mencapai zona{" "}
-            <strong className="text-red-600">Rentan</strong>, terus tingkatkan
-            dan jangan sampai terlambat absen!
+            Kehadiranmu telah mencapai zona &nbsp;
+            {data?.kehadiran > 80 ? (
+              <>
+                <strong className="text-red-600">Rentan</strong>, jangan lupa
+                absen!
+              </>
+            ) : (
+              <>
+                <strong className="text-green-700">Aman</strong>, tingkatkan
+                kedisiplinan mu
+              </>
+            )}
+            ,
           </p>
         </div>
       </div>

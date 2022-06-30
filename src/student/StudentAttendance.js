@@ -32,7 +32,7 @@ export default function StudentAttendance() {
 
   const { isSuccess, data } = useGetStudentAttendanceQuery(
     {
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").split(".")[0],
       latitude: GeoLoc.latitude,
       longitude: GeoLoc.longitude,
     },
@@ -56,7 +56,7 @@ export default function StudentAttendance() {
 
   const handleSubmitForm = async () => {
     const data = await triggerPostStudentAttendance({
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").split(".")[0],
     });
     if (data?.data?.status === 200) {
       setClock({

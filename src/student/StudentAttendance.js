@@ -19,6 +19,7 @@ export default function StudentAttendance() {
     longitude: "",
     latitude: "",
   });
+  const [attendance_status, setAttendanceStatus] = useState(false);
   const [clock, setClock] = useState(false);
   const [statusPost, setStatusPost] = useState({
     error: false,
@@ -26,8 +27,6 @@ export default function StudentAttendance() {
     success: false,
     success_desc: null,
   });
-  const [isAttended, setAttended] = useState(false);
-  const [attendanceType, setAttendanceType] = useState(false);
   const [triggerPostStudentAttendance] = usePostStudentAttendanceMutation();
 
   const { isSuccess, data } = useGetStudentAttendanceQuery(
@@ -38,40 +37,32 @@ export default function StudentAttendance() {
     },
     { skip: !GPSActive }
   );
-  console.log(data);
+
   if (isSuccess && clock === false) {
     setClock({
       in: data.clock_in,
       out: data.clock_out,
     });
-    if (data.attendance_type === "done") {
-      setAttended(true);
-      setAttendanceType("Done!");
-    } else if (data.attendance_type === "MRD") {
-      setAttendanceType("Clock-In");
-    } else {
-      setAttendanceType(data.attendance_type);
-    }
+    setAttendanceStatus(data.attendance_status);
   }
 
   const handleSubmitForm = async () => {
     const data = await triggerPostStudentAttendance({
       token: Cookie.getItem("token").split(".")[0],
     });
-    if (data?.data?.status === 200) {
+    if (data.data.clock_in) {
       setClock({
         in: data.data.clock_in,
+      });
+    } else if (data.data.clock_out) {
+      setClock({
+        in: clock.in,
         out: data.data.clock_out,
       });
-      console.log(data);
-      if (data?.data?.attendance_type === "done") {
-        setAttended(true);
-        setAttendanceType("Done!");
-      } else {
-        setAttendanceType(data.attendance_type);
-      }
-      setStatusPost({ success: true, success_desc: data.data.message });
     }
+    console.log(data);
+    setStatusPost({ success: true, success_desc: data.data.message });
+    setAttendanceStatus(data.data.next_attendance_status);
 
     if (data?.data?.error) {
       if (data?.data?.error === "invalid_post") {
@@ -213,19 +204,19 @@ export default function StudentAttendance() {
               <div className="grid grid-cols-2 gap-2 py-3 text-center">
                 <div className="py-2">
                   <h2 className="text-sm font-semibold">Clock In</h2>
-                  <h3 className="text-lg">{clock.in}</h3>
+                  <h3 className="text-lg">{clock.in || "--:--"}</h3>
                 </div>
                 <div className="py-2">
                   <h2 className="text-sm font-semibold">Clock Out</h2>
-                  <h3 className="text-lg">{clock.out}</h3>
+                  <h3 className="text-lg">{clock.out || "--:--"}</h3>
                 </div>
               </div>
-              {isAttended ? (
+              {attendance_status === "Done!" ? (
                 <button
                   type="button"
                   className="ease focus:shadow-outline w-full cursor-not-allowed select-none rounded-md border border-green-500 bg-green-500 py-2 font-semibold text-slate-100 shadow-xl transition duration-500  focus:outline-none"
                 >
-                  {attendanceType}
+                  {attendance_status}
                 </button>
               ) : (
                 <button
@@ -233,7 +224,7 @@ export default function StudentAttendance() {
                   type="button"
                   className="ease focus:shadow-outline w-full select-none rounded-md border border-indigo-500 bg-indigo-500 py-2 font-semibold text-slate-100 shadow-xl transition duration-500 hover:bg-indigo-600 focus:outline-none"
                 >
-                  {attendanceType}
+                  {attendance_status}
                 </button>
               )}
             </>

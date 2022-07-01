@@ -31,6 +31,8 @@ export default function StudentAbsent() {
       { skip: !GPSActive }
     );
 
+  // console.log("get", data);
+
   const [triggerPresenceClass] = usePostPresenceClassMutation();
 
   const handleGPS = () => {
@@ -67,8 +69,12 @@ export default function StudentAbsent() {
       lng: GeoLoc.longitude,
       bakso: tokenForm,
     });
-
-    setSubRes(res.data);
+    if (res?.error) {
+      setSubRes(res.error.data);
+    } else {
+      setSubRes(res.data);
+    }
+    console.log(subRes);
   };
 
   if (isError && error.status === 401) {
@@ -154,7 +160,7 @@ export default function StudentAbsent() {
           <img src="/touristmap.svg" alt="Maps" />
         </div>
 
-        {subRes?.error?.status === 403 ? (
+        {subRes?.error?.status ? (
           <div className="alert mx-5 flex flex-row items-center rounded border-b-2 border-yellow-300 bg-yellow-200 p-3">
             <div className="alert-icon flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-yellow-500 bg-yellow-100">
               <span className="text-yellow-500">
@@ -177,7 +183,7 @@ export default function StudentAbsent() {
               </div>
             </div>
           </div>
-        ) : subRes?.error?.status === 409 ? (
+        ) : subRes?.success ? (
           <div className="alert mx-5 flex flex-row items-center rounded border-b-2 border-blue-300 bg-blue-200 p-3">
             <div className="alert-icon flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-blue-500 bg-blue-100">
               <span className="text-blue-500">
@@ -196,7 +202,7 @@ export default function StudentAbsent() {
             </div>
             <div className="alert-content ml-4">
               <div className="alert-title text-lg font-semibold text-blue-800">
-                {subRes?.error?.message}
+                {subRes.success.message}
               </div>
             </div>
           </div>
@@ -311,130 +317,8 @@ export default function StudentAbsent() {
           ) : (
             ""
           )}
-          {/* {isSuccess ? (
-            data.status_code === 14 ? (
-              "Have A Nica"
-            ) : data.status_code === 11 ? (
-              ""
-            ) : data.status_code === 16 ? (
-              <div className="alert mx-5 mt-4 flex flex-row items-center rounded border-b-2 border-blue-300 bg-blue-200 p-6">
-                <div className="alert-icon flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-blue-500 bg-blue-100">
-                  <span className="text-blue-500">
-                    <svg
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      className="h-6 w-6"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                        clipRule="evenodd"
-                      ></path>
-                    </svg>
-                  </span>
-                </div>
-                <div className="alert-content ml-4">
-                  <div className="alert-title text-lg font-semibold text-blue-800">
-                    Tidak Ada Kelas
-                  </div>
-                  <div className="alert-description text-sm text-blue-600">
-                    Untuk hari ini belum ada pelajaran yang akan dimulai
-                  </div>
-                </div>
-              </div>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )} */}
         </div>
       </div>
     </Layout>
   );
 }
-
-/* <div className="mx-auto mt-[20px]  w-[90%] rounded-lg bg-white p-5 text-center">
-                <svg
-                  viewBox="0 0 24 24"
-                  className="mx-auto h-16 w-16 text-green-600"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z"
-                  ></path>
-                </svg>
-
-                <h3 className="mt-3 text-2xl font-semibold">{data.message}!</h3>
-
-                <p className=" mt-3 text-slate-500">Have a Nice Day!</p>
-
-                <button className="mt-5 rounded-sm bg-indigo-600 px-7 py-3 font-semibold text-white hover:animate-pulse ">
-                  <a href="/student/">Go Back </a>
-                </button>
-              </div> */
-
-/*
-              {!isEmpty(subRes) ? (
-                subRes.status_code === 13 ? (
-                  ""
-                ) : subRes.status_code === 15 ? (
-                  <div className="alert mx-5 flex flex-row items-center rounded border-b-2 border-green-300 bg-green-200 p-3">
-                    <div className="alert-icon flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-green-500 bg-green-100">
-                      <span className="text-green-500">
-                        <svg
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                          className="h-6 w-6"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                            clipRule="evenodd"
-                          ></path>
-                        </svg>
-                      </span>
-                    </div>
-                    <div className="alert-content ml-4">
-                      <div className="alert-title text-lg font-semibold text-yellow-800">
-                        Berhasil Absen
-                      </div>
-                      <div className="alert-description text-sm text-yellow-600">
-                        {subRes.message}
-                      </div>
-                    </div>
-                  </div>
-                ) : subRes.status_code === 14 ? (
-                 sjdan\]]safhasfnab abseb 
-                ) : (
-                  <div className="alert mx-5 flex flex-row items-center rounded border-b-2 border-yellow-300 bg-yellow-200 p-3">
-                    <div className="alert-icon flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-yellow-500 bg-yellow-100">
-                      <span className="text-yellow-500">
-                        <svg
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                          className="h-6 w-6"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                            clipRule="evenodd"
-                          ></path>
-                        </svg>
-                      </span>
-                    </div>
-                    <div className="alert-content ml-4">
-                      <div className="alert-title text-lg font-semibold text-yellow-800">
-                        Token Salah
-                      </div>
-                      <div className="alert-description text-sm text-yellow-600">
-                        {subRes.message}
-                      </div>
-                    </div>
-                  </div>
-                )
-              ) : (
-                ""
-              )}
-
-              */

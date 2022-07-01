@@ -9,7 +9,7 @@ export default function StudentStatistic() {
   const myRef = useRef(null);
   const [data, setData] = useState({});
   const [triggerStudentStatistic] = useGetStudentStatisticMutation();
-
+  console.log(data);
   function instanceProgressBar() {
     return new ProgressBar.Circle(myRef.current, {
       color: "#aaa",
@@ -47,13 +47,11 @@ export default function StudentStatistic() {
         const res = await triggerStudentStatistic({
           token: Cookie.getItem("token").split(".")[0],
         }).unwrap();
-        bar.animate(res.data.kehadiran);
 
-        if (res.data.kehadiran === 0) {
-          bar.animate("0.005");
-        }
+        console.log(res);
+        bar.animate(res.presence);
 
-        setData({ ...res.data });
+        setData({ ...res });
       } catch (err) {
         if (err.status === 401) {
           Cookie.deleteItem("token");
@@ -94,20 +92,20 @@ export default function StudentStatistic() {
               <>
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Kehadiran</h5>
-                  <span className="text-center">{data.kehadiran}%</span>
+                  <span className="text-center">{data.presence * 100}%</span>
                 </div>
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Izin</h5>
-                  <span className="text-center">{data.ijin * 100}%</span>
+                  <span className="text-center">{data.leave * 100}%</span>
                 </div>
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Sakit</h5>
-                  <span className="text-center">{data.sakit * 100}%</span>
+                  <span className="text-center">{data.leave * 100}%</span>
                 </div>
 
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Alpha</h5>
-                  <span className="text-center">{data.alpha * 100}%</span>
+                  <span className="text-center">{data.absent * 100}%</span>
                 </div>
               </>
             )}

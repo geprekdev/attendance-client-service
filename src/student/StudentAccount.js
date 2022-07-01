@@ -57,10 +57,8 @@ export default function StudentAccount() {
 
             {isSuccess && (
               <>
-                <h1 className="text-center text-2xl"> {data.data[1].name}</h1>
-                <p className="text-center text-sm text-gray-900">
-                  @{data.data[1].username}
-                </p>
+                <h1 className="text-center text-2xl"> Emira Lia</h1>
+                <p className="text-center text-sm text-gray-900">@liaemir</p>
               </>
             )}
 
@@ -92,7 +90,7 @@ export default function StudentAccount() {
                   </>
                 )}
 
-                {isSuccess &&
+                {/* {isSuccess &&
                   (() => {
                     let temp = [];
                     for (const iterator in data.data) {
@@ -128,7 +126,34 @@ export default function StudentAccount() {
                     }
 
                     return temp;
-                  })()}
+                  })()} */}
+
+                {isSuccess &&
+                  data["Jun 2022"].map((presence, idx) => (
+                    <div
+                      className="flex w-full items-center border-t border-gray-100 py-4 pl-6 pr-3 text-gray-600 transition duration-150 hover:bg-gray-100 "
+                      key={idx}
+                    >
+                      {presence.status === "HADIR" ? (
+                        <Icon
+                          size="19px"
+                          className={`mx-1 text-green-600`}
+                          path={mdiCheckBold}
+                        />
+                      ) : presence.status === "ALPHA" ? (
+                        <Icon
+                          size="19px"
+                          className={`mx-1 text-red-600`}
+                          path={mdiAlphaACircle}
+                        />
+                      ) : (
+                        ""
+                      )}
+                      <p>{presence.name}</p>
+                      &nbsp;
+                      <p className="text-xs text-gray-500">{presence.date}</p>
+                    </div>
+                  ))}
               </div>
             </div>
           </div>

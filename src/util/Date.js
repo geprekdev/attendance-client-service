@@ -5,6 +5,7 @@ const month = [
   "April",
   "Mei",
   "Juni",
+  "Juli",
   "Agustus",
   "September",
   "Oktober",
@@ -18,7 +19,7 @@ export const getDay = date => day[date];
 
 export const getFullDate = date =>
   `
-    ${date.getUTCDate()} 
-    ${month[date.getUTCMonth()]} 
-    ${date.getUTCFullYear()}
+    ${date.getDate()} 
+    ${month[date.getMonth()]} 
+    ${date.getFullYear()}
   `;

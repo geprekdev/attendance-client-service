@@ -15,18 +15,22 @@ export default function Login() {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    const data = await triggerLogin({ username, password });
-    setData(data);
+    const res = await triggerLogin({ username, password });
+    setData(res.data);
 
-    if (data?.data?.token) {
-      Cookie.setItem("token", `Token ${data.data.token}.${role}`);
+    console.log(res.data);
+
+    if (res.data.token) {
+      Cookie.setItem("token", `Token ${data.token}.${role}`);
+
+      window.location = "/student/";
 
       // Di sini di cek return nhya
       // navigasi berdasarkan role
 
-      role === "TEACHER"
-        ? (window.location = "/instructor")
-        : (window.location = "/student/");
+      // role === "TEACHER"
+      //   ? (window.location = "/instructor")
+      //   : (window.location = "/student/");
     }
   };
 

@@ -13,8 +13,7 @@ import Icon from "@mdi/react";
 import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
 import { useGetStudentClassesQuery } from "./StudentAPI";
-import { useGetStudentAttendanceQuery } from "./StudentAPI";
-import isEmpty from "../util/EmptyObj";
+// import { useGetStudentAttendanceQuery } from "./StudentAPI";
 import Skeleton from "../components/Skeleton";
 import { getFullDate } from "../util/Date";
 import Cookie from "../util/Cookie";
@@ -24,9 +23,9 @@ export default function NewStudentHome() {
     useGetStudentClassesQuery({
       token: Cookie.getItem("token").split(".")[0],
     });
-  const attendanceQuery = useGetStudentAttendanceQuery({
-    token: Cookie.getItem("token").split(".")[0],
-  });
+  // const attendanceQuery = useGetStudentAttendanceQuery({
+  //   token: Cookie.getItem("token").split(".")[0],
+  // });
 
   const menus = [
     { pathIcon: mdiTimer, text: "Statistic", link: "/student/statistic" },
@@ -35,44 +34,36 @@ export default function NewStudentHome() {
     { pathIcon: mdiSendCircle, text: "Izin", link: "/student/izin" },
   ];
 
-  if (
-    (attendanceQuery.isError && attendanceQuery.error.status === 401) ||
-    (isError && error.status === 401)
-  ) {
-    Cookie.deleteItem("token");
-    window.location = "/auth/login";
-    return;
-  }
+  // if ((isError && error.status === 401) || (isError && error.status === 401)) {
+  //   Cookie.deleteItem("token");
+  //   window.location = "/auth/login";
+  //   return;
+  // }
 
   return (
     <Layout title="Student" role="STUDENT">
       <div className="mx-auto mb-[56px] h-screen max-w-[444px]  border px-5 py-3 pb-24 shadow-lg">
         {isLoading && (
           <div className="w-[90px]">
-            <Skeleton
-              color="bg-gradient-to-r from-[#63c2f0] to-indigo-100"
-              rounded="lg"
-            />
+            <Skeleton />
           </div>
         )}
 
         {isSuccess && (
-          <p className="text-sm font-light text-slate-800 ">
-            {data.data.greet}
-          </p>
+          <p className="text-sm font-light text-slate-800 ">{data.greet}</p>
         )}
 
         {isLoading && (
           <div className="w-[250px]">
-            <Skeleton
-              color="bg-gradient-to-r from-[#63c2f0] to-indigo-100"
-              rounded="lg"
-              margin="mt-2"
-            />
+            <Skeleton rounded="lg" margin="mt-2" />
           </div>
         )}
 
-        {isSuccess && <p className="text-xl">{data.data.name}</p>}
+        {isSuccess && (
+          <p className="text-xl">
+            {`${data.user.first_name} ${data.user.last_name}`}
+          </p>
+        )}
 
         <div className="mt-5 w-full rounded-lg bg-gradient-to-r from-blue-700 to-[#63c2f0] text-white shadow-lg">
           <div className="mx-auto flex w-3/4 justify-center gap-5 py-3">
@@ -110,13 +101,12 @@ export default function NewStudentHome() {
                   Scheduled:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <Icon path={mdiAlarm} size="15px" className="inline" />{" "}
                   <span className="font-semibold">
-                    {attendanceQuery.isSuccess &&
-                      attendanceQuery.data.work_time}
+                    {(isSuccess && data.work_time) || "--:--"}
                   </span>
                 </div>
                 <p>
                   Checked in at:&nbsp;&nbsp;
-                  {attendanceQuery.isSuccess && attendanceQuery.data.clock_in}
+                  {(isSuccess && data.clock_in) || "--:--"}
                 </p>
               </div>
             </div>
@@ -138,13 +128,12 @@ export default function NewStudentHome() {
                   <Icon path={mdiAlarm} size="15px" className="inline" />{" "}
                   <span className="font-semibold">
                     {" "}
-                    {attendanceQuery.isSuccess &&
-                      attendanceQuery.data.home_time}
+                    {(isSuccess && data.home_time) || "--:--"}
                   </span>
                 </div>
                 <p>
                   Checked in at: &nbsp;
-                  {attendanceQuery.isSuccess && attendanceQuery.data.clock_out}
+                  {(isSuccess && data.clock_out) || "--:--"}
                 </p>
               </div>
             </div>
@@ -157,17 +146,12 @@ export default function NewStudentHome() {
 
         {isLoading && (
           <div className="h-[20%] w-[100%]">
-            <Skeleton
-              color="bg-gradient-to-r from-[#63c2f0] to-indigo-100"
-              rounded="lg"
-              height="100%"
-              margin="mt-3"
-            />
+            <Skeleton rounded="lg" height="100%" margin="mt-3" />
           </div>
         )}
 
-        {isSuccess ? (
-          isEmpty(data.data.current_lecture) ? (
+        {isSuccess &&
+          (data.currentLecture.subject === null ? (
             <div className="mt-3 rounded-xl bg-gradient-to-r from-blue-700 to-[#63c2f0] py-2 px-5 font-semibold text-white">
               Tidak Ada Kelas
             </div>
@@ -175,18 +159,21 @@ export default function NewStudentHome() {
             <Link to="/student/presence">
               <div className="mt-2 rounded-lg bg-gradient-to-r from-blue-700 to-[#63c2f0] px-7 py-4 text-white">
                 <h3 className="mb-2 font-bold">
-                  {isSuccess && data.data?.current_lecture.subject}
+                  {isSuccess && data?.currentLecture.subject}
                 </h3>
-                <p>{isSuccess && data.data?.current_lecture.time}</p>
+                <p>
+                  {isSuccess &&
+                    `${data?.currentLecture.time.start_time} - ${data?.currentLecture.time.end_time}`}{" "}
+                  {""}
+                  WIB
+                </p>
                 <p className="mt-5 text-right text-sm">
-                  {isSuccess && data.data?.current_lecture.teacher}
+                  {isSuccess &&
+                    `${data?.currentLecture.teacher.first_name} ${data?.currentLecture.teacher.last_name}`}
                 </p>
               </div>
             </Link>
-          )
-        ) : (
-          ""
-        )}
+          ))}
       </div>
     </Layout>
   );

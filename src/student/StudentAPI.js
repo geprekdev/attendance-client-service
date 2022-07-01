@@ -9,7 +9,7 @@ export const studentAPI = createApi({
         headers: {
           Authorization: user.token,
         },
-        url: "/api/v1/student/",
+        url: "/v1/student/",
       }),
     }),
     getStudentPresence: builder.query({
@@ -17,7 +17,7 @@ export const studentAPI = createApi({
         headers: {
           Authorization: user.token,
         },
-        url: "/api/v1/student/presences/",
+        url: "/v1/student/presences/",
       }),
     }),
 
@@ -26,7 +26,7 @@ export const studentAPI = createApi({
         headers: {
           Authorization: user.token,
         },
-        url: `/api/v1/student/submit/?geo=${user.latitude},${user.longitude}`,
+        url: `/v1/student/submit/?geo=${user.latitude},${user.longitude}`,
       }),
     }),
     getStudentStatistic: builder.mutation({
@@ -34,7 +34,7 @@ export const studentAPI = createApi({
         headers: {
           Authorization: user.token,
         },
-        url: "/api/v1/student/statistic/",
+        url: "/v1/student/statistic/",
       }),
     }),
     getStudentAccount: builder.query({
@@ -42,7 +42,7 @@ export const studentAPI = createApi({
         headers: {
           Authorization: user.token,
         },
-        url: "/api/v1/student/history/",
+        url: "/v1/student/history/",
       }),
     }),
     getStudentAttendance: builder.query({
@@ -59,7 +59,7 @@ export const studentAPI = createApi({
           Authorization: user.token,
         },
         method: "POST",
-        url: "/v1/attendance",
+        url: "/v1/attendance/",
       }),
     }),
     postPresenceClass: builder.mutation({
@@ -69,7 +69,15 @@ export const studentAPI = createApi({
         },
         body: { token: user.bakso, lat: user.lat, lng: user.lng },
         method: "POST",
-        url: "/api/v1/student/submit/",
+        url: "/v1/student/submit/",
+      }),
+    }),
+    getScheduleClass: builder.query({
+      query: user => ({
+        headers: {
+          Authorization: user.token,
+        },
+        url: "/v1/student/schedule/",
       }),
     }),
   }),
@@ -84,4 +92,5 @@ export const {
   useGetStudentSubmitGeoQuery,
   useGetStudentAttendanceQuery,
   usePostStudentAttendanceMutation,
+  useGetScheduleClassQuery,
 } = studentAPI;

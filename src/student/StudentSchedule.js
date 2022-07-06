@@ -19,10 +19,11 @@ export default function StudentSchedule() {
   const [dateCalendar, setDateCalendar] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
-  const { isSuccess, isLoading, data } = useGetScheduleClassQuery(
-    { token: Cookie.getItem("token").split(".")[0] },
-    { refetchOnReconnect: true }
-  );
+  const { isSuccess, isLoading, data, isError, error } =
+    useGetScheduleClassQuery(
+      { token: Cookie.getItem("token") },
+      { refetchOnReconnect: true }
+    );
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,6 +32,12 @@ export default function StudentSchedule() {
     }, 10000);
     return () => clearInterval(time);
   }, []);
+
+  if (isError && error.status === 401) {
+    Cookie.deleteItem("token");
+    navigate("/auth/login");
+    return;
+  }
 
   return (
     <Layout role="STUDENT" title="Student Scheduled">

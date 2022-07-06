@@ -4,7 +4,7 @@ import { useGetStudentStatisticMutation } from "./StudentAPI";
 import isEmpty from "../util/EmptyObj";
 import Layout from "../components/Layout";
 import Cookie from "../util/Cookie";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Icon from "@mdi/react";
 import { mdiChevronLeft } from "@mdi/js";
 
@@ -41,26 +41,24 @@ export default function StudentStatistic() {
     });
   }
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const bar = instanceProgressBar();
 
     async function getData() {
-      try {
-        const res = await triggerStudentStatistic({
-          token: Cookie.getItem("token").split(".")[0],
-        }).unwrap();
+      const res = await triggerStudentStatistic({
+        token: Cookie.getItem("token"),
+      });
 
-        console.log(res);
+      bar.animate(res.data.presence);
 
-        bar.animate(res.presence);
+      setData({ ...res });
 
-        setData({ ...res });
-      } catch (err) {
-        if (err.status === 401) {
-          Cookie.deleteItem("token");
-          window.location = "/auth/login";
-          return;
-        }
+      if (res.error.status === 401) {
+        Cookie.deleteItem("token");
+        navigate("/auth/login");
+        return;
       }
     }
 

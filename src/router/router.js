@@ -1,5 +1,5 @@
 import { Routes, BrowserRouter, Route } from "react-router-dom";
-import Home from "../home/Home";
+import Home from "../customPage/HomePage";
 import ClassList from "../classroom";
 import ClassListDetail from "../classroom/ClassListDetail";
 import Login from "../auth/Login";
@@ -14,12 +14,14 @@ import StudentNotification from "../student/StudentNotification";
 import StudentPermission from "../student/StudentPermission";
 import StudentPermissionNew from "../student/StudentPermissionNew";
 import StudentActivity from "../student/StudentActivity";
+import ErrorPage from "../customPage/ErrorPage";
 
 export default function router() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/rusakk" element={<ErrorPage />} />
 
         <Route element={<ProtectedRouter />}>
           <Route path="/student/" element={<NewStudentHome />} />

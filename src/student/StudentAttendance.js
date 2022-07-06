@@ -3,8 +3,12 @@ import { useState } from "react";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import { Icon } from "@mdi/react";
 import L from "leaflet";
-import { Link } from "react-router-dom";
-import { mdiRecordCircleOutline, mdiArrowLeft } from "@mdi/js";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  mdiArrowLeft,
+  mdiInformationOutline,
+  mdiRecordCircleOutline,
+} from "@mdi/js";
 import "./App.css";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
@@ -29,14 +33,22 @@ export default function StudentAttendance() {
   });
   const [triggerPostStudentAttendance] = usePostStudentAttendanceMutation();
 
-  const { isSuccess, data } = useGetStudentAttendanceQuery(
+  const { isSuccess, data, isError, error } = useGetStudentAttendanceQuery(
     {
-      token: Cookie.getItem("token").split(".")[0],
+      token: Cookie.getItem("token").split("."),
       latitude: GeoLoc.latitude,
       longitude: GeoLoc.longitude,
     },
     { skip: !GPSActive }
   );
+
+  const navigate = useNavigate();
+
+  if (isError && error.status === 401) {
+    Cookie.deleteItem("token");
+    navigate("/auth/login");
+    return;
+  }
 
   if (isSuccess && clock === false) {
     setClock({
@@ -48,7 +60,7 @@ export default function StudentAttendance() {
 
   const handleSubmitForm = async () => {
     const data = await triggerPostStudentAttendance({
-      token: Cookie.getItem("token").split(".")[0],
+      token: Cookie.getItem("token"),
     });
     if (data.data.clock_in) {
       setClock({
@@ -60,15 +72,15 @@ export default function StudentAttendance() {
         out: data.data.clock_out,
       });
     }
+
     console.log(data);
+
+    if (data?.data?.error === "invalid_post") {
+      setStatusPost({ error: true, error_desc: data.data.error_description });
+      return;
+    }
     setStatusPost({ success: true, success_desc: data.data.message });
     setAttendanceStatus(data.data.next_attendance_status);
-
-    if (data?.data?.error) {
-      if (data?.data?.error === "invalid_post") {
-        setStatusPost({ error: true, error_desc: data.data.error_description });
-      }
-    }
   };
 
   const handleGPS = () => {
@@ -178,56 +190,65 @@ export default function StudentAttendance() {
           )}
         </div>
 
-        <div className="absolute bottom-0 z-20 h-[40%] w-full rounded-t-3xl bg-white px-9 py-8 shadow-2xl">
-          {isSuccess && (
-            <>
-              <div className="grid grid-cols-2">
-                <div>
-                  <Icon
-                    className="text-yellow-500"
-                    path={mdiRecordCircleOutline}
-                    size="30px"
-                  />
+        <div className="absolute bottom-14 z-20 h-[40%] w-full rounded-t-3xl bg-white px-9 py-8 shadow-2xl">
+          {isSuccess && data?.message ? (
+            <div className="mt-10 flex items-center justify-center gap-2 rounded-xl text-2xl font-semibold text-indigo-500">
+              <Icon path={mdiInformationOutline} size="50px" />
+              <p>Tidak Ada Jawal</p>
+            </div>
+          ) : (
+            isSuccess && (
+              <div className="">
+                <div className="grid grid-cols-2">
+                  <div>
+                    <Icon
+                      className="text-yellow-500"
+                      path={mdiRecordCircleOutline}
+                      size="30px"
+                    />
+                  </div>
+
+                  <div className="-ml-[75%] text-sm">
+                    <h1 className="text-[14px]">
+                      {data.user.address.split(",")[0]} -{" "}
+                      {data.user.address.split(",")[1]}
+                    </h1>
+                    <span className="text-[13px] text-slate-700">
+                      {data.user.address}
+                    </span>
+                  </div>
                 </div>
 
-                <div className="-ml-[75%] text-sm">
-                  <h1 className="text-[14px]">
-                    {data.user.address.split(",")[0]} -{" "}
-                    {data.user.address.split(",")[1]}
-                  </h1>
-                  <span className="text-[13px] text-slate-700">
-                    {data.user.address}
-                  </span>
+                <div className="grid grid-cols-2 gap-2 py-3 text-center">
+                  <div className="py-2">
+                    <h2 className="text-sm font-semibold">Clock In</h2>
+                    <h3 className="text-lg">{clock.in || "--:--"}</h3>
+                  </div>
+                  <div className="py-2">
+                    <h2 className="text-sm font-semibold">Clock Out</h2>
+                    <h3 className="text-lg">{clock.out || "--:--"}</h3>
+                  </div>
                 </div>
-              </div>
+                {attendance_status === "Done!" && (
+                  <button
+                    type="button"
+                    className="ease focus:shadow-outline w-full cursor-not-allowed select-none rounded-md border border-green-500 bg-green-500 py-2 font-semibold text-slate-100 shadow-xl transition duration-500  focus:outline-none"
+                  >
+                    {attendance_status}
+                  </button>
+                )}
 
-              <div className="grid grid-cols-2 gap-2 py-3 text-center">
-                <div className="py-2">
-                  <h2 className="text-sm font-semibold">Clock In</h2>
-                  <h3 className="text-lg">{clock.in || "--:--"}</h3>
-                </div>
-                <div className="py-2">
-                  <h2 className="text-sm font-semibold">Clock Out</h2>
-                  <h3 className="text-lg">{clock.out || "--:--"}</h3>
-                </div>
+                {attendance_status && (
+                  <button
+                    onClick={handleSubmitForm}
+                    type="button"
+                    className="ease focus:shadow-outline w-full select-none rounded-md border border-indigo-500 bg-indigo-500 py-2 font-semibold text-slate-100 shadow-xl transition duration-500 hover:bg-indigo-600 focus:outline-none"
+                  >
+                    {attendance_status}
+                  </button>
+                )}
               </div>
-              {attendance_status === "Done!" ? (
-                <button
-                  type="button"
-                  className="ease focus:shadow-outline w-full cursor-not-allowed select-none rounded-md border border-green-500 bg-green-500 py-2 font-semibold text-slate-100 shadow-xl transition duration-500  focus:outline-none"
-                >
-                  {attendance_status}
-                </button>
-              ) : (
-                <button
-                  onClick={handleSubmitForm}
-                  type="button"
-                  className="ease focus:shadow-outline w-full select-none rounded-md border border-indigo-500 bg-indigo-500 py-2 font-semibold text-slate-100 shadow-xl transition duration-500 hover:bg-indigo-600 focus:outline-none"
-                >
-                  {attendance_status}
-                </button>
-              )}
-            </>
+            )
           )}
         </div>
       </div>

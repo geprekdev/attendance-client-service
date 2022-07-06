@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { mdiChevronLeft, mdiRefresh, mdiCrosshairsGps } from "@mdi/js";
 import Icon from "@mdi/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Skeleton from "../components/Skeleton";
 import {
   useGetStudentSubmitGeoQuery,
@@ -24,7 +24,7 @@ export default function StudentAbsent() {
   const { isLoading, isSuccess, data, isError, error } =
     useGetStudentSubmitGeoQuery(
       {
-        token: Cookie.getItem("token").split(".")[0],
+        token: Cookie.getItem("token"),
         latitude: GeoLoc.latitude,
         longitude: GeoLoc.longitude,
       },
@@ -64,7 +64,7 @@ export default function StudentAbsent() {
     e.preventDefault();
 
     const res = await triggerPresenceClass({
-      token: Cookie.getItem("token").split(".")[0],
+      token: Cookie.getItem("token"),
       lat: GeoLoc.latitude,
       lng: GeoLoc.longitude,
       bakso: tokenForm,
@@ -77,9 +77,11 @@ export default function StudentAbsent() {
     console.log(subRes);
   };
 
+  const navigate = useNavigate();
+
   if (isError && error.status === 401) {
     Cookie.deleteItem("token");
-    window.location = "/auth/login";
+    navigate("/auth/login");
     return;
   }
 

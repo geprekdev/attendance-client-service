@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
 
   const navigate = useNavigate();
 
@@ -19,34 +18,26 @@ export default function Login() {
     e.preventDefault();
 
     const res = await triggerLogin({ username, password });
+    if (res.error) {
+      setData(res.error);
+      return;
+    }
+
+    Cookie.setItem("token", `Token ${res.data.token}`);
+
     setData(res.data);
 
-    if (res.data.token) {
-      Cookie.setItem("token", `Token ${res.data.token}.${role}`);
-
-      navigate("/student/");
-
-      // Di sini di cek return nhya
-      // navigasi berdasarkan role
-
-      // role === "TEACHER"
-      //   ? (window.location = "/instructor")
-      //   : (window.location = "/student/");
+    if (res.data.role === "student") {
+      setTimeout(() => {
+        navigate("/student/");
+      }, 2000);
     }
   };
 
   useEffect(() => {
     const token = Cookie.getItem("token");
+
     if (token) {
-      // const role = token.split(".")[1];
-
-      // if (role === "uYD3z") {
-      //   window.location = "/student/";
-      // } else if (role === "eAc4v") {
-      //   window.location = "/intsructor/";
-      // } else {
-      // }
-
       navigate("/student/");
     }
   }, []);
@@ -55,11 +46,11 @@ export default function Login() {
     <Layout title="Login">
       <div className="flex min-h-screen w-full flex-col items-center bg-gray-50 pt-6 sm:justify-center sm:pt-0">
         <div className="mx-auto w-full p-5 sm:max-w-md">
-          <h2 className="mb-12 text-center text-5xl font-extrabold">
-            Welcome.
+          <h2 className="mb-12 text-center  text-5xl font-extrabold">
+            {data?.name ? `Hi ${data.name}` : "Welcome."}
           </h2>
 
-          {data?.error?.data?.non_field_errors ? (
+          {data?.data?.non_field_errors && (
             <div
               className="relative mb-6 flex items-center rounded-md bg-red-100 py-3 px-5 text-sm text-red-500 "
               role="alert"
@@ -81,9 +72,11 @@ export default function Login() {
               </div>
               <span>Username atau Password salah</span>
             </div>
-          ) : data?.error ? (
+          )}
+
+          {data?.data?.username && (
             <div
-              className="relative mb-6 flex items-center rounded-md bg-red-100 py-3 px-5 text-sm text-red-500 "
+              className="relative mb-6 flex items-center rounded-md bg-yellow-100 py-3 px-5 text-sm text-gray-500 "
               role="alert"
             >
               <div className="mr-2 w-4">
@@ -103,8 +96,6 @@ export default function Login() {
               </div>
               <span>Username atau Password tidak boleh kosong</span>
             </div>
-          ) : (
-            ""
           )}
 
           <form onSubmit={handleSubmit}>
@@ -137,30 +128,7 @@ export default function Login() {
               />
             </div>
 
-            <div className="mx-auto flex w-[80%] justify-between text-base font-semibold">
-              <button
-                type="button"
-                className={`${
-                  role === "eAc4v" &&
-                  "rounded-lg bg-gradient-to-r from-[#ff00cc] to-indigo-700 py-2 px-5 font-semibold text-white"
-                }`}
-                onClick={() => setRole("eAc4v")}
-              >
-                Teacher
-              </button>
-              <button
-                type="button"
-                className={`${
-                  role === "uYD3z" &&
-                  "rounded-lg bg-gradient-to-r from-[#ff00cc5a] to-[#4338ca5a] py-2 px-5 font-semibold text-black"
-                }`}
-                onClick={() => setRole("uYD3z")}
-              >
-                Student
-              </button>
-            </div>
-
-            <div className="mt-6 flex items-center justify-between">
+            {/* <div className="mt-6 flex items-center justify-between">
               <div className="flex w-full items-center ">
                 <input
                   id="remember_me"
@@ -174,7 +142,7 @@ export default function Login() {
                   Remember me
                 </label>
               </div>
-            </div>
+            </div> */}
 
             <div className="mt-6">
               <button className="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 font-semibold capitalize text-white transition hover:bg-blue-700 focus:border-blue-700 focus:outline-none focus:ring focus:ring-blue-200 active:bg-blue-700 disabled:opacity-25">

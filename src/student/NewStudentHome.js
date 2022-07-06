@@ -10,7 +10,7 @@ import {
   mdiTimer,
 } from "@mdi/js";
 import Icon from "@mdi/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import { useGetStudentClassesQuery } from "./StudentAPI";
 // import { useGetStudentAttendanceQuery } from "./StudentAPI";
@@ -21,11 +21,19 @@ import Cookie from "../util/Cookie";
 export default function NewStudentHome() {
   const { isSuccess, isLoading, data, isError, error } =
     useGetStudentClassesQuery({
-      token: Cookie.getItem("token").split(".")[0],
+      token: Cookie.getItem("token"),
     });
   // const attendanceQuery = useGetStudentAttendanceQuery({
   //   token: Cookie.getItem("token").split(".")[0],
   // });
+
+  const navigate = useNavigate();
+
+  if (isError && error.status === 401) {
+    Cookie.deleteItem("token");
+    navigate("/auth/login");
+    return;
+  }
 
   const menus = [
     { pathIcon: mdiTimer, text: "Statistic", link: "/student/statistic" },
@@ -34,11 +42,9 @@ export default function NewStudentHome() {
     { pathIcon: mdiSendCircle, text: "Izin", link: "/student/permission" },
   ];
 
-  // if ((isError && error.status === 401) || (isError && error.status === 401)) {
-  //   Cookie.deleteItem("token");
-  //   window.location = "/auth/login";
-  //   return;
-  // }
+  if (isError && error.status === 502) {
+    navigate("/rusakk");
+  }
 
   return (
     <Layout title="Student" role="STUDENT">

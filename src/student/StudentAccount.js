@@ -10,7 +10,7 @@ import { useGetStudentAccountQuery } from "./StudentAPI";
 export default function StudentAccount() {
   const { isLoading, isSuccess, data, isError, error } =
     useGetStudentAccountQuery({
-      token: Cookie.getItem("token").split(".")[0],
+      token: Cookie.getItem("token"),
     });
 
   const navigate = useNavigate();

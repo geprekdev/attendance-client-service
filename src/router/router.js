@@ -1,9 +1,10 @@
 import { Routes, BrowserRouter, Route } from "react-router-dom";
 import Home from "../customPage/HomePage";
-import ClassList from "../classroom";
-import ClassListDetail from "../classroom/ClassListDetail";
+// import ClassList from "../classroom";
+// import ClassListDetail from "../classroom/ClassListDetail";
 import Login from "../auth/Login";
 import ProtectedRouter from "./ProtectedRouter";
+
 import StudentPresence from "../student/StudentPresence";
 import StudentAccount from "../student/StudentAccount";
 import StudentStatistic from "../student/StudentStatistic";
@@ -14,7 +15,11 @@ import StudentNotification from "../student/StudentNotification";
 import StudentPermission from "../student/StudentPermission";
 import StudentPermissionNew from "../student/StudentPermissionNew";
 import StudentActivity from "../student/StudentActivity";
+
 import ErrorPage from "../customPage/ErrorPage";
+
+import TeacherHome from "../teacher/TeacherHome";
+import TeacherSchedule from "../teacher/TeacherSchedule";
 
 export default function router() {
   return (
@@ -37,8 +42,14 @@ export default function router() {
           <Route path="/student/notification" element={<StudentNotification />} />
         </Route>
 
-        <Route path="/instructor/classlists" element={<ClassList />} />
-        <Route path="/instructor/classlists/detail/:grade/:subject" element={<ClassListDetail />} />
+        
+        <Route path="/teacher/" element={<TeacherHome />} />
+        <Route path="/teacher/schedule" element={<TeacherSchedule />} />
+
+        {/* <Route path="/instructor/classlists" element={<ClassList />} />
+        <Route path="/instructor/classlists/detail/:grade/:subject" element={<ClassListDetail />} /> */}
+
+
         <Route path="/auth/login" element={<Login />} />
       </Routes>
     </BrowserRouter>

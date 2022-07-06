@@ -31,7 +31,10 @@ export default function Login() {
       setTimeout(() => {
         navigate("/student/");
       }, 2000);
+      return;
     }
+
+    navigate("/teacher/");
   };
 
   useEffect(() => {

@@ -10,7 +10,7 @@ import {
   mdiClockOutline,
 } from "@mdi/js";
 import { getDay, getFullDate } from "../util/Date";
-import { useGetScheduleClassQuery } from "./StudentAPI";
+import { useGetScheduleClassQuery } from "../student/StudentAPI";
 import Cookie from "../util/Cookie";
 import Skeleton from "../components/Skeleton";
 import { useNavigate } from "react-router-dom";
@@ -39,10 +39,8 @@ export default function StudentSchedule() {
     return;
   }
 
-  console.log(isSuccess && data);
-
   return (
-    <Layout role="STUDENT" title="Student Scheduled">
+    <Layout role="TEACHER" title="Student Scheduled">
       <div className="mx-auto mb-[56px] max-w-[444px] border  px-5 py-3 shadow-lg">
         <div className="flex items-center justify-between rounded-full bg-gradient-to-r from-blue-700 to-[#63c2f0] px-5 py-2 ">
           <h1 className="text-xl text-white">Schedule</h1>
@@ -128,7 +126,7 @@ export default function StudentSchedule() {
                         >
                           <div className="flex items-center justify-between">
                             <h4 className="text-[19px] font-semibold ">
-                              {lsn.subject}
+                              {lsn.classroom}
                             </h4>
                             {lsn.on_going && (
                               <Icon
@@ -155,7 +153,7 @@ export default function StudentSchedule() {
                               </p>
                             </div>
                             <p className="mt-2 font-semibold text-slate-500">
-                              {lsn.teacher.first_name} {lsn.teacher.last_name}
+                              {lsn.subject}
                             </p>
                           </div>
                         </div>

@@ -75,8 +75,12 @@ export default function StudentAccount() {
 
             {isSuccess && (
               <>
-                <h1 className="text-center text-2xl"> Emira Lia</h1>
-                <p className="text-center text-sm text-gray-900">@liaemir</p>
+                <h1 className="text-center text-2xl">
+                  {data.user.first_name} {data.user.last_name}
+                </h1>
+                <p className="text-center text-sm text-gray-900">
+                  @{data.user.username}
+                </p>
               </>
             )}
 
@@ -147,7 +151,7 @@ export default function StudentAccount() {
                   })()} */}
 
                 {isSuccess &&
-                  data?.["Jun 2022"]?.map((presence, idx) => (
+                  data?.["Jul 2022"]?.map((presence, idx) => (
                     <div
                       className="flex w-full items-center border-t border-gray-100 py-4 pl-6 pr-3 text-gray-600 transition duration-150 hover:bg-gray-100 "
                       key={idx}

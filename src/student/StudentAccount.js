@@ -147,7 +147,7 @@ export default function StudentAccount() {
                   })()} */}
 
                 {isSuccess &&
-                  data["Jun 2022"].map((presence, idx) => (
+                  data?.["Jun 2022"]?.map((presence, idx) => (
                     <div
                       className="flex w-full items-center border-t border-gray-100 py-4 pl-6 pr-3 text-gray-600 transition duration-150 hover:bg-gray-100 "
                       key={idx}

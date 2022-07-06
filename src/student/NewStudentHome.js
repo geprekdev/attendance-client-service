@@ -31,7 +31,7 @@ export default function NewStudentHome() {
     { pathIcon: mdiTimer, text: "Statistic", link: "/student/statistic" },
     { pathIcon: mdiNoteText, text: "Presence", link: "/student/presence" },
     { pathIcon: mdiNoteCheck, text: "Activity", link: "/student/activity" },
-    { pathIcon: mdiSendCircle, text: "Izin", link: "/student/izin" },
+    { pathIcon: mdiSendCircle, text: "Izin", link: "/student/permission" },
   ];
 
   // if ((isError && error.status === 401) || (isError && error.status === 401)) {

@@ -1,6 +1,7 @@
-import { mdiAlphaACircle, mdiCheckBold } from "@mdi/js";
+import { mdiAlphaACircle, mdiCheckBold, mdiLogout } from "@mdi/js";
 import Icon from "@mdi/react";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import Skeleton from "../components/Skeleton";
 import Cookie from "../util/Cookie";
@@ -12,21 +13,38 @@ export default function StudentAccount() {
       token: Cookie.getItem("token").split(".")[0],
     });
 
+  const navigate = useNavigate();
+
   if (isError && error.status === 401) {
     Cookie.deleteItem("token");
     window.location = "/auth/login";
     return;
   }
 
+  const handleLogout = () => {
+    const yes = window.confirm("Apakah anda ingin keluar ?");
+    if (yes) {
+      Cookie.deleteItem("token");
+      navigate("/auth/login");
+    }
+  };
+
   return (
     <Layout title="Student Account" role="STUDENT">
       <div className="mx-auto mb-[56px] h-screen max-w-[444px]  border px-5 py-3 pb-24 shadow-lg">
-        <div className="relative mx-auto mt-20 rounded-lg bg-white shadow-2xl shadow-blue-100">
+        <div className="flex items-center justify-between rounded-full bg-gradient-to-r from-blue-700 to-[#63c2f0] px-5 py-2 text-xl text-white">
+          <p>Account</p>
+          <button onClick={handleLogout}>
+            <Icon path={mdiLogout} size="24px" />
+          </button>
+        </div>
+        &nbsp;
+        <div className="relative mx-auto mt-20 rounded-lg bg-white shadow-xl ">
           <div className="flex justify-center">
             <img
               src="https://i.pinimg.com/originals/6d/31/a8/6d31a83bbabc72d7c74491654546fbd0.jpg"
               alt="Logo"
-              className="absolute -top-20 mx-auto h-32 w-32 transform rounded-full border-4 border-white shadow-md transition duration-200 hover:scale-110"
+              className="absolute -top-20 mx-auto h-32 w-32 transform rounded-full border-4 border-white shadow-md transition duration-200 hover:animate-pulse"
             />
           </div>
 

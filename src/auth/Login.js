@@ -2,11 +2,14 @@ import Layout from "../components/Layout";
 import { useEffect, useState } from "react";
 import { useLoginMutation } from "./AuthAPI";
 import Cookie from "../util/Cookie";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
+
+  const navigate = useNavigate();
 
   const [triggerLogin] = useLoginMutation();
 
@@ -18,12 +21,10 @@ export default function Login() {
     const res = await triggerLogin({ username, password });
     setData(res.data);
 
-    console.log(res.data);
-
     if (res.data.token) {
-      Cookie.setItem("token", `Token ${data.token}.${role}`);
+      Cookie.setItem("token", `Token ${res.data.token}.${role}`);
 
-      window.location = "/student/";
+      navigate("/student/");
 
       // Di sini di cek return nhya
       // navigasi berdasarkan role
@@ -46,7 +47,7 @@ export default function Login() {
       // } else {
       // }
 
-      window.location = "/student/";
+      navigate("/student/");
     }
   }, []);
 
@@ -116,7 +117,7 @@ export default function Login() {
                 type="text"
                 name="rj;"
                 required
-                className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm invalid:animate-pulse   invalid:border-2 invalid:border-red-400 focus:border-red-300 focus:outline-none focus:ring focus:ring-red-200 focus:ring-opacity-50 disabled:bg-gray-100"
+                className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm invalid:animate-pulse   invalid:border invalid:border-red-400 focus:border-indigo-500 focus:outline-none focus:ring focus:ring-red-200 focus:ring-opacity-50 disabled:bg-gray-100"
                 value={username}
                 onChange={e => setUsername(e.target.value)}
               />
@@ -130,7 +131,7 @@ export default function Login() {
                 type="password"
                 name="password"
                 required
-                className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm invalid:animate-pulse invalid:border-2 invalid:border-red-400  focus:border-red-300 focus:outline-none focus:ring focus:ring-red-200 focus:ring-opacity-50 disabled:bg-gray-100"
+                className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm invalid:animate-pulse invalid:border invalid:border-red-400  focus:border-indigo-500 focus:outline-none focus:ring focus:ring-red-200 focus:ring-opacity-50 disabled:bg-gray-100"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
               />
@@ -164,7 +165,7 @@ export default function Login() {
                 <input
                   id="remember_me"
                   type="checkbox"
-                  className="border border-gray-300 text-red-600 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50"
+                  className="border border-gray-300 text-red-600 shadow-sm focus:border-indigo-500 focus:ring focus:ring-red-200 focus:ring-opacity-50"
                 />
                 <label
                   htmlFor="remember_me"

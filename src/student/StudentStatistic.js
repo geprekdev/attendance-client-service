@@ -4,12 +4,14 @@ import { useGetStudentStatisticMutation } from "./StudentAPI";
 import isEmpty from "../util/EmptyObj";
 import Layout from "../components/Layout";
 import Cookie from "../util/Cookie";
+import { Link } from "react-router-dom";
+import Icon from "@mdi/react";
+import { mdiChevronLeft } from "@mdi/js";
 
 export default function StudentStatistic() {
   const myRef = useRef(null);
   const [data, setData] = useState({});
   const [triggerStudentStatistic] = useGetStudentStatisticMutation();
-  console.log(data);
   function instanceProgressBar() {
     return new ProgressBar.Circle(myRef.current, {
       color: "#aaa",
@@ -49,6 +51,7 @@ export default function StudentStatistic() {
         }).unwrap();
 
         console.log(res);
+
         bar.animate(res.presence);
 
         setData({ ...res });
@@ -81,9 +84,15 @@ export default function StudentStatistic() {
   return (
     <Layout title="Student Statistic" role="STUDENT">
       <div className="mx-auto mb-[56px] h-screen max-w-[444px]  border px-5 py-3 pb-24 shadow-lg">
+        <div className="-m-5 h-[50px] max-w-[150%] bg-[#6A64F1] pt-3 pl-3">
+          <Link to="/student/">
+            <Icon path={mdiChevronLeft} size="1.9em" color="white" />
+          </Link>
+        </div>
+
         <div
           ref={myRef}
-          className="relative m-5 mx-auto max-h-[270px]  max-w-[270px]"
+          className="relative m-5 mx-auto mt-12 max-h-[270px] max-w-[270px]"
         ></div>
 
         <div className="relative mt-14  w-full rounded-xl bg-white p-10 shadow-xl">

@@ -6,8 +6,7 @@
 // import { userLogin } from "../auth/AuthSlice";
 // import Cookie from "../util/Cookie";
 
-import { Outlet } from "react-router-dom";
-import Login from "../auth/Login";
+import { Navigate, Outlet } from "react-router-dom";
 import Cookie from "../util/Cookie";
 
 // export default function ProtectedRouter() {
@@ -51,5 +50,5 @@ import Cookie from "../util/Cookie";
 // }
 
 export default function ProtectedRoute() {
-  return Cookie.getItem("token") ? <Outlet /> : <Login />;
+  return Cookie.getItem("token") ? <Outlet /> : <Navigate to="/auth/login" />;
 }

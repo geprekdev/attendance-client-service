@@ -31,7 +31,7 @@ export default function NewNav({ role }) {
   return (
     <>
       {role === "STUDENT" && (
-        <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-[440px] bg-white ">
+        <div className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-[440px] bg-white">
           <hr />
 
           <div className="flex justify-evenly p-5">
@@ -53,7 +53,7 @@ export default function NewNav({ role }) {
             ))}
           </div>
 
-          <div className="fixed bottom-[60px] left-0 right-0 mx-auto max-w-[440px] ">
+          <div className="fixed bottom-[60px] left-0 right-0 mx-auto max-w-[440px]">
             <div className="flex  justify-center">
               <Link to="/student/attendance">
                 <Icon

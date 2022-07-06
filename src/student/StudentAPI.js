@@ -12,6 +12,7 @@ export const studentAPI = createApi({
         url: "/v1/student/",
       }),
     }),
+
     getStudentPresence: builder.query({
       query: user => ({
         headers: {
@@ -29,6 +30,7 @@ export const studentAPI = createApi({
         url: `/v1/student/submit/?geo=${user.latitude},${user.longitude}`,
       }),
     }),
+
     getStudentStatistic: builder.mutation({
       query: user => ({
         headers: {
@@ -37,6 +39,7 @@ export const studentAPI = createApi({
         url: "/v1/student/statistic/",
       }),
     }),
+
     getStudentAccount: builder.query({
       query: user => ({
         headers: {
@@ -45,6 +48,16 @@ export const studentAPI = createApi({
         url: "/v1/student/history/",
       }),
     }),
+
+    getStudentActivity: builder.query({
+      query: user => ({
+        headers: {
+          Authorization: user.token,
+        },
+        url: "/v1/student/history/",
+      }),
+    }),
+
     getStudentAttendance: builder.query({
       query: user => ({
         headers: {
@@ -53,6 +66,7 @@ export const studentAPI = createApi({
         url: `/v1/attendance?geo=${user.latitude},${user.longitude}`,
       }),
     }),
+
     postStudentAttendance: builder.mutation({
       query: user => ({
         headers: {
@@ -62,6 +76,7 @@ export const studentAPI = createApi({
         url: "/v1/attendance/",
       }),
     }),
+
     postPresenceClass: builder.mutation({
       query: user => ({
         headers: {
@@ -72,6 +87,7 @@ export const studentAPI = createApi({
         url: "/v1/student/submit/",
       }),
     }),
+
     getScheduleClass: builder.query({
       query: user => ({
         headers: {
@@ -93,4 +109,5 @@ export const {
   useGetStudentAttendanceQuery,
   usePostStudentAttendanceMutation,
   useGetScheduleClassQuery,
+  useGetStudentActivityQuery,
 } = studentAPI;

@@ -10,20 +10,23 @@ import {
   mdiClockOutline,
 } from "@mdi/js";
 import { getDay, getFullDate } from "../util/Date";
-import { useGetScheduleClassQuery } from "../student/StudentAPI";
 import Cookie from "../util/Cookie";
 import Skeleton from "../components/Skeleton";
 import { useNavigate } from "react-router-dom";
+import { useGetTeacherScheduleClassQuery } from "./TeacherAPI";
 
 export default function StudentSchedule() {
   const [dateCalendar, setDateCalendar] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
   const { isSuccess, isLoading, data, isError, error } =
-    useGetScheduleClassQuery(
+    useGetTeacherScheduleClassQuery(
       { token: Cookie.getItem("token") },
       { refetchOnReconnect: true }
     );
+
+  // console.log(data);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,10 +42,12 @@ export default function StudentSchedule() {
     return;
   }
 
+  console.log(data);
+
   return (
     <Layout role="TEACHER" title="Student Scheduled">
       <div className="mx-auto mb-[56px] max-w-[444px] border  px-5 py-3 shadow-lg">
-        <div className="flex items-center justify-between rounded-full bg-gradient-to-r from-blue-700 to-[#63c2f0] px-5 py-2 ">
+        <div className="flex items-center justify-between rounded-full bg-gradient-to-r from-red-700 to-[#f48282] px-5 py-2 ">
           <h1 className="text-xl text-white">Schedule</h1>
           {showCalendar && (
             <div className="fixed top-4 z-20 w-[280px] sm:w-[500px] xs:w-[490px]">
@@ -93,7 +98,10 @@ export default function StudentSchedule() {
 
           {(() => {
             if (isSuccess) {
-              const lesson = data[dateCalendar.toLocaleDateString()];
+              const lesson =
+                data[dateCalendar.toLocaleDateString()] || data["7/7/2022"];
+
+              // console.log(data);
 
               if (lesson) {
                 const l = [...lesson];
@@ -117,8 +125,8 @@ export default function StudentSchedule() {
                         <div
                           className={` ml-auto rounded-r-lg ${
                             lsn.on_going
-                              ? "w-full cursor-pointer border-4 border-y-transparent border-r-transparent border-l-indigo-500 text-gray-900 shadow-lg"
-                              : "w-[65%] border-[3px] border-y-transparent border-l-red-500 border-r-transparent text-slate-400 shadow"
+                              ? "w-full cursor-pointer border-4 border-y-transparent border-r-transparent border-l-red-500 text-gray-900 shadow-lg"
+                              : "w-[65%] border-[3px] border-y-transparent border-l-gray-500 border-r-transparent text-slate-400 shadow"
                           } px-5 py-3`}
                           onClick={() =>
                             lsn.on_going && navigate("/student/presence")

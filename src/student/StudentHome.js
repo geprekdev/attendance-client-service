@@ -48,7 +48,7 @@ export default function NewStudentHome() {
 
   return (
     <Layout title="Student" role="STUDENT">
-      <div className="mx-auto mb-[56px] h-screen max-w-[444px]  border px-5 py-3 pb-24 shadow-lg">
+      <div className="mx-auto  h-screen max-w-[444px]  border px-5 py-3 pb-24 shadow-lg">
         {isLoading && (
           <div className="w-[90px]">
             <Skeleton />

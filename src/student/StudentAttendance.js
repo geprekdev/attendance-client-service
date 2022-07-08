@@ -35,7 +35,7 @@ export default function StudentAttendance() {
 
   const { isSuccess, data, isError, error } = useGetStudentAttendanceQuery(
     {
-      token: Cookie.getItem("token").split("."),
+      token: Cookie.getItem("token"),
       latitude: GeoLoc.latitude,
       longitude: GeoLoc.longitude,
     },

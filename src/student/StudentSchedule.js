@@ -3,12 +3,7 @@ import Layout from "../components/Layout";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import Icon from "@mdi/react";
-import {
-  mdiCalendar,
-  mdiChevronRight,
-  mdiClockAlertOutline,
-  mdiClockOutline,
-} from "@mdi/js";
+import { mdiCalendar, mdiChevronRight, mdiClockOutline } from "@mdi/js";
 import { getDay, getFullDate } from "../util/Date";
 import { useGetScheduleClassQuery } from "./StudentAPI";
 import Cookie from "../util/Cookie";
@@ -43,7 +38,7 @@ export default function StudentSchedule() {
 
   return (
     <Layout role="STUDENT" title="Student Scheduled">
-      <div className="mx-auto mb-[56px] max-w-[444px] border  px-5 py-3 shadow-lg">
+      <div className="mx-auto max-w-[444px] border  px-5 py-3 shadow-lg">
         <div className="flex items-center justify-between rounded-full bg-gradient-to-r from-blue-700 to-[#63c2f0] px-5 py-2 ">
           <h1 className="text-xl text-white">Schedule</h1>
           {showCalendar && (
@@ -63,7 +58,10 @@ export default function StudentSchedule() {
           </button>
         </div>
 
-        <div className="h-screen pt-7" onClick={() => setShowCalendar(false)}>
+        <div
+          className="min-h-screen pt-7"
+          onClick={() => setShowCalendar(false)}
+        >
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">
               {getDay(dateCalendar.getDay())}, {getFullDate(dateCalendar)}
@@ -114,27 +112,27 @@ export default function StudentSchedule() {
                   })
                   .map(lsn => (
                     <div key={lsn.id} className="group relative">
-                      <div className="mt-5 flex gap-10">
+                      <div className="mt-5 flex gap-10 group-last:pb-[130px]">
                         <p>{lsn.start_time}</p>
                         <div
                           className={` ml-auto rounded-r-lg ${
                             lsn.on_going
                               ? "w-full cursor-pointer border-4 border-y-transparent border-r-transparent border-l-indigo-500 text-gray-900 shadow-lg"
-                              : "w-[65%] border-[3px] border-y-transparent border-l-red-500 border-r-transparent text-slate-400 shadow"
+                              : "w-[65%] border-[3px] border-y-transparent border-l-red-300 border-r-transparent text-slate-400 shadow"
                           } px-5 py-3`}
                           onClick={() =>
                             lsn.on_going && navigate("/student/presence")
                           }
                         >
                           <div className="flex items-center justify-between">
-                            <h4 className="text-[19px] font-semibold ">
+                            <h4 className="font-semibold xs:text-lg">
                               {lsn.subject}
                             </h4>
                             {lsn.on_going && (
                               <Icon
                                 path={mdiChevronRight}
                                 size="24px"
-                                className="text-gray-400"
+                                className="hidden text-gray-400 xs:block"
                               />
                             )}
                           </div>
@@ -142,19 +140,12 @@ export default function StudentSchedule() {
                             className={`${lsn.on_going && "text-slate-700"} `}
                           >
                             <div className="flex items-center gap-1">
-                              <Icon
-                                path={
-                                  lsn.on_going
-                                    ? mdiClockAlertOutline
-                                    : mdiClockOutline
-                                }
-                                size="16px"
-                              />
-                              <p>
+                              <Icon path={mdiClockOutline} size="16px" />
+                              <p className="text-sm xs:text-base">
                                 {lsn.start_time} - {lsn.end_time}
                               </p>
                             </div>
-                            <p className="mt-2 font-semibold text-slate-500">
+                            <p className="mt-2 text-sm font-semibold text-slate-500 xs:text-base">
                               {lsn.teacher.first_name} {lsn.teacher.last_name}
                             </p>
                           </div>

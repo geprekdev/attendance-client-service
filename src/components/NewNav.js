@@ -62,8 +62,7 @@ export default function NewNav({ role }) {
                   isActive
                     ? "text-indigo-600 after:absolute  after:bottom-3 after:h-1 after:w-1 after:rounded-full after:bg-indigo-600 after:content-['']"
                     : "text-indigo-400"
-                }
-               `}
+                }`}
                 key={stMenu.text}
               >
                 <Icon path={stMenu.pathIcon} size="23px" />
@@ -73,7 +72,7 @@ export default function NewNav({ role }) {
           </div>
 
           <div className="fixed bottom-[60px] left-0 right-0 mx-auto max-w-[440px]">
-            <div className="flex  justify-center">
+            <div className="flex justify-center">
               <Link to="/student/attendance">
                 <Icon
                   path={mdiLocationEnter}
@@ -99,26 +98,13 @@ export default function NewNav({ role }) {
                   isActive
                     ? "text-indigo-600 after:absolute  after:bottom-3 after:h-1 after:w-1 after:rounded-full after:bg-indigo-600 after:content-['']"
                     : "text-indigo-400"
-                }
-               `}
+                }`}
                 key={stMenu.text}
               >
                 <Icon path={stMenu.pathIcon} size="23px" />
                 <p className="mt-2 text-xs">{stMenu.text}</p>
               </NavLink>
             ))}
-          </div>
-
-          <div className="fixed bottom-[60px] left-0 right-0 mx-auto max-w-[440px]">
-            <div className="flex  justify-center">
-              <Link to="/student/attendance">
-                <Icon
-                  path={mdiLocationEnter}
-                  size="65px"
-                  className="cursor-pointer rounded-full border-4 border-white bg-blue-500 p-3 text-white shadow-xl"
-                />
-              </Link>
-            </div>
           </div>
         </div>
       )}

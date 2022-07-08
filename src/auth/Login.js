@@ -11,15 +11,17 @@ export default function Login() {
   const navigate = useNavigate();
 
   const [triggerLogin] = useLoginMutation();
-
   const [data, setData] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async e => {
     e.preventDefault();
 
+    setLoading(true);
     const res = await triggerLogin({ username, password });
     if (res.error) {
       setData(res.error);
+      setLoading(false);
       return;
     }
 
@@ -27,14 +29,15 @@ export default function Login() {
 
     setData(res.data);
 
-    if (res.data.role === "student") {
-      setTimeout(() => {
+    setLoading(false);
+    setTimeout(() => {
+      if (res.data.role === "student") {
         navigate("/student/");
-      }, 2000);
-      return;
-    }
 
-    navigate("/teacher/");
+        return;
+      }
+      navigate("/teacher/");
+    }, 2000);
   };
 
   useEffect(() => {
@@ -148,7 +151,12 @@ export default function Login() {
             </div> */}
 
             <div className="mt-6">
-              <button className="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 font-semibold capitalize text-white transition hover:bg-blue-700 focus:border-blue-700 focus:outline-none focus:ring focus:ring-blue-200 active:bg-blue-700 disabled:opacity-25">
+              <button
+                className={`inline-flex w-full items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 font-semibold capitalize text-white transition hover:bg-blue-700  focus:outline-none focus:ring focus:ring-blue-200 ${
+                  loading &&
+                  "cursor-not-allowed  focus:border-gray-700 focus:bg-gray-500 disabled:opacity-25"
+                }`}
+              >
                 Sign In
               </button>
             </div>

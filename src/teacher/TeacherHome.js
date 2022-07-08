@@ -1,185 +1,244 @@
-import {
-  mdiAlarm,
-  mdiBookVariant,
-  mdiCalendarRange,
-  mdiLocationEnter,
-  mdiLocationExit,
-  mdiNoteCheck,
-  mdiNoteText,
-  mdiSendCircle,
-  mdiTimer,
-} from "@mdi/js";
+import { mdiChevronRight, mdiMapMarker } from "@mdi/js";
 import Icon from "@mdi/react";
-import { Link, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
-import { useGetStudentClassesQuery } from "../student/StudentAPI";
-// import { useGetStudentAttendanceQuery } from "./StudentAPI";
-import Skeleton from "../components/Skeleton";
-import { getFullDate } from "../util/Date";
+import {
+  useGetTeacherDashboardQuery,
+  usePostTeacherDashboardMutation,
+} from "./TeacherAPI";
 import Cookie from "../util/Cookie";
+import Skeleton from "../components/Skeleton";
+import { useNavigate } from "react-router-dom";
+import { getDay, getFullDate } from "../util/Date";
+import { useState } from "react";
+import { usePostStudentAttendanceMutation } from "../student/StudentAPI";
 
 export default function NewStudentHome() {
-  const { isSuccess, isLoading, data, isError, error } =
-    useGetStudentClassesQuery({
+  const [GeoLoc, setGeoLoc] = useState({
+    longitude: "",
+    latitude: "",
+  });
+
+  const [GPSActive, setGPSActive] = useState(false);
+  const getTeacherDashboard = useGetTeacherDashboardQuery(
+    {
+      token: Cookie.getItem("token"),
+      latitude: GeoLoc.latitude,
+      longitude: GeoLoc.longitude,
+    },
+    { skip: !GPSActive }
+  );
+  const [data, setData] = useState(false);
+  const [triggerPostStudentAttendance] = usePostStudentAttendanceMutation();
+  const [triggerPostTeacherDashboard] = usePostTeacherDashboardMutation();
+
+  const handleGPS = () => {
+    var options = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0,
+    };
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          setGeoLoc({
+            longitude: parseFloat(position.coords.longitude),
+            latitude: parseFloat(position.coords.latitude),
+          });
+
+          setGPSActive(true);
+        },
+        null,
+        options
+      );
+    } else {
+      alert("Perangkat anda tidak mendukung GPS!");
+    }
+  };
+
+  if (GPSActive === false) {
+    handleGPS();
+  }
+
+  if (getTeacherDashboard.isSuccess && data === false) {
+    setData(getTeacherDashboard.data);
+    console.log("asfasfas", data);
+  }
+
+  const handleSubmitForm = async () => {
+    const data = await triggerPostStudentAttendance({
       token: Cookie.getItem("token"),
     });
-  // const attendanceQuery = useGetStudentAttendanceQuery({
-  //   token: Cookie.getItem("token").split(".")[0],
-  // });
+    const res = await triggerPostTeacherDashboard({
+      token: Cookie.getItem("token"),
+    });
+    console.log(data.data);
+    setData(res?.data);
+  };
 
   const navigate = useNavigate();
 
-  if (isError && error.status === 401) {
+  if (getTeacherDashboard.isError && getTeacherDashboard.error.status === 403) {
     Cookie.deleteItem("token");
     navigate("/auth/login");
-    return;
   }
 
-  const menus = [
-    { pathIcon: mdiTimer, text: "Statistic", link: "/student/statistic" },
-    { pathIcon: mdiNoteText, text: "Presence", link: "/student/presence" },
-    { pathIcon: mdiNoteCheck, text: "Activity", link: "/student/activity" },
-    { pathIcon: mdiSendCircle, text: "Izin", link: "/student/permission" },
-  ];
-
-  if (isError && error.status === 502) {
-    navigate("/rusakk");
-  }
+  const date = new Date();
+  console.log(getTeacherDashboard.isSuccess && data);
 
   return (
-    <Layout title="Student" role="TEACHER">
-      <div className="mx-auto mb-[56px] h-screen max-w-[444px]  border px-5 py-3 pb-24 shadow-lg">
-        {isLoading && (
-          <div className="w-[90px]">
-            <Skeleton />
-          </div>
-        )}
-
-        {isSuccess && (
-          <p className="text-sm font-light text-slate-800 ">{data.greet}</p>
-        )}
-
-        {isLoading && (
-          <div className="w-[250px]">
-            <Skeleton rounded="lg" margin="mt-2" />
-          </div>
-        )}
-
-        {isSuccess && (
-          <p className="text-xl">
-            {`${data.user.first_name} ${data.user.last_name}`}
+    <Layout title="Teacher" role="TEACHER">
+      <div className="mx-auto min-h-screen max-w-[444px] border pb-24 shadow-lg">
+        <div className="h-[70vh] w-full bg-[#c52831] px-5 pt-7">
+          {getTeacherDashboard.isLoading && (
+            <div className="w-[110px]">
+              <Skeleton />
+            </div>
+          )}
+          {!GPSActive && (
+            <div className="w-[110px]">
+              <Skeleton />
+            </div>
+          )}
+          <p className="text-gray-100">
+            {getTeacherDashboard.isSuccess && data?.greet}
           </p>
-        )}
 
-        <div className="mt-5 w-full rounded-lg bg-gradient-to-r from-blue-700 to-[#63c2f0] text-white shadow-lg">
-          <div className="mx-auto flex w-3/4 justify-center gap-5 py-3">
-            {menus.map(menu => (
-              <Link
-                to={menu.link}
-                key={menu.text}
-                className="flex flex-col items-center"
-              >
-                <Icon
-                  path={menu.pathIcon}
-                  size="35px"
-                  className="rounded-full bg-white p-1.5 text-blue-600"
-                />
-                <p className="pt-2 text-sm">{menu.text}</p>
-              </Link>
-            ))}
-          </div>
-        </div>
-        <div className="mt-7 flex items-center gap-3">
-          <Icon path={mdiCalendarRange} size="16px" className="text-blue-500" />
-          <p className="text-sm uppercase">Today - {getFullDate(new Date())}</p>
-        </div>
-        <div className="mt-7 flex flex-col rounded-md bg-white py-5 px-7 shadow-[0_12px_50px_-6px_rgb(0,0,0,0.15)]">
-          <div className="mb-3 flex items-center gap-7">
-            <Icon
-              path={mdiLocationEnter}
-              size="40px"
-              className="rounded-full bg-blue-500 p-2 text-white shadow-lg"
-            />
+          <div className="mt-5 flex justify-between text-white">
             <div>
-              <p>CHECK-IN</p>
-              <div className="mt-1.5 text-sm text-slate-400">
-                <div className="flex items-center gap-1">
-                  Scheduled:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <Icon path={mdiAlarm} size="15px" className="inline" />{" "}
-                  <span className="font-semibold">
-                    {(isSuccess && data.work_time) || "--:--"}
-                  </span>
+              {getTeacherDashboard.isLoading && (
+                <div className="w-[200px]">
+                  <Skeleton />
                 </div>
-                <p>
-                  Checked in at:&nbsp;&nbsp;
-                  {(isSuccess && data.clock_in) || "--:--"}
-                </p>
-              </div>
+              )}
+              {!GPSActive && (
+                <div className="w-[200px]">
+                  <Skeleton />
+                </div>
+              )}
+              <h1 className="text-3xl font-semibold">
+                {getTeacherDashboard.isSuccess && data?.user?.first_name}
+              </h1>
+
+              {getTeacherDashboard.isLoading && (
+                <div className="mt-3 w-[60px]">
+                  <Skeleton />
+                </div>
+              )}
+              {!GPSActive && (
+                <div className="mt-3 w-[60px]">
+                  <Skeleton />
+                </div>
+              )}
+
+              <p>{getTeacherDashboard.isSuccess && "Staff"}</p>
             </div>
-          </div>
-
-          <hr />
-
-          <div className="mt-3 flex items-center gap-7">
-            <Icon
-              path={mdiLocationExit}
-              size="40px"
-              className="rounded-full bg-[#ffd94e] p-2 text-white shadow-lg"
-            />
             <div>
-              <p>CHECK-OUT</p>
-              <div className="mt-1.5 text-sm text-slate-400">
-                <div className="flex items-center gap-1">
-                  Scheduled: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <Icon path={mdiAlarm} size="15px" className="inline" />{" "}
-                  <span className="font-semibold">
-                    {" "}
-                    {(isSuccess && data.home_time) || "--:--"}
-                  </span>
+              <img
+                src="https://i.ytimg.com/vi/VeiwR4PvYwM/maxresdefault.jpg"
+                alt="Xien Lim"
+                className="h-16 w-16 transform rounded-full border-4 border-white shadow-md"
+              />
+            </div>
+          </div>
+
+          <div className="mt-5 w-full rounded-lg bg-white p-4">
+            <div className="flex justify-between">
+              <p className="font-semibold"> Jadwal kerja</p>
+              <p className="text-gray-500">
+                {`${getDay(date.getDay())}, ${getFullDate(date)}`}
+              </p>
+            </div>
+            <div className="mt-4 text-center">
+              <h4 className="text-3xl font-bold">
+                {getTeacherDashboard.isSuccess && data?.work_time
+                  ? data?.work_time + " WIB"
+                  : "Off"}
+              </h4>
+              <p className="text-xl text-gray-500">Jam kerja</p>
+            </div>
+
+            <div className="my-4 flex items-center gap-5 border-y py-4">
+              <Icon
+                path={mdiMapMarker}
+                size="40px"
+                className="text-green-600"
+              />
+              <p className="text-sm text-gray-500">
+                {!GPSActive && "Antah Berantah"}
+                {getTeacherDashboard.isLoading && "Antah Berantah . . ."}
+                {getTeacherDashboard.isSuccess && data?.user?.address}
+              </p>
+            </div>
+
+            <div className="flex justify-around">
+              {data?.status_button?.clockIn ? (
+                <button
+                  onClick={handleSubmitForm}
+                  className="rounded bg-blue-600 py-3 px-7 text-white hover:bg-blue-700"
+                >
+                  Clock in
+                </button>
+              ) : (
+                <button className="cursor-not-allowed rounded bg-gray-200 py-3 px-7 text-gray-500">
+                  Clock In
+                </button>
+              )}
+
+              {data?.status_button?.clockOut ? (
+                <button
+                  onClick={handleSubmitForm}
+                  className="rounded bg-blue-600 py-3 px-7 text-white hover:bg-blue-700"
+                >
+                  Clock out
+                </button>
+              ) : (
+                <button className="cursor-not-allowed rounded bg-gray-200 py-3 px-7 text-gray-500">
+                  Clock out
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="-mt-7 rounded-t-3xl bg-white p-5">
+          <div className="flex justify-between">
+            <h4 className="font-semibold">Aktivitas Terkini</h4>
+            <p className="text-blue-700">Log Absensi</p>
+          </div>
+
+          <div className="group mt-2 border-t ">
+            {getTeacherDashboard.isSuccess &&
+              data?.recent_activity?.map((activity, idx) => (
+                <div className="flex justify-between border-b py-2" key={idx}>
+                  <p className="text-gray-500">{activity.time}</p>
+                  <p className="ml-16">{activity.type}</p>
+                  <Icon path={mdiChevronRight} size="24px" />
                 </div>
-                <p>
-                  Checked in at: &nbsp;
-                  {(isSuccess && data.clock_out) || "--:--"}
-                </p>
-              </div>
-            </div>
+              ))}
+
+            {getTeacherDashboard.isLoading && (
+              <>
+                <div className="my-2 py-1">
+                  <Skeleton />
+                </div>
+                <div className="my-2 py-1">
+                  <Skeleton />
+                </div>
+              </>
+            )}
+            {!GPSActive && (
+              <>
+                <div className="my-2 py-1">
+                  <Skeleton />
+                </div>
+                <div className="my-2 py-1">
+                  <Skeleton />
+                </div>
+              </>
+            )}
           </div>
         </div>
-        <div className="mt-7 flex items-center gap-1">
-          <Icon path={mdiBookVariant} size="16px" className=" text-blue-400" />
-          <p className="text-sm uppercase">Jam Mengajar Saat Ini</p>
-        </div>
-
-        {isLoading && (
-          <div className="h-[20%] w-[100%]">
-            <Skeleton rounded="lg" height="100%" margin="mt-3" />
-          </div>
-        )}
-
-        {isSuccess &&
-          (data.currentLecture.subject === null ? (
-            <div className="mt-3 rounded-xl bg-gradient-to-r from-blue-700 to-[#63c2f0] py-2 px-5 font-semibold text-white">
-              Tidak Ada Jadwal Mengajar
-            </div>
-          ) : (
-            <Link to="/student/presence">
-              <div className="mt-2 rounded-lg bg-gradient-to-r from-blue-700 to-[#63c2f0] px-7 py-4 text-white">
-                <h3 className="mb-2 font-bold">
-                  {isSuccess && data?.currentLecture.subject}
-                </h3>
-                <p>
-                  {isSuccess &&
-                    `${data?.currentLecture.time.start_time} - ${data?.currentLecture.time.end_time}`}{" "}
-                  {""}
-                  WIB
-                </p>
-                <p className="mt-5 text-right text-sm">
-                  {isSuccess &&
-                    `${data?.currentLecture.teacher.first_name} ${data?.currentLecture.teacher.last_name}`}
-                </p>
-              </div>
-            </Link>
-          ))}
       </div>
     </Layout>
   );

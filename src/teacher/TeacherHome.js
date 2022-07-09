@@ -71,6 +71,8 @@ export default function NewStudentHome() {
     });
     const res = await triggerPostTeacherDashboard({
       token: Cookie.getItem("token"),
+    latitude: GeoLoc.latitude,
+      longitude: GeoLoc.longitude,
     });
     console.log(data.data);
     setData(res?.data);
@@ -89,6 +91,8 @@ export default function NewStudentHome() {
   return (
     <Layout title="Teacher" role="TEACHER">
       <div className="mx-auto min-h-screen max-w-[444px] border pb-24 shadow-lg">
+      
+      
         <div className="h-[70vh] w-full bg-[#c52831] px-5 pt-7">
           {getTeacherDashboard.isLoading && (
             <div className="w-[110px]">
@@ -131,7 +135,7 @@ export default function NewStudentHome() {
                 </div>
               )}
 
-              <p>{getTeacherDashboard.isSuccess && "Staff"}</p>
+              <p>{getTeacherDashboard.isSuccess && ""}</p>
             </div>
             <div>
               <img
@@ -152,7 +156,7 @@ export default function NewStudentHome() {
             <div className="mt-4 text-center">
               <h4 className="text-3xl font-bold">
                 {getTeacherDashboard.isSuccess && data?.work_time
-                  ? data?.work_time + " WIB"
+                  ? data?.work_time + " - " + data?.home_time + " WIB"
                   : "Off"}
               </h4>
               <p className="text-xl text-gray-500">Jam kerja</p>

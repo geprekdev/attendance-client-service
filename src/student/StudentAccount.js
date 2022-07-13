@@ -1,6 +1,6 @@
 import { mdiAlphaACircle, mdiCheckBold, mdiLogout } from "@mdi/js";
 import Icon from "@mdi/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import Skeleton from "../components/Skeleton";
@@ -15,12 +15,6 @@ export default function StudentAccount() {
 
   const navigate = useNavigate();
 
-  if (isError && error.status === 401) {
-    Cookie.deleteItem("token");
-    window.location = "/auth/login";
-    return;
-  }
-
   const handleLogout = () => {
     const yes = window.confirm("Apakah anda ingin keluar ?");
     if (yes) {
@@ -28,6 +22,26 @@ export default function StudentAccount() {
       navigate("/auth/login");
     }
   };
+
+  useEffect(() => {
+    // Unauthorize
+    if (isError && error.status === 401) {
+      Cookie.deleteItem("token");
+      window.location = "/auth/login";
+      return;
+    }
+
+    // Role permission
+    if (isError && error.status === 403) {
+      navigate("/teacher/");
+      return;
+    }
+
+    // Server Error
+    if (isError && error.status === 502) {
+      navigate("/rusakk");
+    }
+  }, [isError]);
 
   return (
     <Layout title="Student Account" role="STUDENT">

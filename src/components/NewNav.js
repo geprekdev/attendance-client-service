@@ -1,8 +1,9 @@
 import {
   mdiAccountCircleOutline,
   mdiBellOutline,
+  mdiBookOutline,
   mdiCalendarOutline,
-  mdiHome,
+  mdiHomeOutline,
   mdiLocationEnter,
 } from "@mdi/js";
 import Icon from "@mdi/react";
@@ -10,7 +11,7 @@ import { Link, NavLink } from "react-router-dom";
 
 export default function NewNav({ role }) {
   const studentMenu = [
-    { pathIcon: mdiHome, text: "Home", link: "/student/" },
+    { pathIcon: mdiHomeOutline, text: "Home", link: "/student/" },
     {
       pathIcon: mdiCalendarOutline,
       text: "Schedule",
@@ -29,16 +30,16 @@ export default function NewNav({ role }) {
   ];
 
   const teacherMenu = [
-    { pathIcon: mdiHome, text: "Home", link: "/teacher/" },
+    { pathIcon: mdiHomeOutline, text: "Home", link: "/teacher/" },
     {
       pathIcon: mdiCalendarOutline,
       text: "Schedule",
       link: "/teacher/schedule",
     },
     {
-      pathIcon: mdiBellOutline,
-      text: "Notification",
-      link: "/teacher/notification",
+      pathIcon: mdiBookOutline,
+      text: "Classroom",
+      link: "/teacher/class",
     },
     {
       pathIcon: mdiAccountCircleOutline,
@@ -61,7 +62,7 @@ export default function NewNav({ role }) {
                 text-indigo-400 hover:text-indigo-500 ${
                   isActive
                     ? "text-indigo-600 after:absolute  after:bottom-3 after:h-1 after:w-1 after:rounded-full after:bg-indigo-600 after:content-['']"
-                    : "text-indigo-400"
+                    : "text-gray-400"
                 }`}
                 key={stMenu.text}
               >
@@ -93,12 +94,13 @@ export default function NewNav({ role }) {
             {teacherMenu.map(stMenu => (
               <NavLink
                 to={stMenu.link}
-                className={({ isActive }) => `group flex flex-col items-center
-                text-indigo-400 hover:text-indigo-500 ${
-                  isActive
-                    ? "text-indigo-600 after:absolute  after:bottom-3 after:h-1 after:w-1 after:rounded-full after:bg-indigo-600 after:content-['']"
-                    : "text-indigo-400"
-                }`}
+                className={({ isActive }) =>
+                  `group flex flex-col items-center hover:text-red-500 ${
+                    isActive
+                      ? "text-red-600 after:absolute after:bottom-3 after:h-1 after:w-1 after:rounded-full after:bg-red-400 after:content-['']"
+                      : "text-gray-400"
+                  }`
+                }
                 key={stMenu.text}
               >
                 <Icon path={stMenu.pathIcon} size="23px" />

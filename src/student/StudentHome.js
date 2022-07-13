@@ -17,8 +17,9 @@ import { useGetStudentClassesQuery } from "./StudentAPI";
 import Skeleton from "../components/Skeleton";
 import { getFullDate } from "../util/Date";
 import Cookie from "../util/Cookie";
+import { useEffect } from "react";
 
-export default function NewStudentHome() {
+export default function StudentHome() {
   const { isSuccess, isLoading, data, isError, error } =
     useGetStudentClassesQuery({
       token: Cookie.getItem("token"),
@@ -29,11 +30,25 @@ export default function NewStudentHome() {
 
   const navigate = useNavigate();
 
-  if (isError && error.status === 401) {
-    Cookie.deleteItem("token");
-    navigate("/auth/login");
-    return;
-  }
+  useEffect(() => {
+    // Unauthorize
+    if (isError && error.status === 401) {
+      Cookie.deleteItem("token");
+      window.location = "/auth/login";
+      return;
+    }
+
+    // Role permission
+    if (isError && error.status === 403) {
+      navigate("/teacher/");
+      return;
+    }
+
+    // Server Error
+    if (isError && error.status === 502) {
+      navigate("/rusakk");
+    }
+  }, [isError]);
 
   const menus = [
     { pathIcon: mdiTimer, text: "Statistic", link: "/student/statistic" },
@@ -41,10 +56,6 @@ export default function NewStudentHome() {
     { pathIcon: mdiNoteCheck, text: "Activity", link: "/student/activity" },
     { pathIcon: mdiSendCircle, text: "Izin", link: "/student/permission" },
   ];
-
-  if (isError && error.status === 502) {
-    navigate("/rusakk");
-  }
 
   return (
     <Layout title="Student" role="STUDENT">

@@ -51,15 +51,24 @@ export default function StudentStatistic() {
         token: Cookie.getItem("token"),
       });
 
+      console.log(res);
+
+      // Unauthorize
+      if (res?.error?.status === 401) {
+        Cookie.deleteItem("token");
+        window.location = "/auth/login";
+        return;
+      }
+
+      // Role permission
+      if (res?.error?.status === 403) {
+        navigate("/teacher/");
+        return;
+      }
+
       bar.animate(res.data.presence);
 
       setData({ ...res });
-
-      if (res.error.status === 401) {
-        Cookie.deleteItem("token");
-        navigate("/auth/login");
-        return;
-      }
     }
 
     bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';

@@ -36,19 +36,24 @@ export default function StudentSchedule() {
     return () => clearInterval(time);
   }, []);
 
+  // Unauthorize
   if (isError && error.status === 401) {
     Cookie.deleteItem("token");
-    navigate("/auth/login");
+    window.location = "/auth/login";
     return;
   }
 
-  console.log(data);
+  // Role permission
+  if (isError && error.status === 403) {
+    navigate("/teacher/");
+    return;
+  }
 
   return (
     <Layout role="TEACHER" title="Student Scheduled">
       <div className="mx-auto mb-[56px] max-w-[444px] border  px-5 py-3 shadow-lg">
         <div className="flex items-center justify-between rounded-full bg-gradient-to-r from-red-700 to-[#f48282] px-5 py-2 ">
-          <h1 className="text-xl text-white">Schedule</h1>
+          <h1 className="text-xl font-bold text-white">Schedule</h1>
           {showCalendar && (
             <div className="fixed top-4 z-20 w-[280px] sm:w-[500px] xs:w-[490px]">
               <Calendar
@@ -172,7 +177,7 @@ export default function StudentSchedule() {
               }
 
               return (
-                <div className="mx-auto mt-5 text-center text-xl font-semibold text-blue-500">
+                <div className="mx-auto mt-5 text-center text-xl font-semibold text-red-600">
                   <p>Tidak Ada Kelas</p>
                 </div>
               );

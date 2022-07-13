@@ -1,6 +1,6 @@
 import { mdiAlphaACircle, mdiCheckBold, mdiChevronLeft } from "@mdi/js";
 import Icon from "@mdi/react";
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import Skeleton from "../components/Skeleton";
@@ -15,12 +15,25 @@ export default function StudentActivity() {
 
   const navigate = useNavigate();
 
-  if (isError && error.status === 401) {
-    Cookie.deleteItem("token");
-    navigate("/auth/login");
-    return;
-  }
+  useEffect(() => {
+    // Unauthorize
+    if (isError && error.status === 401) {
+      Cookie.deleteItem("token");
+      window.location = "/auth/login";
+      return;
+    }
 
+    // Role permission
+    if (isError && error.status === 403) {
+      navigate("/teacher/");
+      return;
+    }
+
+    // Server Error
+    if (isError && error.status === 502) {
+      navigate("/rusakk");
+    }
+  }, [isError]);
   return (
     <Layout title="Activity" role="STUDENT">
       <div

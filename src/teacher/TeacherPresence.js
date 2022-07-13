@@ -32,29 +32,6 @@ export default function TeacherPresence() {
           </div>
 
           <div className="shadow-xl">
-            {/* <table>
-              <tbody>
-                <tr className="flex w-full items-center justify-between border-t border-gray-100 py-4 pl-6 pr-3 text-gray-600 transition duration-150 hover:bg-gray-100 ">
-                  {data.map((student, idx) => (
-                    <td>
-                      <span>{idx}</span>
-                      <p>{student.name}</p>
-                      <p className={`text-xs text-gray-500`}>24-06-2022</p>
-                      <Icon
-                        size="19px"
-                        className={`mx-1  ${
-                          student.icon === mdiAlphaABox
-                            ? "rounded-full text-red-600"
-                            : "text-green-600"
-                        }`}
-                        path={student.icon}
-                      />
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
-            </table> */}
-
             {data.map((student, idx) => (
               <div className="flex w-full items-center justify-between border-t border-gray-100 py-4 pl-6 pr-3 text-gray-600 transition duration-150 hover:bg-gray-100 ">
                 <span>{idx}</span>

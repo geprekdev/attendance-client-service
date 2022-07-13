@@ -28,13 +28,23 @@ export default function StudentSchedule() {
     return () => clearInterval(time);
   }, []);
 
+  // Unauthorize
   if (isError && error.status === 401) {
     Cookie.deleteItem("token");
-    navigate("/auth/login");
+    window.location = "/auth/login";
     return;
   }
 
-  console.log(isSuccess && data);
+  // Role permission
+  if (isError && error.status === 403) {
+    navigate("/teacher/");
+    return;
+  }
+
+  // Server Error
+  if (isError && error.status === 502) {
+    navigate("/rusakk");
+  }
 
   return (
     <Layout role="STUDENT" title="Student Scheduled">

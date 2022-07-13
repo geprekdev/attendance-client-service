@@ -23,3 +23,9 @@ export const getFullDate = date =>
     ${month[date.getMonth()]} 
     ${date.getFullYear()}
   `;
+
+export const getMonthYear = date =>
+  `
+    ${month[date.getMonth()]} 
+    ${date.getFullYear()}
+  `;

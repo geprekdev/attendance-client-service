@@ -1,5 +1,5 @@
 import Layout from "../components/Layout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import { Icon } from "@mdi/react";
 import L from "leaflet";
@@ -44,11 +44,25 @@ export default function StudentAttendance() {
 
   const navigate = useNavigate();
 
-  if (isError && error.status === 401) {
-    Cookie.deleteItem("token");
-    navigate("/auth/login");
-    return;
-  }
+  useEffect(() => {
+    // Unauthorize
+    if (isError && error.status === 401) {
+      Cookie.deleteItem("token");
+      window.location = "/auth/login";
+      return;
+    }
+
+    // Role permission
+    if (isError && error.status === 403) {
+      navigate("/teacher/");
+      return;
+    }
+
+    // Server Error
+    if (isError && error.status === 502) {
+      navigate("/rusakk");
+    }
+  }, [isError]);
 
   if (isSuccess && clock === false) {
     setClock({

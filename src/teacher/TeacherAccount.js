@@ -42,7 +42,7 @@ export default function TeacherAccount() {
         </div>
         <div className="-mb-[30px] mt-[25px] flex justify-center">
           <img
-            src="https://i.pinimg.com/originals/6d/31/a8/6d31a83bbabc72d7c74491654546fbd0.jpg"
+            src="http://bprpedungan.com/wp-content/uploads/2017/08/Person-placeholder-300x300.jpg"
             alt="Logo"
             className=" mx-auto h-32 w-32 transform rounded-full border-4 border-white shadow-md transition duration-200 hover:animate-pulse"
           />

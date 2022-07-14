@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import Cookie from "../util/Cookie";
 import {
   useGetTeacherJournalAddNewQuery,
@@ -7,9 +7,10 @@ import {
 } from "./TeacherAPI";
 
 export default function TeacherClassJournalAddNew() {
-  const { data, isSuccess, isLoading } = useGetTeacherJournalAddNewQuery({
-    token: Cookie.getItem("token"),
-  });
+  const { data, isSuccess, isLoading, isError, error } =
+    useGetTeacherJournalAddNewQuery({
+      token: Cookie.getItem("token"),
+    });
 
   const { id } = useParams();
 
@@ -33,39 +34,45 @@ export default function TeacherClassJournalAddNew() {
 
   return (
     <div className="mt-3">
-      <h1 className="text-right text-xl font-semibold">Jurnal Mengajar</h1>
+      {isSuccess && data === null ? (
+        <Navigate to={`/teacher/class/${id}/journal`} state={{ err: true }} />
+      ) : (
+        <>
+          <h1 className="text-right text-xl font-semibold">Jurnal Mengajar</h1>
 
-      <div className="mt-3">
-        <form onSubmit={handleSubmit}>
-          <h3 className="font-semibold">Kelas</h3>
-          <div className="mt-2 rounded-lg bg-gray-100 px-5 py-2">
-            {isSuccess && data.grade}
+          <div className="mt-3">
+            <form onSubmit={handleSubmit}>
+              <h3 className="font-semibold">Kelas</h3>
+              <div className="mt-2 rounded-lg bg-gray-100 px-5 py-2">
+                {isSuccess && data.grade}
+              </div>
+
+              <div className="mt-5">
+                <h3 className="font-semibold">Mata Pelajaran</h3>
+                <div className="mt-2 rounded-lg bg-gray-100 px-5 py-2">
+                  {isSuccess && data.subject}
+                </div>
+              </div>
+
+              <div className="mt-5">
+                <h3 className="font-semibold">Kegiatan</h3>
+                <textarea
+                  onChange={e => setDescription(e.target.value)}
+                  value={description}
+                  className="mt-2 w-full rounded bg-gray-100 px-5 py-2"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="mb-[50px] mt-5 w-full rounded-lg bg-red-500 px-5 py-2 text-center font-semibold text-white hover:bg-red-600"
+              >
+                Kirim
+              </button>
+            </form>
           </div>
-
-          <div className="mt-5">
-            <h3 className="font-semibold">Mata Pelajaran</h3>
-            <div className="mt-2 rounded-lg bg-gray-100 px-5 py-2">
-              {isSuccess && data.subject}
-            </div>
-          </div>
-
-          <div className="mt-5">
-            <h3 className="font-semibold">Kegiatan</h3>
-            <textarea
-              onChange={e => setDescription(e.target.value)}
-              value={description}
-              className="mt-2 w-full rounded bg-gray-100 px-5 py-2"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="mb-[50px] mt-5 w-full rounded-lg bg-red-500 px-5 py-2 text-center font-semibold text-white hover:bg-red-600"
-          >
-            Kirim
-          </button>
-        </form>
-      </div>
+        </>
+      )}
     </div>
   );
 }

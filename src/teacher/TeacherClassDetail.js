@@ -1,9 +1,16 @@
 import { useEffect } from "react";
-import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
+import {
+  Navigate,
+  NavLink,
+  Outlet,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import Layout from "../components/Layout";
 import Cookie from "../util/Cookie";
 import { useGetTeacherClassDetailQuery } from "./TeacherAPI";
 import Skeleton from "../components/Skeleton";
+import isEmpty from "../util/EmptyObj";
 
 export default function TeacherClass() {
   const { id } = useParams();
@@ -65,7 +72,7 @@ export default function TeacherClass() {
           ))}
         </div>
 
-        <Outlet />
+        {isEmpty(data) ? <Navigate to="/teacher/class/" /> : <Outlet />}
       </div>
     </Layout>
   );

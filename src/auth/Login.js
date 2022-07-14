@@ -28,13 +28,19 @@ export default function Login() {
 
     Cookie.setItem("token", `Token ${res.data.token}`);
 
+    // const role = res.data.role;
+    // if (role === "student") {
+    //   Cookie.setItem("_s", "_st.d");
+    // } else {
+    //   Cookie.setItem("_s", "_tc.h");
+    // }
+
     setData(res.data);
     setLoading(false);
 
     setTimeout(() => {
       if (res.data.role === "student") {
         navigate("/student/");
-
         return;
       }
       navigate("/teacher/");
@@ -43,9 +49,14 @@ export default function Login() {
 
   useEffect(() => {
     const token = Cookie.getItem("token");
+    // const role = Cookie.getItem("_s");
 
     if (token) {
-      navigate("/student/");
+      // if (role === "_st.d") {
+      //   navigate("/student/");
+      // } else {
+      // }
+      navigate("/teacher");
     }
   }, []);
 

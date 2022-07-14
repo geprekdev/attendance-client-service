@@ -5,6 +5,7 @@ import "react-calendar/dist/Calendar.css";
 import Icon from "@mdi/react";
 import {
   mdiCalendar,
+  mdiCalendarClock,
   mdiChevronRight,
   mdiClockAlertOutline,
   mdiClockOutline,
@@ -67,7 +68,7 @@ export default function StudentSchedule() {
           )}
 
           <button onClick={() => setShowCalendar(true)}>
-            <Icon path={mdiCalendar} size="24px" className="text-white" />
+            <Icon path={mdiCalendarClock} size="24px" className=" text-white" />
           </button>
         </div>
 

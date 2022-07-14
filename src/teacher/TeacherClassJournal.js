@@ -1,38 +1,67 @@
-import { mdiPlus } from "@mdi/js";
+import { mdiInformationOutline, mdiPlus } from "@mdi/js";
 import Icon from "@mdi/react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useGetTeacherJournalQuery } from "./TeacherAPI";
 import Cookie from "../util/Cookie";
+import Skeleton from "../components/Skeleton";
+import { useState } from "react";
 
 export default function TeacherJournal() {
   const { id } = useParams();
-
+  const { state } = useLocation();
+  const [alert, setAlert] = useState(false);
   const { data, isSuccess, isLoading } = useGetTeacherJournalQuery(
     {
       token: Cookie.getItem("token"),
       id,
     },
-    {
-      refetchOnFocus: true,
-    }
+    { refetchOnFocus: true }
   );
-
-  console.log(isSuccess && data);
 
   return (
     <div className=" mt-4">
+      {state?.err && (
+        <div
+          className={`${
+            alert ? "hidden" : "flex"
+          } justify-between rounded bg-yellow-600 p-3 text-yellow-200 shadow-inner`}
+          onClick={() => setAlert(true)}
+        >
+          <p className="flex items-center self-center">
+            <strong>
+              <Icon className="mr-2" path={mdiInformationOutline} size="20px" />
+            </strong>
+            Tidak ada jurnal yang harus di isi hari ini
+          </p>
+          <strong className="align-center alert-del cursor-pointer text-xl">
+            &times;
+          </strong>
+        </div>
+      )}
+
       {isSuccess && data.length === 0 ? (
         <p className="mt-5 text-center text-gray-500">Tidak Ada Jurnal</p>
       ) : (
         data?.map(journal => (
           <div
-            className="mx-auto my-5 w-[80%] cursor-default border-4 border-y-transparent border-r-transparent border-l-red-300 px-5 py-2 text-gray-900 shadow hover:border-l-red-500 hover:shadow-md"
+            className="mx-auto my-5 w-[80%]  cursor-default border-4 border-y-transparent border-r-transparent border-l-red-300 px-5 py-2 text-gray-900 shadow hover:border-l-red-500 hover:shadow-md"
             key={journal.description}
           >
             <h3 className="mb-1.5 font-semibold">{journal.description}</h3>
             <p className="text-gray-500">{journal.date}</p>
           </div>
         ))
+      )}
+
+      {isLoading && (
+        <>
+          <div className="mx-auto my-5 h-[50px] w-[80%]">
+            <Skeleton height={"50px"} />
+          </div>
+          <div className="mx-auto h-[50px] w-[80%]">
+            <Skeleton height={"50px"} />
+          </div>
+        </>
       )}
 
       {/* Add new journal */}

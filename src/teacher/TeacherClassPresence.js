@@ -33,7 +33,7 @@ export default function TeacherClassPresence() {
       <div className="relative ml-auto mt-5 w-[50%] ">
         <button
           type="button"
-          className="inline-flex w-full justify-center rounded-md border-gray-300 py-1 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+          className="inline-flex w-full justify-center rounded-md border-b py-1 text-sm font-medium text-gray-700 hover:bg-gray-50"
           id="menu-button"
           aria-expanded="true"
           aria-haspopup="true"
@@ -72,7 +72,9 @@ export default function TeacherClassPresence() {
                   for (const obj in data.date) {
                     temp.push(
                       <button
-                        className="block px-4 py-2 text-sm text-gray-400 hover:text-gray-700"
+                        className={`block px-4 py-2 text-sm ${
+                          obj === day ? "text-gray-700" : "text-gray-400"
+                        } hover:text-gray-700`}
                         role="menuitem"
                         tabIndex="-1"
                         id="menu-item-0"

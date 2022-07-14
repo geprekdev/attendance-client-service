@@ -24,12 +24,16 @@ export default function TeacherJournal() {
         <div
           className={`${
             alert ? "hidden" : "flex"
-          } justify-between rounded bg-yellow-600 p-3 text-yellow-200 shadow-inner`}
+          } justify-between rounded-lg border-2 border-red-300 p-3 text-red-800  shadow-inner`}
           onClick={() => setAlert(true)}
         >
           <p className="flex items-center self-center">
             <strong>
-              <Icon className="mr-2" path={mdiInformationOutline} size="20px" />
+              <Icon
+                className="mr-2 text-red-500"
+                path={mdiInformationOutline}
+                size="20px"
+              />
             </strong>
             Tidak ada jurnal yang harus di isi hari ini
           </p>

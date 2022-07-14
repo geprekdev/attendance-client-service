@@ -108,6 +108,64 @@ export default function NewStudentHome() {
 
   return (
     <Layout title="Teacher" role="TEACHER">
+      {!GPSActive && (
+        <div
+          className="relative z-10"
+          aria-labelledby="modal-title"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+          <div className="fixed top-[15vh] right-0 left-0  z-10 overflow-y-auto">
+            <div className="flex min-h-full items-end justify-center p-4 text-center">
+              <div className="relative w-[380px] transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all">
+                <div className="bg-white px-4 pt-5 pb-4">
+                  <div className="flex items-center gap-5">
+                    <div className="mx-0 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-red-100  ">
+                      <svg
+                        className="h-6 w-6 text-red-600"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="2"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                        />
+                      </svg>
+                    </div>
+                    <div className="mt-3  sm:mt-0 sm:ml-4 sm:text-left">
+                      <h3
+                        className="text-lg font-medium leading-6 text-gray-900"
+                        id="modal-title"
+                      >
+                        GPS Tidak Aktif
+                      </h3>
+                      <div className="mt-2">
+                        <p className=" text-sm text-gray-500">
+                          Pastikan anda mengkaktifkan GPS untuk melakukan{" "}
+                          <span className="font-semibold text-gray-700">
+                            Clock In{" "}
+                          </span>
+                          dan{" "}
+                          <span className="font-semibold text-gray-700">
+                            Clock Out
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="mx-auto min-h-screen max-w-[444px] border pb-24 shadow-lg">
         <div className="bg-[#c52831]">
           <div className="mb-8 w-full  px-5 pt-7">

@@ -13,7 +13,7 @@ import {
 import { getDay, getFullDate } from "../util/Date";
 import Cookie from "../util/Cookie";
 import Skeleton from "../components/Skeleton";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useGetTeacherScheduleClassQuery } from "./TeacherAPI";
 
 export default function StudentSchedule() {
@@ -40,14 +40,13 @@ export default function StudentSchedule() {
   // Unauthorize
   if (isError && error.status === 401) {
     Cookie.deleteItem("token");
-    window.location = "/auth/login";
-    return;
+    return <Navigate to={"/auth/login"} />;
   }
 
   // Role permission
   if (isError && error.status === 403) {
-    navigate("/teacher/");
-    return;
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
   }
 
   return (
@@ -135,7 +134,7 @@ export default function StudentSchedule() {
                               : "w-[65%] border-[3px] border-y-transparent border-l-gray-500 border-r-transparent text-slate-400 shadow"
                           } px-5 py-3`}
                           onClick={() =>
-                            lsn.on_going && navigate("/student/presence")
+                            lsn.on_going && navigate("/teacher/presence")
                           }
                         >
                           <div className="flex items-center justify-between">

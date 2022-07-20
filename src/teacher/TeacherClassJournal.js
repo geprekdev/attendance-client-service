@@ -1,6 +1,6 @@
 import { mdiInformationOutline, mdiPlus } from "@mdi/js";
 import Icon from "@mdi/react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, Navigate, useLocation, useParams } from "react-router-dom";
 import { useGetTeacherJournalQuery } from "./TeacherAPI";
 import Cookie from "../util/Cookie";
 import Skeleton from "../components/Skeleton";
@@ -10,13 +10,26 @@ export default function TeacherJournal() {
   const { id } = useParams();
   const { state } = useLocation();
   const [alert, setAlert] = useState(false);
-  const { data, isSuccess, isLoading } = useGetTeacherJournalQuery(
-    {
-      token: Cookie.getItem("token"),
-      id,
-    },
-    { refetchOnFocus: true }
-  );
+  const { data, isSuccess, isLoading, isError, error } =
+    useGetTeacherJournalQuery(
+      {
+        token: Cookie.getItem("token"),
+        id,
+      },
+      { refetchOnFocus: true }
+    );
+
+  // Unauthorize
+  if (isError && error.status === 401) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
+
+  // Role permission
+  if (isError && error.status === 403) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
 
   return (
     <div className=" mt-4">
@@ -35,7 +48,7 @@ export default function TeacherJournal() {
                 size="20px"
               />
             </strong>
-            Tidak ada jurnal yang harus di isi hari ini
+            Anda sudah mengirim Journal!
           </p>
           <strong className="align-center alert-del cursor-pointer text-xl">
             &times;

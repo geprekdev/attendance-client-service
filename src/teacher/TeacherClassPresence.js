@@ -1,7 +1,7 @@
 import { mdiAlphaACircle, mdiCheckBold } from "@mdi/js";
 import Icon from "@mdi/react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import Cookie from "../util/Cookie";
 import { useGetTeacherClassDetailQuery } from "./TeacherAPI";
 import Skeleton from "../components/Skeleton";
@@ -9,10 +9,11 @@ import Skeleton from "../components/Skeleton";
 export default function TeacherClassPresence() {
   const { id } = useParams();
 
-  const { isLoading, data, isSuccess } = useGetTeacherClassDetailQuery({
-    token: Cookie.getItem("token"),
-    idClass: id,
-  });
+  const { isLoading, data, isSuccess, isError, error } =
+    useGetTeacherClassDetailQuery({
+      token: Cookie.getItem("token"),
+      idClass: id,
+    });
 
   const [day, setDay] = useState();
 
@@ -27,6 +28,18 @@ export default function TeacherClassPresence() {
   const handleDayClicked = e => {
     setDay(e.target.textContent);
   };
+
+  // Unauthorize
+  if (isError && error.status === 401) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
+
+  // Role permission
+  if (isError && error.status === 403) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
 
   return (
     <div onClick={() => (dropdownActive ? setDropdownActive(false) : null)}>

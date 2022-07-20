@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Navigate,
   NavLink,
@@ -14,10 +14,11 @@ import isEmpty from "../util/EmptyObj";
 
 export default function TeacherClass() {
   const { id } = useParams();
-  const { isLoading, data, isSuccess } = useGetTeacherClassDetailQuery({
-    token: Cookie.getItem("token"),
-    idClass: id,
-  });
+  const { isLoading, data, isSuccess, isError, error } =
+    useGetTeacherClassDetailQuery({
+      token: Cookie.getItem("token"),
+      idClass: id,
+    });
 
   const navigate = useNavigate();
   const menus = [
@@ -26,8 +27,20 @@ export default function TeacherClass() {
   ];
 
   useEffect(() => {
-    navigate("presence");
+    navigate("journal");
   }, []);
+
+  // Unauthorize
+  if (isError && error.status === 401) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
+
+  // Role permission
+  if (isError && error.status === 403) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
 
   return (
     <Layout role="TEACHER">

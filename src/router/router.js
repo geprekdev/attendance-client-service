@@ -53,12 +53,12 @@ export default function router() {
           <Route path="/teacher/class" element={<TeacherClass />} />
           <Route path="/teacher/class/:id" element={<TeacherClassDetail />}>
             <Route path="journal" element={<TeacherClassJournal />}/>
-            <Route path="journal/new" element={<TeacherClassJournalAddNew />}/>
             <Route path="presence" element={<TeacherClassPresence />}/>
+            <Route path="journal/new" element={<TeacherClassJournalAddNew />}/>
           </Route>
           
           <Route path="/teacher/schedule" element={<TeacherSchedule />} />
-        <Route path="/teacher/activity" element={<TeacherActivity />} />
+          <Route path="/teacher/activity" element={<TeacherActivity />} />
           <Route path="/teacher/presence" element={<TeacherPresence />} />
           <Route path="/teacher/account" element={<TeacherAccount />} />
         </Route>

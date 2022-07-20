@@ -6,10 +6,7 @@ const cookie = {
    * @param {Number} time
    */
   setItem: (name, value, time) => {
-    const d = new Date();
-    d.setTime(d.getTime() + time * 24 * 60 * 60 * 1000);
-    let expires = "expires=" + d.toUTCString();
-    document.cookie = `${name}=${value}; expires=${expires}; path=/; SameSite=Lax`;
+    document.cookie = `${name}=${value}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/; SameSite=Lax`;
   },
 
   /**

@@ -3,22 +3,31 @@ import Layout from "../components/Layout";
 import { getMonthYear } from "../util/Date";
 import { useGetTeacherActivityQuery } from "./TeacherAPI";
 import Cookie from "../util/Cookie";
+import { Navigate } from "react-router-dom";
 
 export default function TeacherActivity() {
-  const { isSuccess, data } = useGetTeacherActivityQuery({
+  const { isSuccess, data, isError, error } = useGetTeacherActivityQuery({
     token: Cookie.getItem("token"),
   });
+
+  // Unauthorize
+  if (isError && error.status === 401) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
+
+  // Role permission
+  if (isError && error.status === 403) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
+
   console.log(data);
   return (
     <Layout role="TEACHER">
       <div className="mx-auto min-h-screen max-w-[444px] border px-5 py-3 shadow-lg">
         <div className="flex items-center justify-between rounded-full bg-gradient-to-r from-red-700 to-[#f48282] px-5 py-2 ">
           <h1 className="text-xl text-white">Activity</h1>
-          <Icon
-            // path={}
-            size="24px"
-            className="text-white"
-          />
         </div>
 
         <div className="mt-3">
@@ -29,7 +38,7 @@ export default function TeacherActivity() {
           </h3>
 
           <div className="mt-3 mb-[100px]">
-            <table class="w-full text-center">
+            <table className="w-full text-center">
               <thead className="bg-gray-100 text-gray-800">
                 <tr className="">
                   <th className="py-1">Tanggal</th>
@@ -41,7 +50,7 @@ export default function TeacherActivity() {
               <tbody className="">
                 {isSuccess &&
                   data.map(activity => (
-                    <tr className="hover:bg-gray-50">
+                    <tr className="hover:bg-gray-50" key={activity.day}>
                       <td className="py-1">{activity.day}</td>
                       <td className="py-1">{activity.clock_in}</td>
                       <td className="py-1">{activity.clock_out}</td>

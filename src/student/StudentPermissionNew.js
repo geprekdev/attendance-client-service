@@ -7,9 +7,11 @@ import {
 } from "@mdi/js";
 import Icon from "@mdi/react";
 import { useState } from "react";
-import Calendar from "react-calendar";
+// import Calendar from "react-calendar";
 import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
+import { getFullDate } from "../util/Date";
+import { useGetStudentLeaveQuery } from "./StudentAPI";
 
 export default function StudentPermissionNew() {
   const menus = [
@@ -17,30 +19,76 @@ export default function StudentPermissionNew() {
     { type: "Full Day", text: "Izin untuk seharian penuh" },
   ];
 
-  const [cal, setCal] = useState();
-
-  console.log(cal);
-
   const [mapel, setMapel] = useState([
-    { name: "Matematika Terapan", isActive: false },
+    { name: "Matematika asfasfas", isActive: false },
     { name: "Sejarah Indonesia", isActive: false },
     { name: "Fisika dan Kosmologi", isActive: false },
     { name: "Kesenian Daerah", isActive: false },
     { name: "Pemodelan Perangkat Lunak", isActive: false },
   ]);
 
+  const [hari, setHari] = useState([
+    { name: "Senin, 18 Juli 2022", isActive: false },
+    { name: "Selasa, 19 Juli 2022", isActive: false },
+    { name: "Rabu, 20 Juli 2022", isActive: false },
+    { name: "Kamis, 21 Juli 2022", isActive: false },
+    { name: "Jumat, 22 Juli 2022", isActive: false },
+    { name: "Sabtu, 23 Juli 2022", isActive: false },
+    { name: "Minggu, 24 Juli 2022", isActive: false },
+  ]);
+
+  const [isSuccess, data] = useGetStudentLeaveQuery();
+  console.log(isSuccess && data);
+
+  const [dropdownActive, setDropdownActive] = useState(false);
+  const [category, setCategory] = useState("Sakit");
+
+  const [cal, setCal] = useState();
+
+  const categories = ["Sakit", "Izin", "Keperluan Sekolah"];
+
+  const handleMapelClick = position => {
+    setMapel(
+      [...mapel].map((mpl, idx) => {
+        if (idx === position) {
+          return {
+            ...mpl,
+            isActive: !mpl.isActive,
+          };
+        } else return { ...mpl };
+      })
+    );
+  };
+
+  const handleClick = position => {
+    setHari(
+      [...hari].map((h, idx) => {
+        if (idx === position) {
+          return {
+            ...h,
+            isActive: !h.isActive,
+          };
+        } else return { ...h };
+      })
+    );
+  };
+
+  const handleCategorySelected = category => {
+    setCategory(category);
+  };
+
   const [typePermission, setTypePermission] = useState("Half Day");
 
   return (
     <Layout title="Student" role="STUDENT">
-      <div className="mx-auto max-w-[444px] border px-5 py-3 pb-24 shadow-lg">
+      <div className="relative mx-auto max-w-[444px] border px-5 py-3 pb-12 shadow-lg">
         <div className="-m-5 h-[50px] max-w-[150%] bg-[#6A64F1] pt-3 pl-3">
           <Link to="/student/permission">
             <Icon path={mdiChevronLeft} size="1.9em" color="white" />
           </Link>
         </div>
 
-        <Calendar selectRange value={cal} onChange={setCal} />
+        {/* <Calendar selectRange value={cal} onChange={setCal} /> */}
 
         <div className="mt-7">
           <h1 className=" text-3xl">Izin</h1>
@@ -94,22 +142,28 @@ export default function StudentPermissionNew() {
             ))}
           </div>
           <div className="mt-10 mb-[56px]">
-            {typePermission === "Half Day" ? (
+            {typePermission === "Half Day" && (
               <>
-                <h3 className="text-lg font-semibold">Pilih Tanggal</h3>
+                <h3 className="text-lg font-semibold">Hari Ini</h3>
                 <div className="mt-1 flex items-center justify-between rounded-lg bg-gray-100 px-5 py-2">
-                  <p>Juni, 20 - Juni, 21</p>
-                  <Icon path={mdiCalendar} size="24px" />
+                  <p>{getFullDate(new Date())}</p>
                 </div>
 
                 <div className="mt-7">
                   <h3 className="text-lg font-semibold">Pilih Mapel</h3>
                   <div className="flex flex-wrap">
                     {mapel.map((mpl, idx) => (
-                      <div className="ml-5 mb-3 text-gray-600" key={mpl.name}>
+                      <div
+                        className={`ml-5 mb-3 text-gray-600 `}
+                        key={mpl.name}
+                      >
                         <button
-                          className="rounded-full border px-5 py-1.5 hover:bg-indigo-200"
-                          onClick={() => ""}
+                          key={idx}
+                          className={`${
+                            mpl.isActive && "border-[1.5] border-blue-500"
+                          } rounded-full border px-5 py-1.5 hover:bg-opacity-75 hover:shadow`}
+                          is-active={mpl.isActive.toString()}
+                          onClick={() => handleMapelClick(idx)}
                         >
                           {mpl.name}
                         </button>
@@ -141,7 +195,7 @@ export default function StudentPermissionNew() {
                   <input
                     type="file"
                     id="upFile"
-                    accept=".png .jpg .jpeg .pdf"
+                    accept=".png .jpg .jpeg "
                     className="hidden"
                   />
                 </div>
@@ -150,8 +204,95 @@ export default function StudentPermissionNew() {
                   Ajukan
                 </div>
               </>
-            ) : (
-              ""
+            )}
+
+            {typePermission === "Full Day" && (
+              <>
+                <h3 className="text-lg font-semibold">Pilih Tanggal</h3>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {hari.map((h, idx) => (
+                    <div className={`ml-5 mb-3 text-gray-600`} key={h.name}>
+                      <button
+                        key={idx}
+                        className={`${
+                          h.isActive && "border-[1.5] border-blue-500"
+                        } rounded-full border px-5 py-1.5 hover:bg-opacity-75 hover:shadow`}
+                        is-active={h.isActive.toString()}
+                        onClick={() => handleClick(idx)}
+                      >
+                        {h.name}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                <h3 className="text-lg font-semibold">Kategori</h3>
+                <button
+                  type="button"
+                  className="inline-flex w-full justify-center rounded-md border-b bg-gray-100 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
+                  id="menu-button"
+                  aria-expanded="true"
+                  aria-haspopup="true"
+                  onClick={() => setDropdownActive(!dropdownActive)}
+                >
+                  {category}
+                </button>
+
+                {/* Isi Dropdown */}
+                {dropdownActive && (
+                  <div
+                    className="absolute right-0 mt-2 w-56 origin-top-right rounded-md  bg-white shadow-lg ring-1 ring-black ring-opacity-5 "
+                    role="menu"
+                    aria-orientation="vertical"
+                    aria-labelledby="menu-button"
+                    tabIndex="-1"
+                  >
+                    <div className="py-1" role="none">
+                      {categories.map(category => (
+                        <button
+                          className={`block px-4 py-2 text-sm text-gray-400 hover:text-gray-700`}
+                          role="menuitem"
+                          tabIndex="-1"
+                          id="menu-item-0"
+                          key={category}
+                          onClick={() => handleCategorySelected(category)}
+                        >
+                          {category}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div onClick={() => setDropdownActive(false)}>
+                  <div className="mt-7">
+                    <h3 className="mb-2 text-lg font-semibold">
+                      Unggah Surat Izin
+                    </h3>
+                    <label htmlFor="upFile">
+                      <div className="flex  cursor-pointer items-center justify-center gap-2 rounded-lg bg-gray-200 py-2">
+                        <Icon
+                          path={mdiUploadOutline}
+                          size="24px"
+                          className="text-gray-800"
+                        />
+                        <p>Tambahkan FIle</p>
+                      </div>
+                    </label>
+
+                    <input
+                      type="file"
+                      id="upFile"
+                      accept=".png .jpg .jpeg "
+                      className="hidden"
+                    />
+                  </div>
+
+                  <div className="mt-7 w-full cursor-pointer bg-indigo-500 px-5 py-2 text-center text-white">
+                    Ajukan
+                  </div>
+                </div>
+              </>
             )}
           </div>
         </div>

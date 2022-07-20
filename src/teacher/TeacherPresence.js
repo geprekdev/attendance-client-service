@@ -12,7 +12,7 @@ export default function TeacherPresence() {
     { name: "Sindu Aditya Janadi", icon: mdiCheckBold },
     { name: "Rossyana Rachmawati", icon: mdiCheckBold },
     { name: "Immanuel Y V", icon: mdiCheckBold },
-    { name: "Melati Mawar TUlip", icon: mdiCheckBold },
+    { name: "Melati Mawar Tulip", icon: mdiCheckBold },
   ];
 
   return (
@@ -33,8 +33,11 @@ export default function TeacherPresence() {
 
           <div className="shadow-xl">
             {data.map((student, idx) => (
-              <div className="flex w-full items-center justify-between border-t border-gray-100 py-4 pl-6 pr-3 text-gray-600 transition duration-150 hover:bg-gray-100 ">
-                <span>{idx}</span>
+              <div
+                key={idx}
+                className="flex w-full items-center justify-between border-t border-gray-100 py-4 pl-6 pr-3 text-gray-600 transition duration-150 hover:bg-gray-100 "
+              >
+                <span>{idx + 1}</span>
                 <p>{student.name}</p>
                 &nbsp;
                 <p className={`text-xs text-gray-500`}>24-06-2022</p>

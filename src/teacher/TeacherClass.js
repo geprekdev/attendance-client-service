@@ -4,12 +4,25 @@ import Layout from "../components/Layout";
 import { useGetTeacherClasslistQuery } from "./TeacherAPI";
 import Cookie from "../util/Cookie";
 import Skeleton from "../components/Skeleton";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 export default function TeacherClass() {
-  const { isSuccess, data, isLoading } = useGetTeacherClasslistQuery({
-    token: Cookie.getItem("token"),
-  });
+  const { isSuccess, data, isLoading, isError, error } =
+    useGetTeacherClasslistQuery({
+      token: Cookie.getItem("token"),
+    });
+
+  // Unauthorize
+  if (isError && error.status === 401) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
+
+  // Role permission
+  if (isError && error.status === 403) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
 
   return (
     <Layout role="TEACHER">

@@ -27,10 +27,31 @@ export default function TeacherClassJournalAddNew() {
       description,
     });
 
-    if (res.data) {
-      navigate(`/teacher/class/${id}/journal`);
+    if (res.data === "valid") {
+      console.log(`/teacher/class/${id}/journal`);
+      window.location = `/teacher/class/${id}/journal`;
+      // return <Navigate to={`/teacher/class/${id}/journal`} />;
     }
   };
+
+  // Unauthorize
+  if (isError && error.status === 401) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
+
+  // Role permission
+  if (isError && error.status === 403) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
+
+  // 406
+  if (isError && error.status === 406) {
+    return (
+      <Navigate to={`/teacher/class/${id}/journal`} state={{ err: true }} />
+    );
+  }
 
   return (
     <div className="mt-3">

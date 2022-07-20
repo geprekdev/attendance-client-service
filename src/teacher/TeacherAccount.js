@@ -1,6 +1,6 @@
 import { mdiLogout } from "@mdi/js";
 import Icon from "@mdi/react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import Skeleton from "../components/Skeleton";
 import Cookie from "../util/Cookie";
@@ -18,20 +18,20 @@ export default function TeacherAccount() {
     if (yes) {
       Cookie.deleteItem("token");
       navigate("/auth/login");
+      return <Navigate to={"/auth/login"} />;
     }
   };
 
   // Unauthorize
   if (isError && error.status === 401) {
     Cookie.deleteItem("token");
-    window.location = "/auth/login";
-    return;
+    return <Navigate to={"/auth/login"} />;
   }
 
   // Role permission
   if (isError && error.status === 403) {
-    navigate("/teacher/");
-    return;
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
   }
 
   return (

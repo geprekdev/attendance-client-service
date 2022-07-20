@@ -17,11 +17,11 @@ export default function NewNav({ role }) {
       text: "Schedule",
       link: "/student/schedule",
     },
-    {
-      pathIcon: mdiBellOutline,
-      text: "Notification",
-      link: "/student/notification",
-    },
+    // {
+    //   pathIcon: mdiBellOutline,
+    //   text: "Notification",
+    //   link: "/student/notification",
+    // },
     {
       pathIcon: mdiAccountCircleOutline,
       text: "Account",
@@ -51,7 +51,7 @@ export default function NewNav({ role }) {
   return (
     <>
       {role === "STUDENT" && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-[440px] bg-white">
+        <div className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-[440px] border-t bg-white">
           <hr />
 
           <div className="flex justify-evenly p-5">
@@ -70,18 +70,6 @@ export default function NewNav({ role }) {
                 <p className="mt-2 text-xs">{stMenu.text}</p>
               </NavLink>
             ))}
-          </div>
-
-          <div className="fixed bottom-[60px] left-0 right-0 mx-auto max-w-[440px]">
-            <div className="flex justify-center">
-              <Link to="/student/attendance">
-                <Icon
-                  path={mdiLocationEnter}
-                  size="65px"
-                  className="cursor-pointer rounded-full border-4 border-white bg-blue-500 p-3 text-white shadow-xl"
-                />
-              </Link>
-            </div>
           </div>
         </div>
       )}

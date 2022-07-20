@@ -7,7 +7,7 @@ import {
 } from "./TeacherAPI";
 import Cookie from "../util/Cookie";
 import Skeleton from "../components/Skeleton";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { getDay, getFullDate } from "../util/Date";
 import { useState } from "react";
 import { usePostStudentAttendanceMutation } from "../student/StudentAPI";
@@ -94,14 +94,13 @@ export default function NewStudentHome() {
   // Unauthorize
   if (getTeacherDashboard.isError && getTeacherDashboard.error.status === 401) {
     Cookie.deleteItem("token");
-    window.location = "/auth/login";
-    return;
+    return <Navigate to={"/auth/login"} />;
   }
 
   // Role permission
   if (getTeacherDashboard.isError && getTeacherDashboard.error.status === 403) {
-    navigate("/teacher/");
-    return;
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
   }
 
   const date = new Date();

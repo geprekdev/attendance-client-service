@@ -113,12 +113,28 @@ export const studentAPI = createApi({
         },
         method: "POST",
         body: {
-          leave_type: user.leave,
+          leave_type: user.leave_type,
           attendance_scheduled: user.attendance_scheduled,
           reason: user.reason,
           attachment: user.attachment,
         },
-        url: "/v1/leave/",
+        url: `/v1/leave/`,
+      }),
+    }),
+
+    postStudentLeaveHalf: builder.mutation({
+      query: user => ({
+        headers: {
+          Authorization: user.token,
+        },
+        method: "POST",
+        body: {
+          leave_type: user.leave_type,
+          classroom_scheduled: user.attendance_scheduled,
+          reason: user.reason,
+          attachment: user.attachment,
+        },
+        url: `/v1/leave/?type=half`,
       }),
     }),
   }),
@@ -136,4 +152,6 @@ export const {
   useGetScheduleClassQuery,
   useGetStudentActivityQuery,
   useGetStudentLeaveQuery,
+  usePostStudentLeaveHalfMutation,
+  usePostStudentLeaveFullMutation,
 } = studentAPI;

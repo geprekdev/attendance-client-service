@@ -24,9 +24,8 @@ export default function StudentHome() {
     useGetStudentClassesQuery({
       token: Cookie.getItem("token"),
     });
-  // const attendanceQuery = useGetStudentAttendanceQuery({
-  //   token: Cookie.getItem("token").split(".")[0],
-  // });
+
+  console.log(isSuccess && data);
 
   const navigate = useNavigate();
 
@@ -118,12 +117,12 @@ export default function StudentHome() {
                   Scheduled:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <Icon path={mdiAlarm} size="15px" className="inline" />{" "}
                   <span className="font-semibold">
-                    {(isSuccess && data.work_time) || "--:--"}
+                    {(isSuccess && data.currentAttendance.work_time) || "--:--"}
                   </span>
                 </div>
                 <p>
                   Checked in at:&nbsp;&nbsp;
-                  {(isSuccess && data.clock_in) || "--:--"}
+                  {(isSuccess && data.currentAttendance.clock_in) || "--:--"}
                 </p>
               </div>
             </div>
@@ -157,12 +156,12 @@ export default function StudentHome() {
                   <Icon path={mdiAlarm} size="15px" className="inline" />{" "}
                   <span className="font-semibold">
                     {" "}
-                    {(isSuccess && data.home_time) || "--:--"}
+                    {(isSuccess && data.currentAttendance.home_time) || "--:--"}
                   </span>
                 </div>
                 <p>
                   Checked in at: &nbsp;
-                  {(isSuccess && data.clock_out) || "--:--"}
+                  {(isSuccess && data.currentAttendance.clock_out) || "--:--"}
                 </p>
               </div>
             </div>

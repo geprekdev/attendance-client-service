@@ -26,7 +26,7 @@ export default function StudentSchedule() {
       { refetchOnReconnect: true }
     );
 
-  // console.log(data);
+  console.log(data);
 
   const navigate = useNavigate();
 
@@ -45,6 +45,8 @@ export default function StudentSchedule() {
 
   // Role permission
   if (isError && error.status === 403) {
+    console.log(error);
+
     Cookie.deleteItem("token");
     return <Navigate to={"/auth/login"} />;
   }
@@ -134,7 +136,8 @@ export default function StudentSchedule() {
                               : "w-[65%] border-[3px] border-y-transparent border-l-gray-500 border-r-transparent text-slate-400 shadow"
                           } px-5 py-3`}
                           onClick={() =>
-                            lsn.on_going && navigate("/teacher/presence")
+                            lsn.on_going &&
+                            navigate(`/teacher/class/5/presence`)
                           }
                         >
                           <div className="flex items-center justify-between">

@@ -12,6 +12,8 @@ export default function TeacherClass() {
       token: Cookie.getItem("token"),
     });
 
+  console.log("disni");
+
   // Unauthorize
   if (isError && error.status === 401) {
     Cookie.deleteItem("token");

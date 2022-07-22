@@ -1,5 +1,4 @@
 import { Routes, BrowserRouter, Route } from "react-router-dom";
-
 import Login from "../auth/Login";
 import ProtectedRouter from "./ProtectedRouter";
 
@@ -22,11 +21,13 @@ import TeacherSchedule from "../teacher/TeacherSchedule";
 import TeacherActivity from "../teacher/TeacherActivity";
 import TeacherPresence from "../teacher/TeacherPresence";
 import TeacherAccount from "../teacher/TeacherAccount";
-import TeacherClass from '../teacher/TeacherClass';
-import TeacherClassDetail from '../teacher/TeacherClassDetail';
+import TeacherClass from "../teacher/TeacherClass";
+import TeacherClassDetail from "../teacher/TeacherClassDetail";
 import TeacherClassJournal from "../teacher/TeacherClassJournal";
 import TeacherClassPresence from "../teacher/TeacherClassPresence";
 import TeacherClassJournalAddNew from "../teacher/TeacherClassJournalAddNew";
+import TeacherPermission from "../teacher/TeacherPermission";
+import TeacherPermissionNew from "../teacher/TeacherPermissionNew";
 
 export default function router() {
   return (
@@ -41,22 +42,33 @@ export default function router() {
           <Route path="/student/statistic" element={<StudentStatistic />} />
           <Route path="/student/account" element={<StudentAccount />} />
           <Route path="/student/permission" element={<StudentPermission />} />
-          <Route path="/student/permission/new" element={<StudentPermissionNew />} />
+          <Route
+            path="/student/permission/new"
+            element={<StudentPermissionNew />}
+          />
           <Route path="/student/activity" element={<StudentActivity />} />
 
           <Route path="/student/presence" element={<StudentPresence />} />
           <Route path="/student/attendance" element={<StudentAttendance />} />
-          <Route path="/student/notification" element={<StudentNotification />} />
+          <Route
+            path="/student/notification"
+            element={<StudentNotification />}
+          />
 
           <Route path="/teacher/" element={<TeacherHome />} />
+          <Route path="/teacher/permission" element={<TeacherPermission />} />
+          <Route
+            path="/teacher/permission/new"
+            element={<TeacherPermissionNew />}
+          />
 
           <Route path="/teacher/class" element={<TeacherClass />} />
           <Route path="/teacher/class/:id" element={<TeacherClassDetail />}>
-            <Route path="journal" element={<TeacherClassJournal />}/>
-            <Route path="presence" element={<TeacherClassPresence />}/>
-            <Route path="journal/new" element={<TeacherClassJournalAddNew />}/>
+            <Route path="journal" element={<TeacherClassJournal />} />
+            <Route path="presence" element={<TeacherClassPresence />} />
+            <Route path="journal/new" element={<TeacherClassJournalAddNew />} />
           </Route>
-          
+
           <Route path="/teacher/schedule" element={<TeacherSchedule />} />
           <Route path="/teacher/activity" element={<TeacherActivity />} />
           <Route path="/teacher/presence" element={<TeacherPresence />} />
@@ -70,9 +82,7 @@ export default function router() {
   );
 }
 
-
-
 // import ClassList from "../classroom";
 // import ClassListDetail from "../classroom/ClassListDetail";
 // <Route path="/instructor/classlists" element={<ClassList />} />
-// <Route path="/instructor/classlists/detail/:grade/:subject" element={<ClassListDetail />} /> 
+// <Route path="/instructor/classlists/detail/:grade/:subject" element={<ClassListDetail />} />

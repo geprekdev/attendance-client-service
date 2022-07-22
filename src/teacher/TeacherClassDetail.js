@@ -26,9 +26,9 @@ export default function TeacherClass() {
     { text: "Jurnal", link: `/teacher/class/${id}/journal` },
   ];
 
-  useEffect(() => {
-    navigate("journal");
-  }, []);
+  // useEffect(() => {
+  //   navigate("journal");
+  // }, []);
 
   // Unauthorize
   if (isError && error.status === 401) {

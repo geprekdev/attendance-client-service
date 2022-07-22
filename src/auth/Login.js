@@ -27,14 +27,6 @@ export default function Login() {
     }
 
     Cookie.setItem("token", `Token ${res.data.token}`);
-
-    // const role = res.data.role;
-    // if (role === "student") {
-    //   Cookie.setItem("_s", "_st.d");
-    // } else {
-    //   Cookie.setItem("_s", "_tc.h");
-    // }
-
     setData(res.data);
     setLoading(false);
 
@@ -43,20 +35,14 @@ export default function Login() {
         navigate("/student/");
         return;
       }
+      console.log("ke guru");
       navigate("/teacher/");
     }, 2000);
   };
 
   useEffect(() => {
-    const token = Cookie.getItem("token");
-    // const role = Cookie.getItem("_s");
-
-    if (token) {
-      // if (role === "_st.d") {
-      //   navigate("/student/");
-      // } else {
-      // }
-      navigate("/teacher");
+    if (Cookie.getItem("token")) {
+      navigate("/student/");
     }
   }, []);
 

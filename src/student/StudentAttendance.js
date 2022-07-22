@@ -243,23 +243,23 @@ export default function StudentAttendance() {
                     <h3 className="text-lg">{clock.out || "--:--"}</h3>
                   </div>
                 </div>
-                {attendance_status === "Done!" && (
+                {attendance_status === "Done!" ? (
                   <button
                     type="button"
                     className="ease focus:shadow-outline w-full cursor-not-allowed select-none rounded-md border border-green-500 bg-green-500 py-2 font-semibold text-slate-100 shadow-xl transition duration-500  focus:outline-none"
                   >
                     {attendance_status}
                   </button>
-                )}
-
-                {attendance_status && (
-                  <button
-                    onClick={handleSubmitForm}
-                    type="button"
-                    className="ease focus:shadow-outline w-full select-none rounded-md border border-indigo-500 bg-indigo-500 py-2 font-semibold text-slate-100 shadow-xl transition duration-500 hover:bg-indigo-600 focus:outline-none"
-                  >
-                    {attendance_status}
-                  </button>
+                ) : (
+                  attendance_status && (
+                    <button
+                      onClick={handleSubmitForm}
+                      type="button"
+                      className="ease focus:shadow-outline w-full select-none rounded-md border border-indigo-500 bg-indigo-500 py-2 font-semibold text-slate-100 shadow-xl transition duration-500 hover:bg-indigo-600 focus:outline-none"
+                    >
+                      {attendance_status}
+                    </button>
+                  )
                 )}
               </div>
             )

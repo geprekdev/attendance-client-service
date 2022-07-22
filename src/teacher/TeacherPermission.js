@@ -1,10 +1,9 @@
 import { mdiCalendar, mdiChevronLeft, mdiPlus } from "@mdi/js";
 import Icon from "@mdi/react";
-// import Calendar from "react-calendar";
 import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
 import Cookie from "../util/Cookie";
-import { useGetStudentLeaveQuery } from "./StudentAPI";
+import { useGetStudentLeaveQuery } from "./../student/StudentAPI";
 
 export default function StudentPermission() {
   const { isSuccess, data } = useGetStudentLeaveQuery({
@@ -14,8 +13,8 @@ export default function StudentPermission() {
   return (
     <Layout role="STUDENT">
       <div className="relative mx-auto mb-[56px] min-h-screen max-w-[444px] border px-5 py-3 pb-24 shadow">
-        <div className="-m-5 h-[50px] max-w-[150%] bg-[#6A64F1] pt-3 pl-3">
-          <Link to="/student/">
+        <div className="-m-5 h-[50px] max-w-[150%] bg-[#c52831] pt-3 pl-3">
+          <Link to="/teacher/">
             <Icon path={mdiChevronLeft} size="1.9em" color="white" />
           </Link>
         </div>
@@ -28,7 +27,7 @@ export default function StudentPermission() {
                 temp.push(
                   <div
                     key={obj}
-                    className="mb-4 w-full rounded-lg bg-gradient-to-r from-blue-700 to-[#63c2f0] px-5 py-2 font-semibold text-white shadow-lg"
+                    className="mb-4 w-full rounded-lg bg-gradient-to-r from-red-700 to-[#f06363] px-5 py-2 font-semibold text-white shadow-lg"
                   >
                     {obj}
                   </div>
@@ -48,7 +47,7 @@ export default function StudentPermission() {
                         <Icon
                           path={mdiCalendar}
                           size="24px"
-                          className="text-blue-500"
+                          className="text-red-500"
                         />
                         <p className=" rounded-lg bg-gray-200 px-3 py-1 font-semibold">
                           {d.date}
@@ -78,8 +77,8 @@ export default function StudentPermission() {
 
         <div className="fixed bottom-[120px] mx-auto w-[420px] ">
           <div className="mr-2 flex justify-end">
-            <Link to="/student/permission/new">
-              <button className="flex h-16 w-16 items-center justify-center rounded-full bg-indigo-600 p-0 shadow-xl   transition duration-200 ease-in hover:bg-blue-800 focus:outline-none active:shadow-2xl">
+            <Link to="/teacher/permission/new">
+              <button className="flex h-16 w-16 items-center justify-center rounded-full bg-red-600 p-0 shadow-xl   transition duration-200 ease-in hover:bg-red-800 focus:outline-none active:shadow-2xl">
                 <Icon path={mdiPlus} className="text-white" size="80%" />
               </button>
             </Link>

@@ -1,74 +1,128 @@
 import {
-  mdiCalendar,
   mdiCheckCircleOutline,
   mdiChevronLeft,
   mdiCircleOutline,
   mdiUploadOutline,
 } from "@mdi/js";
 import Icon from "@mdi/react";
-import { useState } from "react";
-// import Calendar from "react-calendar";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import { getFullDate } from "../util/Date";
-import { useGetStudentLeaveQuery } from "./StudentAPI";
+import {
+  useGetStudentLeaveQuery,
+  usePostStudentLeaveFullMutation,
+  usePostStudentLeaveHalfMutation,
+} from "./StudentAPI";
+import Cookie from "../util/Cookie";
+import isEmpty from "../util/EmptyObj";
 
 export default function StudentPermissionNew() {
+  const [triggerPostHalf] = usePostStudentLeaveHalfMutation();
+  const [triggerPostFull] = usePostStudentLeaveFullMutation();
+  const [classroom, setClassroom] = useState([]);
+  const [attendanceScheduled, setAttendanceScheduled] = useState([]);
+  const [days, setDays] = useState({});
+  const [attachment, setAttachment] = useState();
+  const [alertForm, setAlertForm] = useState();
+
+  const [dropdownActive, setDropdownActive] = useState(false);
+  const [category, setCategory] = useState("Sakit");
+  const [typePermission, setTypePermission] = useState("Half Day");
+  const [reason, setReason] = useState("");
+  const navigate = useNavigate();
+
+  const { isSuccess, data, isError, error } = useGetStudentLeaveQuery({
+    token: Cookie.getItem("token"),
+  });
+
   const menus = [
     { type: "Half Day", text: "Izin untuk sementara waktu" },
     { type: "Full Day", text: "Izin untuk seharian penuh" },
   ];
 
-  const [mapel, setMapel] = useState([
-    { name: "Matematika asfasfas", isActive: false },
-    { name: "Sejarah Indonesia", isActive: false },
-    { name: "Fisika dan Kosmologi", isActive: false },
-    { name: "Kesenian Daerah", isActive: false },
-    { name: "Pemodelan Perangkat Lunak", isActive: false },
-  ]);
-
-  const [hari, setHari] = useState([
-    { name: "Senin, 18 Juli 2022", isActive: false },
-    { name: "Selasa, 19 Juli 2022", isActive: false },
-    { name: "Rabu, 20 Juli 2022", isActive: false },
-    { name: "Kamis, 21 Juli 2022", isActive: false },
-    { name: "Jumat, 22 Juli 2022", isActive: false },
-    { name: "Sabtu, 23 Juli 2022", isActive: false },
-    { name: "Minggu, 24 Juli 2022", isActive: false },
-  ]);
-
-  const [isSuccess, data] = useGetStudentLeaveQuery();
-  console.log(isSuccess && data);
-
-  const [dropdownActive, setDropdownActive] = useState(false);
-  const [category, setCategory] = useState("Sakit");
-
-  const [cal, setCal] = useState();
-
   const categories = ["Sakit", "Izin", "Keperluan Sekolah"];
 
-  const handleMapelClick = position => {
-    setMapel(
-      [...mapel].map((mpl, idx) => {
+  const handleLeaveHalfSubmit = async () => {
+    const classroom_scheduled = [];
+    console.warn("Leave Half");
+
+    classroom.forEach(c => {
+      if (c.isActive) {
+        classroom_scheduled.push(c.id);
+      }
+    });
+
+    const leave_type = category === "Ijin" ? 0 : category === "Sakit" ? 1 : 2;
+
+    const res = await triggerPostHalf({
+      token: Cookie.getItem("token"),
+      leave_type,
+      classroom_scheduled,
+      reason,
+    });
+
+    if (res.data) {
+      window.location = "/student/permission/";
+    } else {
+      setAlertForm({
+        status: true,
+        message: `Reason field ${res?.error?.data?.reason}`,
+      });
+    }
+  };
+
+  const handleLeaveFullSubmit = async () => {
+    console.warn("Leave Full");
+    const leave_type = category === "Ijin" ? 0 : category === "Sakit" ? 1 : 2;
+    const attendance_scheduled = [];
+
+    attendanceScheduled.forEach(att => {
+      if (att.isActive) {
+        attendance_scheduled.push(att.id);
+      }
+    });
+
+    const res = await triggerPostFull({
+      token: Cookie.getItem("token"),
+      reason,
+      leave_type,
+      attendance_scheduled,
+    });
+    console.log(res);
+
+    if (res.data) {
+      window.location = "/student/permission/";
+    } else {
+      setAlertForm({
+        status: true,
+        message: `Reason field ${res?.error?.data?.reason}`,
+      });
+    }
+  };
+
+  const handleDaysClick = position => {
+    setDays(
+      [...days].map((day, idx) => {
         if (idx === position) {
           return {
-            ...mpl,
-            isActive: !mpl.isActive,
+            ...day,
+            isActive: !day.isActive,
           };
-        } else return { ...mpl };
+        } else return { ...day };
       })
     );
   };
 
-  const handleClick = position => {
-    setHari(
-      [...hari].map((h, idx) => {
+  const handleClassroomClick = position => {
+    setClassroom(
+      [...classroom].map((c, idx) => {
         if (idx === position) {
           return {
-            ...h,
-            isActive: !h.isActive,
+            ...c,
+            isActive: !c.isActive,
           };
-        } else return { ...h };
+        } else return { ...c };
       })
     );
   };
@@ -77,7 +131,18 @@ export default function StudentPermissionNew() {
     setCategory(category);
   };
 
-  const [typePermission, setTypePermission] = useState("Half Day");
+  useEffect(() => {
+    if (isSuccess) {
+      console.log(data);
+      setClassroom(
+        data.classroomTimetable.map(c => ({ ...c, isActive: false }))
+      );
+      setAttendanceScheduled(
+        data.attendanceTimetable.map(att => ({ ...att, isActive: false }))
+      );
+      setDays(data.attendanceTimetable.map(d => ({ ...d, isActive: false })));
+    }
+  }, [isSuccess, data]);
 
   return (
     <Layout title="Student" role="STUDENT">
@@ -87,8 +152,6 @@ export default function StudentPermissionNew() {
             <Icon path={mdiChevronLeft} size="1.9em" color="white" />
           </Link>
         </div>
-
-        {/* <Calendar selectRange value={cal} onChange={setCal} /> */}
 
         <div className="mt-7">
           <h1 className=" text-3xl">Izin</h1>
@@ -141,9 +204,30 @@ export default function StudentPermissionNew() {
               </div>
             ))}
           </div>
+
           <div className="mt-10 mb-[56px]">
             {typePermission === "Half Day" && (
               <>
+                {alertForm?.status && (
+                  <div
+                    className="mb-4 flex rounded-lg bg-yellow-100 p-4 text-sm text-yellow-700"
+                    role="alert"
+                  >
+                    <svg
+                      className="mr-3 inline h-5 w-5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                        clipRule="evenodd"
+                      ></path>
+                    </svg>
+                    <div>{alertForm.message}</div>
+                  </div>
+                )}
                 <h3 className="text-lg font-semibold">Hari Ini</h3>
                 <div className="mt-1 flex items-center justify-between rounded-lg bg-gray-100 px-5 py-2">
                   <p>{getFullDate(new Date())}</p>
@@ -151,33 +235,82 @@ export default function StudentPermissionNew() {
 
                 <div className="mt-7">
                   <h3 className="text-lg font-semibold">Pilih Mapel</h3>
-                  <div className="flex flex-wrap">
-                    {mapel.map((mpl, idx) => (
-                      <div
-                        className={`ml-5 mb-3 text-gray-600 `}
-                        key={mpl.name}
-                      >
-                        <button
-                          key={idx}
-                          className={`${
-                            mpl.isActive && "border-[1.5] border-blue-500"
-                          } rounded-full border px-5 py-1.5 hover:bg-opacity-75 hover:shadow`}
-                          is-active={mpl.isActive.toString()}
-                          onClick={() => handleMapelClick(idx)}
+                  <div className="mt-3 flex flex-wrap">
+                    {!isEmpty(classroom) &&
+                      classroom.map((classroom, idx) => (
+                        <div
+                          className={`ml-5 mb-3 text-gray-600 `}
+                          key={classroom.name}
                         >
-                          {mpl.name}
-                        </button>
-                      </div>
-                    ))}
+                          <button
+                            className={`${
+                              classroom?.isActive &&
+                              "border-[1.7px] border-blue-500"
+                            } rounded-full border px-5 py-1.5 hover:bg-opacity-75 hover:shadow`}
+                            is-active={classroom.isActive.toString()}
+                            onClick={() => handleClassroomClick(idx)}
+                          >
+                            {classroom.name}
+                          </button>
+                        </div>
+                      ))}
                   </div>
                 </div>
 
                 <div className="mt-7">
                   <h3 className="text-lg font-semibold">Kategori</h3>
-                  <p className="ml-5">Keperluan Sekolah</p>
+                  <button
+                    type="button"
+                    className="inline-flex w-full justify-center rounded-md border-b bg-gray-100 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
+                    id="menu-button"
+                    aria-expanded="true"
+                    aria-haspopup="true"
+                    onClick={() => setDropdownActive(!dropdownActive)}
+                  >
+                    {category}
+                  </button>
+
+                  {/* Isi Dropdown */}
+                  {dropdownActive && (
+                    <div
+                      className="absolute right-0 mt-2 w-56 origin-top-right rounded-md  bg-white shadow-lg ring-1 ring-black ring-opacity-5 "
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="menu-button"
+                      tabIndex="-1"
+                    >
+                      <div className="py-1" role="none">
+                        {categories.map(category => (
+                          <button
+                            className={`block px-4 py-2 text-sm text-gray-400 hover:text-gray-700`}
+                            role="menuitem"
+                            tabIndex="-1"
+                            id="menu-item-0"
+                            key={category}
+                            onClick={() => handleCategorySelected(category)}
+                          >
+                            {category}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                <div className="mt-7">
+                <div className="mt-4 ">
+                  <h3 className="text-lg font-semibold">Alasan</h3>
+                  <textarea
+                    id="message"
+                    rows="4"
+                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 "
+                    placeholder="Keperluan Sekolah"
+                    required
+                    onChange={e => setReason(e.target.value)}
+                    value={reason}
+                  ></textarea>
+                </div>
+
+                <div className="mt-3">
                   <h3 className="mb-2 text-lg font-semibold">
                     Unggah Surat Izin
                   </h3>
@@ -195,32 +328,57 @@ export default function StudentPermissionNew() {
                   <input
                     type="file"
                     id="upFile"
-                    accept=".png .jpg .jpeg "
+                    accept="image/*"
                     className="hidden"
+                    value={attachment}
+                    // onChange={e => setAttachment(e.target.files)}
                   />
                 </div>
 
-                <div className="mt-7 w-full cursor-pointer bg-indigo-500 px-5 py-2 text-center text-white">
-                  Ajukan
+                <div
+                  onClick={handleLeaveHalfSubmit}
+                  className="mt-7 w-full cursor-pointer bg-indigo-500 px-5 py-2 text-center text-white"
+                >
+                  <button type="submit">Ajukan</button>
                 </div>
               </>
             )}
 
             {typePermission === "Full Day" && (
               <>
+                {alertForm?.status && (
+                  <div
+                    className="mb-4 flex rounded-lg bg-yellow-100 p-4 text-sm text-yellow-700"
+                    role="alert"
+                  >
+                    <svg
+                      className="mr-3 inline h-5 w-5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                        clipRule="evenodd"
+                      ></path>
+                    </svg>
+                    <div>{alertForm.message}</div>
+                  </div>
+                )}
                 <h3 className="text-lg font-semibold">Pilih Tanggal</h3>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {hari.map((h, idx) => (
-                    <div className={`ml-5 mb-3 text-gray-600`} key={h.name}>
+                  {days.map((day, idx) => (
+                    <div className={`ml-5 mb-3 text-gray-600`} key={day.name}>
                       <button
                         key={idx}
                         className={`${
-                          h.isActive && "border-[1.5] border-blue-500"
+                          day.isActive && "border-[1.7px] border-blue-500"
                         } rounded-full border px-5 py-1.5 hover:bg-opacity-75 hover:shadow`}
-                        is-active={h.isActive.toString()}
-                        onClick={() => handleClick(idx)}
+                        is-active={day.isActive.toString()}
+                        onClick={() => handleDaysClick(idx)}
                       >
-                        {h.name}
+                        {day.name}
                       </button>
                     </div>
                   ))}
@@ -264,6 +422,19 @@ export default function StudentPermissionNew() {
                   </div>
                 )}
 
+                <div className="mt-3">
+                  <h3 className="text-lg font-semibold">Alasan</h3>
+                  <textarea
+                    id="message"
+                    rows="4"
+                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 "
+                    placeholder="Keperluan Sekolah"
+                    required
+                    onChange={e => setReason(e.target.value)}
+                    value={reason}
+                  ></textarea>
+                </div>
+
                 <div onClick={() => setDropdownActive(false)}>
                   <div className="mt-7">
                     <h3 className="mb-2 text-lg font-semibold">
@@ -288,8 +459,12 @@ export default function StudentPermissionNew() {
                     />
                   </div>
 
-                  <div className="mt-7 w-full cursor-pointer bg-indigo-500 px-5 py-2 text-center text-white">
-                    Ajukan
+                  <div
+                    onClick={handleLeaveFullSubmit}
+                    className="mt-7 w-full cursor-pointer bg-indigo-500 px-5
+                    py-2 text-center text-white"
+                  >
+                    <button type="submit">Ajukan</button>
                   </div>
                 </div>
               </>

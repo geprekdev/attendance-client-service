@@ -57,6 +57,7 @@ export const teacherAPI = createApi({
         url: `/v1/teacher/c/?id=${user.idClass}`,
       }),
     }),
+
     getTeacherActivity: builder.query({
       query: user => ({
         headers: {
@@ -65,6 +66,7 @@ export const teacherAPI = createApi({
         url: `/v1/teacher/activity`,
       }),
     }),
+
     getTeacherJournal: builder.query({
       query: user => ({
         headers: {
@@ -73,6 +75,7 @@ export const teacherAPI = createApi({
         url: `v1/teacher/journal/?id=${user.id}`,
       }),
     }),
+
     getTeacherJournalAddNew: builder.query({
       query: user => ({
         headers: {
@@ -81,6 +84,7 @@ export const teacherAPI = createApi({
         url: `v1/teacher/create-journal/`,
       }),
     }),
+
     postTeacherJournalAddNew: builder.mutation({
       query: user => ({
         headers: {
@@ -91,6 +95,22 @@ export const teacherAPI = createApi({
           description: user.description,
         },
         url: `v1/teacher/create-journal/`,
+      }),
+    }),
+
+    postTeacherLeaveFull: builder.mutation({
+      query: user => ({
+        headers: {
+          Authorization: user.token,
+        },
+        method: "POST",
+        body: {
+          leave_type: user.leave_type,
+          attendance_scheduled: user.attendance_scheduled,
+          reason: user.reason,
+          attachment: user.attachment,
+        },
+        url: `/v1/leave/`,
       }),
     }),
   }),
@@ -107,4 +127,5 @@ export const {
   useGetTeacherJournalQuery,
   useGetTeacherJournalAddNewQuery,
   usePostTeacherJournalAddNewMutation,
+  usePostTeacherLeaveFullMutation,
 } = teacherAPI;

@@ -14,9 +14,7 @@ export default function TeacherClassPresence() {
       token: Cookie.getItem("token"),
       idClass: id,
     });
-
   const [day, setDay] = useState();
-
   const [dropdownActive, setDropdownActive] = useState(false);
 
   useEffect(() => {

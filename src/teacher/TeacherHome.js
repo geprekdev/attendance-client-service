@@ -7,7 +7,7 @@ import {
 } from "./TeacherAPI";
 import Cookie from "../util/Cookie";
 import Skeleton from "../components/Skeleton";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { getDay, getFullDate } from "../util/Date";
 import { useState } from "react";
 import { usePostStudentAttendanceMutation } from "../student/StudentAPI";
@@ -18,9 +18,8 @@ export default function NewStudentHome() {
     latitude: "",
   });
 
-  // basss
   const [error, setError] = useState(false);
-  const [alertShow, setAlertShow] = useState(true);
+  const [alertShow, setAlertShow] = useState(false);
 
   const [GPSActive, setGPSActive] = useState(false);
   const getTeacherDashboard = useGetTeacherDashboardQuery(
@@ -79,17 +78,24 @@ export default function NewStudentHome() {
       latitude: GeoLoc.latitude,
       longitude: GeoLoc.longitude,
     });
-    console.log("Post Student", data);
-    console.log("asfaf");
-    setError({
-      status: true,
-      message: data.data.message,
-    });
-    console.log("Error State", error);
+    console.log(data.data);
+    setAlertShow(true);
+    if (data.data?.error === "invalid_clock_out") {
+      setError({
+        status: true,
+        colorError: true,
+        message: data.data.message,
+      });
+    } else {
+      setError({
+        status: true,
+        colorError: false,
+        message: data.data.message,
+      });
+    }
+
     setData(res?.data);
   };
-
-  const navigate = useNavigate();
 
   // Unauthorize
   if (getTeacherDashboard.isError && getTeacherDashboard.error.status === 401) {
@@ -169,13 +175,13 @@ export default function NewStudentHome() {
         <div className="bg-[#c52831]">
           <div className="mb-8 w-full  px-5 pt-7">
             {/* Message Alert */}
-            {error !== false && (
+            {alertShow !== false && (
               <div
                 className={`${
                   alertShow ? "flex" : "hidden"
                 } justify-between rounded ${
-                  !error.status
-                    ? "bg-yellow-600 text-yellow-200"
+                  error.errorColor
+                    ? "bg-yellow-500 text-yellow-100"
                     : "bg-green-600 text-green-200"
                 } p-3  shadow-inner`}
                 onClick={() => setAlertShow(false)}

@@ -48,12 +48,6 @@ export default function TeacherAccount() {
           />
         </div>
 
-        {isLoading && (
-          <>
-            <div className="mt-16"></div>
-          </>
-        )}
-
         <div className="mx-auto w-[90%]">
           <div className="mb-4 mt-7">
             <label

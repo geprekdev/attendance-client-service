@@ -80,17 +80,15 @@ export default function NewStudentHome() {
     });
     console.log(data.data);
     setAlertShow(true);
-    if (data.data?.error === "invalid_clock_out") {
+    if (data.data?.error) {
       setError({
-        status: true,
-        colorError: true,
-        message: data.data.message,
+        error: true,
+        message: data.data?.error?.message,
       });
     } else {
       setError({
-        status: true,
-        colorError: false,
-        message: data.data.message,
+        error: false,
+        message: data.data?.success?.message,
       });
     }
 
@@ -180,7 +178,7 @@ export default function NewStudentHome() {
                 className={`${
                   alertShow ? "flex" : "hidden"
                 } justify-between rounded ${
-                  error.errorColor
+                  error.error
                     ? "bg-yellow-500 text-yellow-100"
                     : "bg-green-600 text-green-200"
                 } p-3  shadow-inner`}

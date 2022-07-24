@@ -1,3 +1,4 @@
+// Untuk Clock-in dan Clock-Out siswa
 import Layout from "../components/Layout";
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
@@ -26,10 +27,7 @@ export default function StudentAttendance() {
   const [attendance_status, setAttendanceStatus] = useState(false);
   const [clock, setClock] = useState(false);
   const [statusPost, setStatusPost] = useState({
-    error: false,
-    error_desc: null,
-    success: false,
-    success_desc: null,
+    error: null, message: ""
   });
   const [triggerPostStudentAttendance] = usePostStudentAttendanceMutation();
 
@@ -88,12 +86,11 @@ export default function StudentAttendance() {
     }
 
     console.log(data);
-
-    if (data?.data?.error === "invalid_post") {
-      setStatusPost({ error: true, error_desc: data.data.error_description });
-      return;
+    if (data.data?.error){
+      setStatusPost({error: true, message: data.data?.error?.message})
+    }else{
+      setStatusPost({error: false, message: data.data?.success?.message})
     }
-    setStatusPost({ success: true, success_desc: data.data.message });
     setAttendanceStatus(data.data.next_attendance_status);
   };
 
@@ -151,18 +148,18 @@ export default function StudentAttendance() {
                 stroke="currentColor"
               >
                 <path
-                  strokeLicecap="round"
+                  strokeLiceCap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
                   d="M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016zM12 9v2m0 4h.01"
                 />
               </svg>
             </div>
-            <span>{statusPost.error_desc}</span>
+            <span>{statusPost.message}</span>
           </div>
         )}
 
-        {statusPost.success && (
+        {statusPost.error === false && (
           <div
             className="absolute right-4 top-3 z-20 mb-4 flex items-center rounded-md bg-green-100 py-3 px-5 text-sm text-green-500 shadow-2xl"
             role="alert"
@@ -182,7 +179,7 @@ export default function StudentAttendance() {
                 />
               </svg>
             </div>
-            <span>{statusPost.success_desc}</span>
+            <span>{statusPost.message}</span>
           </div>
         )}
         {/* End Alert */}

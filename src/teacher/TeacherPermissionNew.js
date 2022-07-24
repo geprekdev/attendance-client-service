@@ -51,6 +51,7 @@ export default function StudentPermissionNew() {
       reason,
       leave_type,
       attendance_scheduled,
+      attachment: fileUpload,
     });
 
     console.log(res);

@@ -7,19 +7,14 @@ import Icon from "@mdi/react";
 import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
-import { getFullDate } from "../util/Date";
 import {
   useGetStudentLeaveQuery,
   usePostStudentLeaveFullMutation,
-  usePostStudentLeaveHalfMutation,
 } from "../student/StudentAPI";
 import Cookie from "../util/Cookie";
-import isEmpty from "../util/EmptyObj";
 
 export default function StudentPermissionNew() {
-  const [triggerPostHalf] = usePostStudentLeaveHalfMutation();
   const [triggerPostFull] = usePostStudentLeaveFullMutation();
-  const [classroom, setClassroom] = useState([]);
   const [attendanceScheduled, setAttendanceScheduled] = useState([]);
   const [days, setDays] = useState([]);
   const [alertForm, setAlertForm] = useState();
@@ -27,16 +22,14 @@ export default function StudentPermissionNew() {
   const [dropdownActive, setDropdownActive] = useState(false);
   const [category, setCategory] = useState("Sakit");
   const [reason, setReason] = useState("");
+  const [fileUpload, setFileUpload] = useState({});
+  const [displayIMG, setDisplayIMG] = useState([]);
+
   const navigate = useNavigate();
 
-  const { isSuccess, data, isError, error } = useGetStudentLeaveQuery({
+  const { isSuccess, data } = useGetStudentLeaveQuery({
     token: Cookie.getItem("token"),
   });
-
-  const menus = [
-    { type: "Half Day", text: "Izin untuk sementara waktu" },
-    { type: "Full Day", text: "Izin untuk seharian penuh" },
-  ];
 
   const categories = ["Sakit", "Izin", "Keperluan Sekolah"];
 
@@ -47,15 +40,11 @@ export default function StudentPermissionNew() {
     );
     const attendance_scheduled = [];
 
-    console.log(typeof leave_type);
-
     attendanceScheduled.forEach(att => {
       if (att.isActive) {
         attendance_scheduled.push(att.id);
       }
     });
-
-    console.log(leave_type);
 
     const res = await triggerPostFull({
       token: Cookie.getItem("token"),
@@ -93,18 +82,23 @@ export default function StudentPermissionNew() {
     setCategory(category);
   };
 
+  const onImageChange = event => {
+    if (event.target.files && event.target.files[0]) {
+      setFileUpload(event.target.files[0]);
+      setDisplayIMG(URL.createObjectURL(event.target.files[0]));
+    }
+  };
+
   useEffect(() => {
     if (isSuccess) {
-      console.log(data);
-      setClassroom(
-        data.classroomTimetable.map(c => ({ ...c, isActive: false }))
-      );
       setAttendanceScheduled(
         data.attendanceTimetable.map(att => ({ ...att, isActive: false }))
       );
       setDays(data.attendanceTimetable.map(d => ({ ...d, isActive: false })));
     }
   }, [isSuccess, data]);
+
+  console.log(fileUpload);
 
   return (
     <Layout title="Teacher" role="TEACHER">
@@ -247,19 +241,24 @@ export default function StudentPermissionNew() {
                   <label htmlFor="upFile">
                     <div className="flex  cursor-pointer items-center justify-center gap-2 rounded-lg bg-gray-200 py-2">
                       <Icon
-                        path={mdiUploadOutline}
+                        path={fileUpload[0] ? " " : mdiUploadOutline}
                         size="24px"
                         className="text-gray-800"
                       />
-                      <p>Tambahkan FIle</p>
+                      <p>{fileUpload?.name || "Tambahkan File"}</p>
                     </div>
                   </label>
+
+                  <div className="mt-5">
+                    <img src={displayIMG && displayIMG} alt="Pratinjau" />
+                  </div>
 
                   <input
                     type="file"
                     id="upFile"
-                    accept=".png .jpg .jpeg "
+                    accept="image/"
                     className="hidden"
+                    onChange={onImageChange}
                   />
                 </div>
 

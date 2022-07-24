@@ -26,8 +26,6 @@ export default function StudentSchedule() {
       { refetchOnReconnect: true }
     );
 
-  console.log(data);
-
   const navigate = useNavigate();
 
   useEffect(() => {

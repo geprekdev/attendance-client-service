@@ -11,7 +11,7 @@ export default function StudentPermission() {
   });
 
   return (
-    <Layout role="STUDENT">
+    <Layout role="TEACHER">
       <div className="relative mx-auto mb-[56px] min-h-screen max-w-[444px] border px-5 py-3 pb-24 shadow">
         <div className="-m-5 h-[50px] max-w-[150%] bg-[#c52831] pt-3 pl-3">
           <Link to="/teacher/">

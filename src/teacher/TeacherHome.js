@@ -1,4 +1,4 @@
-import { mdiChevronRight, mdiInformationOutline, mdiMapMarker } from "@mdi/js";
+import { mdiChevronRight, mdiInformationOutline, mdiMapMarker,mdiNoteEditOutline, mdiNoteTextOutline} from "@mdi/js";
 import Icon from "@mdi/react";
 import Layout from "../components/Layout";
 import {
@@ -7,7 +7,7 @@ import {
 } from "./TeacherAPI";
 import Cookie from "../util/Cookie";
 import Skeleton from "../components/Skeleton";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { getDay, getFullDate } from "../util/Date";
 import { useState } from "react";
 import { usePostStudentAttendanceMutation } from "../student/StudentAPI";
@@ -17,6 +17,8 @@ export default function NewStudentHome() {
     longitude: "",
     latitude: "",
   });
+
+  const navigate = useNavigate();
 
   const [error, setError] = useState(false);
   const [alertShow, setAlertShow] = useState(false);
@@ -308,6 +310,47 @@ export default function NewStudentHome() {
                 )}
               </div>
             </div>
+                    
+            {/* button */}
+            <div className="mt-5 w-full rounded-lg bg-white p-4">
+              <div className="flex justify-between">
+              <button onClick={() => {
+                navigate("/teacher/permission/new")
+              }}
+                    className="rounded text-gray-700 w-[49%] py-2 pr-3 hover:bg-gray-200 inline-flex items-center"
+                  >
+                    <span><Icon className="mx-2" path={mdiNoteEditOutline} size="24px" /></span>
+                    <span>Pengajuan Ijin</span>
+                  </button>
+
+
+              
+                <button onClick={() => {
+                navigate("/teacher/permission")
+              }}
+                    className="rounded text-gray-700 w-[49%] py-2 pr-3 hover:bg-gray-200 inline-flex items-center"
+                  >
+                    <span><Icon className="mx-2" path={mdiNoteTextOutline} size="24px" /></span>
+                    <span>Riwayat Ijin</span>
+                  </button>
+
+
+                  {/* <button className="bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded inline-flex items-center"> */}
+                  {/* w-4 h-4 mr-2 */}
+                  {/* <Icon className="w-4 h-4 mr-2" path={mdiNoteEditOutline} size="24px" />
+                    <span>Download</span>
+                  </button> */}
+{/* 
+                  <button
+                    className="rounded text-gray-700 py-1 w-[49%] hover:bg-gray-200"
+                  >
+                  <Icon path={mdiNoteTextOutline} size="24px" />
+                    Riwayat Ijin
+                  </button> */}
+                  
+                </div>
+            </div>
+            {/* end button */}
           </div>
 
           <div className="rounded-t-3xl bg-white p-5">

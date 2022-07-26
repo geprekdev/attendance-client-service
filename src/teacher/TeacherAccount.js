@@ -82,7 +82,7 @@ export default function TeacherAccount() {
               Email
             </label>
             <div className="text-grey-darker w-full appearance-none rounded border py-2 px-3 text-gray-500 shadow">
-              {(isSuccess && data.user.email) || "siamawolu@erpeelisme.my.id"}
+              {(isSuccess && data.user.email) || "-"}
             </div>
           </div>
 
@@ -94,7 +94,7 @@ export default function TeacherAccount() {
               NIP
             </label>
             <div className="text-grey-darker w-full appearance-none rounded border py-2 px-3 text-gray-500 shadow">
-              {(isSuccess && data.user.nip) || 18591274109}
+              {(isSuccess && data.user.username)}
             </div>
           </div>
           <button

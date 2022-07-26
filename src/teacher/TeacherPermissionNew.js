@@ -113,7 +113,7 @@ export default function StudentPermissionNew() {
     <Layout title="Teacher" role="TEACHER">
       <div className="relative mx-auto max-w-[444px] border px-5 py-3 pb-12 shadow-lg">
         <div className="-m-5 h-[50px] max-w-[150%] bg-[#c52831] pt-3 pl-3">
-          <Link to="/student/permission">
+          <Link to="/teacher/permission">
             <Icon path={mdiChevronLeft} size="1.9em" color="white" />
           </Link>
         </div>
@@ -243,7 +243,7 @@ export default function StudentPermissionNew() {
               </div>
 
               <div onClick={() => setDropdownActive(false)}>
-                <div className="mt-7">
+                {/* <div className="mt-7">
                   <h3 className="mb-2 text-lg font-semibold">
                     Unggah Surat Izin
                   </h3>
@@ -269,7 +269,7 @@ export default function StudentPermissionNew() {
                     className="hidden"
                     onChange={onImageChange}
                   />
-                </div>
+                </div> */}
 
                 <div
                   onClick={handleLeaveFullSubmit}

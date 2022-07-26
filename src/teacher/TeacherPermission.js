@@ -75,7 +75,7 @@ export default function StudentPermission() {
           })()}
         </div>
 
-        <div className="fixed bottom-[120px] mx-auto w-[420px] ">
+        {/* <div className="fixed bottom-[120px] mx-auto w-[420px] ">
           <div className="mr-2 flex justify-end">
             <Link to="/teacher/permission/new">
               <button className="flex h-16 w-16 items-center justify-center rounded-full bg-red-600 p-0 shadow-xl   transition duration-200 ease-in hover:bg-red-800 focus:outline-none active:shadow-2xl">
@@ -83,7 +83,7 @@ export default function StudentPermission() {
               </button>
             </Link>
           </div>
-        </div>
+        </div> */}
       </div>
     </Layout>
   );

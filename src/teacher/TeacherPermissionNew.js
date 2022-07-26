@@ -38,7 +38,7 @@ export default function StudentPermissionNew() {
     let formData = new FormData();
     formData.append("test", "hello");
     formData.append("image", fileUpload);
-    console.log("formData", formData)
+    console.log("formData", formData);
     const leave_type = parseInt(
       category === "Ijin" ? 0 : category === "Sakit" ? 1 : 2
     );
@@ -88,15 +88,11 @@ export default function StudentPermissionNew() {
   };
 
   const onImageChange = event => {
-
     if (event.target.files && event.target.files[0]) {
       setFileUpload(event.target.files);
       setDisplayIMG(URL.createObjectURL(event.target.files[0]));
     }
-
   };
-
-
 
   useEffect(() => {
     if (isSuccess) {
@@ -113,7 +109,7 @@ export default function StudentPermissionNew() {
     <Layout title="Teacher" role="TEACHER">
       <div className="relative mx-auto max-w-[444px] border px-5 py-3 pb-12 shadow-lg">
         <div className="-m-5 h-[50px] max-w-[150%] bg-[#c52831] pt-3 pl-3">
-          <Link to="/teacher/permission">
+          <Link to="/teacher/">
             <Icon path={mdiChevronLeft} size="1.9em" color="white" />
           </Link>
         </div>

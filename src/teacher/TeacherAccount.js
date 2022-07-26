@@ -42,7 +42,7 @@ export default function TeacherAccount() {
         </div>
         <div className="-mb-[30px] mt-[25px] flex justify-center">
           <img
-            src="http://bprpedungan.com/wp-content/uploads/2017/08/Person-placeholder-300x300.jpg"
+            src="/person_placeholder.jpg"
             alt="Logo"
             className=" mx-auto h-32 w-32 transform rounded-full border-4 border-white shadow-md transition duration-200 hover:animate-pulse"
           />
@@ -94,7 +94,7 @@ export default function TeacherAccount() {
               NIP
             </label>
             <div className="text-grey-darker w-full appearance-none rounded border py-2 px-3 text-gray-500 shadow">
-              {(isSuccess && data.user.username)}
+              {isSuccess && data.user.username}
             </div>
           </div>
           <button

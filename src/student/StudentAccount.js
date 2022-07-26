@@ -56,11 +56,10 @@ export default function StudentAccount() {
         <div className="relative mx-auto mt-20 rounded-lg bg-white shadow-xl ">
           <div className="flex justify-center">
             <img
-            src="http://bprpedungan.com/wp-content/uploads/2017/08/Person-placeholder-300x300.jpg"
-            alt="Logo"
+              src="/person_placeholder.jpg"
+              alt="Logo"
               className="absolute -top-20 mx-auto h-32 w-32 transform rounded-full border-4 border-white shadow-md transition duration-200 hover:animate-pulse"
             />
-
           </div>
 
           <div className="mt-16">

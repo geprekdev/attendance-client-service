@@ -72,11 +72,14 @@ export default function NewStudentHome() {
   const handleSubmitForm = async () => {
     const data = await triggerPostStudentAttendance({
       token: Cookie.getItem("token"),
+      latitude: GeoLoc.latitude,
+      longitude: GeoLoc.longitude,
     });
     const res = await triggerPostTeacherDashboard({
       token: Cookie.getItem("token"),
       latitude: GeoLoc.latitude,
       longitude: GeoLoc.longitude,
+
     });
     console.log(data.data);
     setAlertShow(true);

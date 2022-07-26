@@ -73,6 +73,8 @@ export default function StudentAttendance() {
   const handleSubmitForm = async () => {
     const data = await triggerPostStudentAttendance({
       token: Cookie.getItem("token"),
+      latitude: GeoLoc.latitude,
+      longitude: GeoLoc.longitude,
     });
     if (data.data.clock_in) {
       setClock({

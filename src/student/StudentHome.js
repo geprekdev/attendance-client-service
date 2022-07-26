@@ -58,7 +58,7 @@ export default function StudentHome() {
 
   return (
     <Layout title="Student" role="STUDENT">
-      <div className="mx-auto  h-screen max-w-[444px]  border px-5 py-3 pb-24 shadow-lg">
+      <div className="mx-auto  h-full max-w-[444px]  border px-5 mb-10 py-3 pb-24 shadow-lg">
         {isLoading && (
           <div className="w-[90px]">
             <Skeleton />
@@ -104,6 +104,7 @@ export default function StudentHome() {
           <p className="text-sm uppercase">Today - {getFullDate(new Date())}</p>
         </div>
         <div className="mt-7 flex flex-col rounded-md bg-white py-5 px-7 shadow-[0_12px_50px_-6px_rgb(0,0,0,0.15)]">
+        <Link to="/student/attendance"> 
           <div className="mb-3 flex items-center gap-7">
             <Icon
               path={mdiLocationEnter}
@@ -130,7 +131,7 @@ export default function StudentHome() {
 
           <hr />
 
-          <div className="fixed bottom-[70px] left-0 right-0 z-50 mx-auto max-w-[440px]">
+          {/* <div className="fixed bottom-[70px] left-0 right-0 z-50 mx-auto max-w-[440px]">
             <div className="flex justify-center">
               <Link to="/student/attendance">
                 <Icon
@@ -140,7 +141,7 @@ export default function StudentHome() {
                 />
               </Link>
             </div>
-          </div>
+          </div> */}
 
           <div className="mt-3 flex items-center gap-7">
             <Icon
@@ -165,7 +166,9 @@ export default function StudentHome() {
                 </p>
               </div>
             </div>
+          
           </div>
+          </Link>
         </div>
         <div className="mt-7 flex items-center gap-1">
           <Icon path={mdiBookVariant} size="16px" className=" text-blue-400" />

@@ -73,6 +73,7 @@ export const studentAPI = createApi({
           Authorization: user.token,
         },
         method: "POST",
+        body: { lat: user.latitude, lng: user.longitude },
         url: "/v1/attendance/",
       }),
     }),

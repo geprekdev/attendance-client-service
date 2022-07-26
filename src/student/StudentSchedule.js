@@ -19,6 +19,7 @@ export default function StudentSchedule() {
       { token: Cookie.getItem("token") },
       { refetchOnReconnect: true }
     );
+  console.log(isSuccess && data);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -104,6 +105,9 @@ export default function StudentSchedule() {
           {(() => {
             if (isSuccess) {
               const lesson = data[dateCalendar.toLocaleDateString()];
+              console.log(lesson);
+              console.log(dateCalendar.toLocaleDateString());
+
 
               if (lesson) {
                 const l = [...lesson];

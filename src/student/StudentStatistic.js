@@ -108,20 +108,20 @@ export default function StudentStatistic() {
               <>
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Kehadiran</h5>
-                  <span className="text-center">{data.presence * 100}%</span>
+                  <span className="text-center">{data.data.presence * 100}%</span>
                 </div>
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Izin</h5>
-                  <span className="text-center">{data.leave * 100}%</span>
+                  <span className="text-center">{data.data.leave * 100}%</span>
                 </div>
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Sakit</h5>
-                  <span className="text-center">{data.leave * 100}%</span>
+                  <span className="text-center">{data.data.leave * 100}%</span>
                 </div>
 
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Alpha</h5>
-                  <span className="text-center">{data.absent * 100}%</span>
+                  <span className="text-center">{data.data.absent * 100}%</span>
                 </div>
               </>
             )}
@@ -129,7 +129,7 @@ export default function StudentStatistic() {
 
           <p className="text-justify text-sm">
             Kehadiranmu telah mencapai zona &nbsp;
-            {data?.kehadiran > 80 ? (
+            {data.data?.presence > 80 ? (
               <>
                 <strong className="text-red-600">Rentan</strong>, jangan lupa
                 absen!

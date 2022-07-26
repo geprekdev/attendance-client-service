@@ -11,6 +11,8 @@ export default function StudentPermission() {
     token: Cookie.getItem("token"),
   });
 
+  console.log(data);
+
   return (
     <Layout role="STUDENT">
       <div className="relative mx-auto mb-[56px] min-h-screen max-w-[444px] border px-5 py-3 pb-24 shadow">
@@ -71,10 +73,10 @@ export default function StudentPermission() {
                 );
               }
             }
-
-            return temp;
-          })()}
+            return temp;})(
+          )}
         </div>
+
 
         <div className="fixed bottom-[120px] mx-auto w-[420px] ">
           <div className="mr-2 flex justify-end">

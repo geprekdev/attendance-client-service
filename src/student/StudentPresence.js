@@ -101,13 +101,13 @@ export default function StudentAbsent() {
 
   return (
     <Layout title="Absen" role="STUDENT">
-      <div className="mx-auto min-h-screen max-w-[444px] border px-5 py-3 shadow-lg ">
-        <div className="-m-5 h-[50px] max-w-[150%] bg-[#6A64F1] pt-3 pl-3">
-          <Link to="/student/">
-            <Icon path={mdiChevronLeft} size="1.9em" color="white" />
-          </Link>
+      <div className="mx-auto h-full mb-20 max-w-[444px] border px-5 py-3 shadow-lg ">
+      <div className="flex items-center justify-between rounded-full bg-gradient-to-r from-blue-700 to-[#63c2f0] px-5 py-2 text-xl text-white">
+          <p>Kehadiran Pelajaran</p>
+          {/* <button>
+            <Icon path={mdiChevronLeft} size="24px" />
+          </button> */}
         </div>
-
         {isSuccess && data?.error && (
           <div className="alert mx-5 mt-14 flex flex-row items-center rounded border-b-2 border-blue-300 bg-blue-200 p-6">
             <div className="alert-icon flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-blue-500 bg-blue-100">

@@ -5,6 +5,7 @@ import {
   mdiCalendarOutline,
   mdiHomeOutline,
   mdiLocationEnter,
+  mdiSendCircleOutline,
 } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Link, NavLink } from "react-router-dom";
@@ -23,10 +24,16 @@ export default function NewNav({ role }) {
     //   link: "/student/notification",
     // },
     {
+      pathIcon:  mdiSendCircleOutline,
+      text: "Ijin",
+      link: "/student/permission"
+    },
+    {
       pathIcon: mdiAccountCircleOutline,
       text: "Account",
       link: "/student/account",
     },
+
   ];
 
   const teacherMenu = [

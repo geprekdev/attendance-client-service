@@ -35,6 +35,10 @@ export default function StudentPermissionNew() {
 
   const handleLeaveFullSubmit = async () => {
     console.warn("Leave Full");
+    let formData = new FormData();
+    formData.append("test", "hello");
+    formData.append("image", fileUpload);
+    console.log("formData", formData)
     const leave_type = parseInt(
       category === "Ijin" ? 0 : category === "Sakit" ? 1 : 2
     );
@@ -84,11 +88,15 @@ export default function StudentPermissionNew() {
   };
 
   const onImageChange = event => {
+
     if (event.target.files && event.target.files[0]) {
-      setFileUpload(event.target.files[0]);
+      setFileUpload(event.target.files);
       setDisplayIMG(URL.createObjectURL(event.target.files[0]));
     }
+
   };
+
+
 
   useEffect(() => {
     if (isSuccess) {

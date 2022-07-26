@@ -310,7 +310,7 @@ export default function StudentPermissionNew() {
                   ></textarea>
                 </div>
 
-                <div className="mt-3">
+                {/* <div className="mt-3">
                   <h3 className="mb-2 text-lg font-semibold">
                     Unggah Surat Izin
                   </h3>
@@ -333,7 +333,7 @@ export default function StudentPermissionNew() {
                     value={attachment}
                     // onChange={e => setAttachment(e.target.files)}
                   />
-                </div>
+                </div> */}
 
                 <div
                   onClick={handleLeaveHalfSubmit}
@@ -436,7 +436,7 @@ export default function StudentPermissionNew() {
                 </div>
 
                 <div onClick={() => setDropdownActive(false)}>
-                  <div className="mt-7">
+                  {/* <div className="mt-7">
                     <h3 className="mb-2 text-lg font-semibold">
                       Unggah Surat Izin
                     </h3>
@@ -457,7 +457,7 @@ export default function StudentPermissionNew() {
                       accept=".png .jpg .jpeg "
                       className="hidden"
                     />
-                  </div>
+                  </div> */}
 
                   <div
                     onClick={handleLeaveFullSubmit}

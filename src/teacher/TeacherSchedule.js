@@ -60,8 +60,8 @@ export default function StudentSchedule() {
                 onChange={setDateCalendar}
                 value={dateCalendar}
                 className="p-3"
-                maxDate={new Date()}
-                minDate={new Date("2022-06-01")}
+                maxDate={new Date("2022-08-2")}
+                minDate={new Date("2022-07-01")}
               />
             </div>
           )}

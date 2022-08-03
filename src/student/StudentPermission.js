@@ -10,9 +10,6 @@ export default function StudentPermission() {
   const { isSuccess, data } = useGetStudentLeaveQuery({
     token: Cookie.getItem("token"),
   });
-
-  console.log(data);
-
   return (
     <Layout role="STUDENT">
       <div className="relative mx-auto mb-[56px] min-h-screen max-w-[444px] border px-5 py-3 pb-24 shadow">

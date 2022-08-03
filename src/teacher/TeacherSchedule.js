@@ -26,6 +26,9 @@ export default function StudentSchedule() {
       { refetchOnReconnect: true }
     );
 
+  console.log(currentDate.toLocaleDateString());
+  console.log(isSuccess && data);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,7 +63,6 @@ export default function StudentSchedule() {
                 onChange={setDateCalendar}
                 value={dateCalendar}
                 className="p-3"
-                maxDate={new Date("2022-08-2")}
                 minDate={new Date("2022-07-01")}
               />
             </div>
@@ -103,8 +105,8 @@ export default function StudentSchedule() {
 
           {(() => {
             if (isSuccess) {
-              const lesson =
-                data[dateCalendar.toLocaleDateString()] || data["7/7/2022"];
+              const lesson = data[dateCalendar.toLocaleDateString()];
+              console.log('get', lesson);
 
               // console.log(data);
 

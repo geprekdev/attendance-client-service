@@ -19,7 +19,6 @@ export default function StudentSchedule() {
       { token: Cookie.getItem("token") },
       { refetchOnReconnect: true }
     );
-  console.log(isSuccess && data);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,7 +57,6 @@ export default function StudentSchedule() {
                 onChange={setDateCalendar}
                 value={dateCalendar}
                 className="p-3"
-                maxDate={new Date()}
                 minDate={new Date("2022-06-01")}
               />
             </div>
@@ -105,10 +103,6 @@ export default function StudentSchedule() {
           {(() => {
             if (isSuccess) {
               const lesson = data[dateCalendar.toLocaleDateString()];
-              console.log(lesson);
-              console.log(dateCalendar.toLocaleDateString());
-
-
               if (lesson) {
                 const l = [...lesson];
 

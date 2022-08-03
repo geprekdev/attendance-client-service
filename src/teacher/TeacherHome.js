@@ -155,7 +155,7 @@ export default function NewStudentHome() {
                       </h3>
                       <div className="mt-2">
                         <p className=" text-sm text-gray-500">
-                          Pastikan anda mengkaktifkan GPS untuk melakukan{" "}
+                          1. Pastikan anda mengkaktifkan GPS untuk dapat melakukan{" "}
                           <span className="font-semibold text-gray-700">
                             Clock In{" "}
                           </span>
@@ -163,6 +163,15 @@ export default function NewStudentHome() {
                           <span className="font-semibold text-gray-700">
                             Clock Out
                           </span>
+                        </p>
+
+                        <p className=" text-sm text-gray-500">
+                          2. Pastikan browser mengizinkan akses lokasi{" "}
+                        </p>
+
+
+                        <p className=" text-sm text-gray-500">
+                          3. Jika belum berhasil silahkan refresh{" "}
                         </p>
                       </div>
                     </div>

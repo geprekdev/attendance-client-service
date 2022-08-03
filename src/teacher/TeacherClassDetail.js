@@ -19,6 +19,7 @@ export default function TeacherClass() {
       token: Cookie.getItem("token"),
       idClass: id,
     });
+  console.log(data);
 
   const navigate = useNavigate();
   const menus = [
@@ -85,7 +86,10 @@ export default function TeacherClass() {
           ))}
         </div>
 
-        {isEmpty(data) ? <Navigate to="/teacher/class/" /> : <Outlet />}
+        {isEmpty(data) ? 
+          (<div className="mx-auto mt-10 text-center text-xl font-semibold text-red-600">
+            <p>Daftar Hadir Kosong</p>
+          </div>) : <Outlet />}
       </div>
     </Layout>
   );

@@ -24,9 +24,6 @@ export default function StudentHome() {
     useGetStudentClassesQuery({
       token: Cookie.getItem("token"),
     });
-
-  console.log(isSuccess && data);
-
   const navigate = useNavigate();
 
   useEffect(() => {

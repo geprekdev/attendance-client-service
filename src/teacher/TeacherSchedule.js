@@ -28,6 +28,7 @@ export default function StudentSchedule() {
 
   console.log(currentDate.toLocaleDateString());
   console.log(isSuccess && data);
+  console.log(isError && error);
 
   const navigate = useNavigate();
 

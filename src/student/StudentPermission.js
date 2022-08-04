@@ -70,13 +70,12 @@ export default function StudentPermission() {
                 );
               }
             }
-            return temp;})(
-          )}
+            return temp;
+          })()}
         </div>
 
-
         <div className="fixed bottom-[120px] mx-auto w-[420px] ">
-          <div className="mr-2 flex justify-end">
+          <div className="mr-10 flex justify-end">
             <Link to="/student/permission/new">
               <button className="flex h-16 w-16 items-center justify-center rounded-full bg-indigo-600 p-0 shadow-xl   transition duration-200 ease-in hover:bg-blue-800 focus:outline-none active:shadow-2xl">
                 <Icon path={mdiPlus} className="text-white" size="80%" />

@@ -6,6 +6,7 @@ import { classListAPI } from "../classroom/ClassListAPI";
 import { studentAPI } from "../student/StudentAPI";
 import { teacherAPI } from "../teacher/TeacherAPI";
 import { setupListeners } from "@reduxjs/toolkit/dist/query";
+import { staffAPI } from "../staff/StaffAPI";
 
 export const store = configureStore({
   reducer: {
@@ -22,7 +23,8 @@ export const store = configureStore({
       .concat(classListAPI.middleware)
       .concat(authAPI.middleware)
       .concat(studentAPI.middleware)
-      .concat(teacherAPI.middleware),
+      .concat(teacherAPI.middleware)
+      .concat(staffAPI.middleware),
 });
 
 setupListeners(store.dispatch);

@@ -107,7 +107,7 @@ export default function StudentSchedule() {
           {(() => {
             if (isSuccess) {
               const lesson = data[dateCalendar.toLocaleDateString()];
-              console.log('get', lesson);
+              console.log("get", lesson);
 
               // console.log(data);
 
@@ -138,12 +138,12 @@ export default function StudentSchedule() {
                           } px-5 py-3`}
                           onClick={() =>
                             lsn.on_going &&
-                            navigate(`/teacher/class/5/presence`)
+                            navigate(`/teacher/class/${lsn.id}/presence`)
                           }
                         >
                           <div className="flex items-center justify-between">
                             <h4 className="text-[19px] font-semibold ">
-                              {lsn.classroom}
+                              {lsn.subject} - {lsn.classroom}
                             </h4>
                             {lsn.on_going && (
                               <Icon
@@ -170,7 +170,7 @@ export default function StudentSchedule() {
                               </p>
                             </div>
                             <p className="mt-2 font-semibold text-slate-500">
-                              {lsn.subject}
+                              {lsn.token}
                             </p>
                           </div>
                         </div>

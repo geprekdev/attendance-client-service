@@ -108,7 +108,9 @@ export default function StudentStatistic() {
               <>
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Kehadiran</h5>
-                  <span className="text-center">{data.data.presence * 100}%</span>
+                  <span className="text-center">
+                    {data.data.presence * 100}%
+                  </span>
                 </div>
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Izin</h5>
@@ -131,13 +133,18 @@ export default function StudentStatistic() {
             Kehadiranmu telah mencapai zona &nbsp;
             {data.data?.presence > 80 ? (
               <>
-                <strong className="text-red-600">Rentan</strong>, jangan lupa
+                <strong className="text-green-700">Aman</strong>, tingkatkan
+                kedisiplinan mu
+              </>
+            ) : data.data?.presence > 50 ? (
+              <>
+                <strong className="text-yellow-600">Rentan</strong>, jangan lupa
                 absen!
               </>
             ) : (
               <>
-                <strong className="text-green-700">Aman</strong>, tingkatkan
-                kedisiplinan mu
+                <strong className="text-red-600">Bahaya</strong>, jangan lupa
+                absen!
               </>
             )}
             ,

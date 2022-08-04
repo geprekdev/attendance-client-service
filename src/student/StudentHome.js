@@ -55,7 +55,7 @@ export default function StudentHome() {
 
   return (
     <Layout title="Student" role="STUDENT">
-      <div className="mx-auto  h-full max-w-[444px]  border px-5 mb-10 py-3 pb-24 shadow-lg">
+      <div className="mx-auto  mb-10 h-full  max-w-[444px] border px-5 py-3 pb-24 shadow-lg">
         {isLoading && (
           <div className="w-[90px]">
             <Skeleton />
@@ -101,34 +101,35 @@ export default function StudentHome() {
           <p className="text-sm uppercase">Today - {getFullDate(new Date())}</p>
         </div>
         <div className="mt-7 flex flex-col rounded-md bg-white py-5 px-7 shadow-[0_12px_50px_-6px_rgb(0,0,0,0.15)]">
-        <Link to="/student/attendance"> 
-          <div className="mb-3 flex items-center gap-7">
-            <Icon
-              path={mdiLocationEnter}
-              size="40px"
-              className="rounded-full bg-blue-500 p-2 text-white shadow-lg"
-            />
-            <div>
-              <p>CHECK-IN</p>
-              <div className="mt-1.5 text-sm text-slate-400">
-                <div className="flex items-center gap-1">
-                  Scheduled:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <Icon path={mdiAlarm} size="15px" className="inline" />{" "}
-                  <span className="font-semibold">
-                    {(isSuccess && data.currentAttendance.work_time) || "--:--"}
-                  </span>
+          <Link to="/student/attendance">
+            <div className="mb-3 flex items-center gap-7">
+              <Icon
+                path={mdiLocationEnter}
+                size="40px"
+                className="rounded-full bg-blue-500 p-2 text-white shadow-lg"
+              />
+              <div>
+                <p>CHECK-IN</p>
+                <div className="mt-1.5 text-sm text-slate-400">
+                  <div className="flex items-center gap-1">
+                    Scheduled:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <Icon path={mdiAlarm} size="15px" className="inline" />{" "}
+                    <span className="font-semibold">
+                      {(isSuccess && data.currentAttendance.work_time) ||
+                        "--:--"}
+                    </span>
+                  </div>
+                  <p>
+                    Checked in at:&nbsp;&nbsp;
+                    {(isSuccess && data.currentAttendance.clock_in) || "--:--"}
+                  </p>
                 </div>
-                <p>
-                  Checked in at:&nbsp;&nbsp;
-                  {(isSuccess && data.currentAttendance.clock_in) || "--:--"}
-                </p>
               </div>
             </div>
-          </div>
 
-          <hr />
+            <hr />
 
-          {/* <div className="fixed bottom-[70px] left-0 right-0 z-50 mx-auto max-w-[440px]">
+            {/* <div className="fixed bottom-[70px] left-0 right-0 z-50 mx-auto max-w-[440px]">
             <div className="flex justify-center">
               <Link to="/student/attendance">
                 <Icon
@@ -140,31 +141,31 @@ export default function StudentHome() {
             </div>
           </div> */}
 
-          <div className="mt-3 flex items-center gap-7">
-            <Icon
-              path={mdiLocationExit}
-              size="40px"
-              className="rounded-full bg-[#ffd94e] p-2 text-white shadow-lg"
-            />
-            <div>
-              <p>CHECK-OUT</p>
-              <div className="mt-1.5 text-sm text-slate-400">
-                <div className="flex items-center gap-1">
-                  Scheduled: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <Icon path={mdiAlarm} size="15px" className="inline" />{" "}
-                  <span className="font-semibold">
-                    {" "}
-                    {(isSuccess && data.currentAttendance.home_time) || "--:--"}
-                  </span>
+            <div className="mt-3 flex items-center gap-7">
+              <Icon
+                path={mdiLocationExit}
+                size="40px"
+                className="rounded-full bg-[#ffd94e] p-2 text-white shadow-lg"
+              />
+              <div>
+                <p>CHECK-OUT</p>
+                <div className="mt-1.5 text-sm text-slate-400">
+                  <div className="flex items-center gap-1">
+                    Scheduled: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <Icon path={mdiAlarm} size="15px" className="inline" />{" "}
+                    <span className="font-semibold">
+                      {" "}
+                      {(isSuccess && data.currentAttendance.home_time) ||
+                        "--:--"}
+                    </span>
+                  </div>
+                  <p>
+                    Checked in at: &nbsp;
+                    {(isSuccess && data.currentAttendance.clock_out) || "--:--"}
+                  </p>
                 </div>
-                <p>
-                  Checked in at: &nbsp;
-                  {(isSuccess && data.currentAttendance.clock_out) || "--:--"}
-                </p>
               </div>
             </div>
-          
-          </div>
           </Link>
         </div>
         <div className="mt-7 flex items-center gap-1">

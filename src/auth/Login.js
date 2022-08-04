@@ -35,9 +35,16 @@ export default function Login() {
         navigate("/student/");
         return;
       }
-      console.log("ke guru");
-      navigate("/teacher/");
+
+      if (res.data.role === "teacher") {
+        navigate("/teacher/");
+        return;
+      }
+
+      navigate("/staff/");
     }, 2000);
+
+    console.log(res.data.role);
   };
 
   useEffect(() => {

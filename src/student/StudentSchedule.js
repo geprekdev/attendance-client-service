@@ -19,9 +19,6 @@ export default function StudentSchedule() {
       { token: Cookie.getItem("token") },
       { refetchOnReconnect: true }
     );
-  console.log(isSuccess && data);
-  console.log(isError && error);
-  console.log(dateCalendar.toLocaleDateString("en-US"));
 
   const navigate = useNavigate();
 

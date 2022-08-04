@@ -29,6 +29,8 @@ import TeacherClassJournalAddNew from "../teacher/TeacherClassJournalAddNew";
 import TeacherPermission from "../teacher/TeacherPermission";
 import TeacherPermissionNew from "../teacher/TeacherPermissionNew";
 
+import StaffHome from "../staff/StaffHome";
+
 export default function router() {
   return (
     <BrowserRouter>
@@ -42,25 +44,16 @@ export default function router() {
           <Route path="/student/statistic" element={<StudentStatistic />} />
           <Route path="/student/account" element={<StudentAccount />} />
           <Route path="/student/permission" element={<StudentPermission />} />
-          <Route
-            path="/student/permission/new"
-            element={<StudentPermissionNew />}
-          />
+          <Route path="/student/permission/new" element={<StudentPermissionNew />} />
           <Route path="/student/activity" element={<StudentActivity />} />
 
           <Route path="/student/presence" element={<StudentPresence />} />
           <Route path="/student/attendance" element={<StudentAttendance />} />
-          <Route
-            path="/student/notification"
-            element={<StudentNotification />}
-          />
+          <Route path="/student/notification" element={<StudentNotification />} />
 
           <Route path="/teacher/" element={<TeacherHome />} />
           <Route path="/teacher/permission" element={<TeacherPermission />} />
-          <Route
-            path="/teacher/permission/new"
-            element={<TeacherPermissionNew />}
-          />
+          <Route path="/teacher/permission/new" element={<TeacherPermissionNew />} />
 
           <Route path="/teacher/class" element={<TeacherClass />} />
           <Route path="/teacher/class/:id" element={<TeacherClassDetail />}>
@@ -73,6 +66,9 @@ export default function router() {
           <Route path="/teacher/activity" element={<TeacherActivity />} />
           <Route path="/teacher/presence" element={<TeacherPresence />} />
           <Route path="/teacher/account" element={<TeacherAccount />} />
+
+          <Route path="/staff/" element={<StaffHome />} />
+
         </Route>
 
         <Route path="/auth/login" element={<Login />} />
@@ -81,8 +77,3 @@ export default function router() {
     </BrowserRouter>
   );
 }
-
-// import ClassList from "../classroom";
-// import ClassListDetail from "../classroom/ClassListDetail";
-// <Route path="/instructor/classlists" element={<ClassList />} />
-// <Route path="/instructor/classlists/detail/:grade/:subject" element={<ClassListDetail />} />

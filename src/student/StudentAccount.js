@@ -12,6 +12,7 @@ export default function StudentAccount() {
     useGetStudentAccountQuery({
       token: Cookie.getItem("token"),
     });
+  console.log(data);
 
   const navigate = useNavigate();
 
@@ -165,7 +166,7 @@ export default function StudentAccount() {
                   })()} */}
 
                 {isSuccess &&
-                  data?.["Jul 2022"]?.map((presence, idx) => (
+                  data?.["Aug 2022"].slice(0, 5)?.map((presence, idx) => (
                     <div
                       className="flex w-full items-center border-t border-gray-100 py-4 pl-6 pr-3 text-gray-600 transition duration-150 hover:bg-gray-100 "
                       key={idx}

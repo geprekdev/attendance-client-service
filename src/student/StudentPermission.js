@@ -11,7 +11,7 @@ export default function StudentPermission() {
     token: Cookie.getItem("token"),
   });
   return (
-    <Layout role="STUDENT">
+    <Layout role="STUDENT" title="Student Permission">
       <div className="relative mx-auto mb-[56px] min-h-screen max-w-[444px] border px-5 py-3 pb-24 shadow">
         <div className="-m-5 h-[50px] max-w-[150%] bg-[#6A64F1] pt-3 pl-3">
           <Link to="/student/">

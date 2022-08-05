@@ -27,7 +27,8 @@ export default function StudentAttendance() {
   const [attendance_status, setAttendanceStatus] = useState(false);
   const [clock, setClock] = useState(false);
   const [statusPost, setStatusPost] = useState({
-    error: null, message: ""
+    error: null,
+    message: "",
   });
   const [triggerPostStudentAttendance] = usePostStudentAttendanceMutation();
 
@@ -88,10 +89,10 @@ export default function StudentAttendance() {
     }
 
     console.log(data);
-    if (data.data?.error){
-      setStatusPost({error: true, message: data.data?.error?.message})
-    }else{
-      setStatusPost({error: false, message: data.data?.success?.message})
+    if (data.data?.error) {
+      setStatusPost({ error: true, message: data.data?.error?.message });
+    } else {
+      setStatusPost({ error: false, message: data.data?.success?.message });
     }
     setAttendanceStatus(data.data.next_attendance_status);
   };
@@ -207,7 +208,7 @@ export default function StudentAttendance() {
           {isSuccess && data?.message ? (
             <div className="mt-10 flex items-center justify-center gap-2 rounded-xl text-2xl font-semibold text-indigo-500">
               <Icon path={mdiInformationOutline} size="50px" />
-              <p>Tidak Ada Jawal</p>
+              <p>Tidak Ada Jadwal</p>
             </div>
           ) : (
             isSuccess && (

@@ -20,16 +20,15 @@ export default function NewNav({ role }) {
       link: "/student/schedule",
     },
     {
-      pathIcon:  mdiSendCircleOutline,
+      pathIcon: mdiSendCircleOutline,
       text: "Ijin",
-      link: "/student/permission"
+      link: "/student/permission",
     },
     {
       pathIcon: mdiAccountCircleOutline,
       text: "Account",
       link: "/student/account",
     },
-
   ];
 
   const teacherMenu = [
@@ -52,7 +51,7 @@ export default function NewNav({ role }) {
   ];
 
   const staffMenu = [
-    { pathIcon: mdiHomeOutline, text: "Home", link: "/teacher/" },
+    { pathIcon: mdiHomeOutline, text: "Home", link: "/staff/" },
     {
       pathIcon: mdiViewDashboardOutline,
       text: "Admin Panel",
@@ -61,7 +60,7 @@ export default function NewNav({ role }) {
     {
       pathIcon: mdiAccountCircleOutline,
       text: "Account",
-      link: "/teacher/account",
+      link: "/staff/account",
     },
   ];
 
@@ -116,13 +115,12 @@ export default function NewNav({ role }) {
         </div>
       )}
 
-
       {role === "STAFF" && (
         <div className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-[440px] bg-white">
           <hr />
 
           <div className="flex justify-evenly p-5">
-            {teacherMenu.map(stMenu => (
+            {staffMenu.map(stMenu => (
               <NavLink
                 to={stMenu.link}
                 className={({ isActive }) =>

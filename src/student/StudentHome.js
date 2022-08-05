@@ -63,7 +63,7 @@ export default function StudentHome() {
         )}
 
         {isSuccess && (
-          <p className="text-sm font-light text-slate-800 ">{data.greet}</p>
+          <p className="text-sm font-light text-slate-800 ">{data.greet},</p>
         )}
 
         {isLoading && (
@@ -160,7 +160,7 @@ export default function StudentHome() {
                     </span>
                   </div>
                   <p>
-                    Checked in at: &nbsp;
+                    Checked out at: &nbsp;
                     {(isSuccess && data.currentAttendance.clock_out) || "--:--"}
                   </p>
                 </div>

@@ -8,15 +8,15 @@ import {
 import Icon from "@mdi/react";
 import Layout from "../components/Layout";
 import {
-  useGetTeacherDashboardQuery,
-  usePostTeacherDashboardMutation,
-} from "../teacher/TeacherAPI";
+  useGetStaffDashboardQuery,
+  usePostStaffDashboardMutation,
+  usePostStaffAttendanceMutation,
+} from "./StaffAPI";
 import Cookie from "../util/Cookie";
 import Skeleton from "../components/Skeleton";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { getDay, getFullDate } from "../util/Date";
 import { useState } from "react";
-import { usePostStudentAttendanceMutation } from "../student/StudentAPI";
 
 export default function NewStudentHome() {
   const [GeoLoc, setGeoLoc] = useState({
@@ -30,7 +30,7 @@ export default function NewStudentHome() {
   const [alertShow, setAlertShow] = useState(false);
 
   const [GPSActive, setGPSActive] = useState(false);
-  const getTeacherDashboard = useGetTeacherDashboardQuery(
+  const getTeacherDashboard = useGetStaffDashboardQuery(
     {
       token: Cookie.getItem("token"),
       latitude: GeoLoc.latitude,
@@ -40,8 +40,8 @@ export default function NewStudentHome() {
   );
   const [data, setData] = useState(false);
 
-  const [triggerPostStudentAttendance] = usePostStudentAttendanceMutation();
-  const [triggerPostTeacherDashboard] = usePostTeacherDashboardMutation();
+  const [triggerPostStudentAttendance] = usePostStaffAttendanceMutation();
+  const [triggerPostStaffDashboard] = usePostStaffDashboardMutation();
 
   const handleGPS = () => {
     var options = {
@@ -83,7 +83,7 @@ export default function NewStudentHome() {
       latitude: GeoLoc.latitude,
       longitude: GeoLoc.longitude,
     });
-    const res = await triggerPostTeacherDashboard({
+    const res = await triggerPostStaffDashboard({
       token: Cookie.getItem("token"),
       latitude: GeoLoc.latitude,
       longitude: GeoLoc.longitude,
@@ -107,20 +107,22 @@ export default function NewStudentHome() {
 
   // Unauthorize
   if (getTeacherDashboard.isError && getTeacherDashboard.error.status === 401) {
-    Cookie.deleteItem("token");
-    return <Navigate to={"/auth/login"} />;
+    console.log("Unauthorize");
+    // Cookie.deleteItem("token");
+    // return <Navigate to={"/auth/login"} />;
   }
 
   // Role permission
   if (getTeacherDashboard.isError && getTeacherDashboard.error.status === 403) {
-    Cookie.deleteItem("token");
-    return <Navigate to={"/auth/login"} />;
+    console.log("Role Permission");
+    // Cookie.deleteItem("token");
+    // return <Navigate to={"/auth/login"} />;
   }
 
   const date = new Date();
 
   return (
-    <Layout title="Teacher" role="TEACHER">
+    <Layout title="Staff" role="STAFF">
       {!GPSActive && (
         <div
           className="relative z-10"
@@ -330,7 +332,7 @@ export default function NewStudentHome() {
               <div className="flex justify-between">
                 <button
                   onClick={() => {
-                    navigate("/teacher/permission/new");
+                    navigate("/staff/permission/new");
                   }}
                   className="inline-flex w-[49%] items-center rounded py-2 pr-3 text-gray-700 hover:bg-gray-200"
                 >
@@ -346,7 +348,7 @@ export default function NewStudentHome() {
 
                 <button
                   onClick={() => {
-                    navigate("/teacher/permission");
+                    navigate("/staff/permission");
                   }}
                   className="inline-flex w-[49%] items-center rounded py-2 pr-3 text-gray-700 hover:bg-gray-200"
                 >
@@ -382,7 +384,7 @@ export default function NewStudentHome() {
               <h4 className="font-semibold">Aktivitas Terkini</h4>
               <Link
                 className="rounded px-2 py-0.5 text-blue-700 hover:bg-gray-100"
-                to="/teacher/activity"
+                to="/staff/activity"
               >
                 Log Absensi
               </Link>

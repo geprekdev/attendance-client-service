@@ -109,32 +109,38 @@ export default function StudentStatistic() {
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Kehadiran</h5>
                   <span className="text-center">
-                    {data.data.presence * 100}%
+                    {Math.floor(data.data.presence * 100)}%
                   </span>
                 </div>
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Izin</h5>
-                  <span className="text-center">{data.data.leave * 100}%</span>
+                  <span className="text-center">
+                    {Math.floor(data.data.leave * 100)}%
+                  </span>
                 </div>
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Sakit</h5>
-                  <span className="text-center">{data.data.leave * 100}%</span>
+                  <span className="text-center">
+                    {Math.floor(data.data.leave * 100)}%
+                  </span>
                 </div>
 
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Alpha</h5>
-                  <span className="text-center">{data.data.absent * 100}%</span>
+                  <span className="text-center">
+                    {Math.floor(data.data.absent * 100)}%
+                  </span>
                 </div>
               </>
             )}
           </div>
 
           <p className="text-justify text-sm">
-            Kehadiranmu telah mencapai zona &nbsp;
+            Kehadiranmu telah mencapai zona&nbsp;
             {data.data?.presence > 80 ? (
               <>
                 <strong className="text-green-700">Aman</strong>, tingkatkan
-                kedisiplinan mu
+                kedisiplinan mu.
               </>
             ) : data.data?.presence > 50 ? (
               <>
@@ -147,7 +153,6 @@ export default function StudentStatistic() {
                 absen!
               </>
             )}
-            ,
           </p>
         </div>
       </div>

@@ -15,6 +15,7 @@ export const store = configureStore({
     [authAPI.reducerPath]: authAPI.reducer,
     [studentAPI.reducerPath]: studentAPI.reducer,
     [teacherAPI.reducerPath]: teacherAPI.reducer,
+    [staffAPI.reducerPath]: staffAPI.reducer,
   },
 
   middleware: getDefaultMiddleware =>

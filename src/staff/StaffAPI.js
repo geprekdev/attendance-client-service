@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const staffAPI = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_API }),
-  reducerPath: "TeacherAPI",
+  reducerPath: "StaffAPI",
 
   endpoints: builder => ({
     postStaffDashboard: builder.mutation({
@@ -11,7 +11,7 @@ export const staffAPI = createApi({
           Authorization: user.token,
         },
         method: "POST",
-        url: `/v1/teacher/?geo=${user.latitude},${user.longitude}`,
+        url: `/v1/staff/?geo=${user.latitude},${user.longitude}`,
       }),
     }),
 
@@ -20,7 +20,7 @@ export const staffAPI = createApi({
         headers: {
           Authorization: user.token,
         },
-        url: `/v1/teacher/?geo=${user.latitude},${user.longitude}`,
+        url: `/v1/staff/`,
       }),
     }),
 
@@ -30,7 +30,7 @@ export const staffAPI = createApi({
           Authorization: user.token,
         },
         method: "POST",
-        url: `/v1/teacher/?geo=${user.latitude},${user.longitude}`,
+        url: `/v1/staff/?geo=${user.latitude},${user.longitude}`,
       }),
     }),
 
@@ -44,6 +44,15 @@ export const staffAPI = createApi({
         url: "/v1/attendance/",
       }),
     }),
+
+    getStaffActivity: builder.query({
+      query: user => ({
+        headers: {
+          Authorization: user.token,
+        },
+        url: " v1/staff/activity/",
+      }),
+    }),
   }),
 });
 
@@ -52,4 +61,5 @@ export const {
   useGetStaffDashboardQuery,
   usePostTeacherDashboardMutation,
   usePostStaffAttendanceMutation,
+  useGetStaffActivityQuery,
 } = staffAPI;

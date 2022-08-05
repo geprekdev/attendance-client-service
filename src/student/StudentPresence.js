@@ -101,8 +101,8 @@ export default function StudentAbsent() {
 
   return (
     <Layout title="Absen" role="STUDENT">
-      <div className="mx-auto h-full mb-20 max-w-[444px] border px-5 py-3 shadow-lg ">
-      <div className="flex items-center justify-between rounded-full bg-gradient-to-r from-blue-700 to-[#63c2f0] px-5 py-2 text-xl text-white">
+      <div className="mx-auto mb-20 h-full max-w-[444px] border px-5 py-3 shadow-lg ">
+        <div className="flex items-center justify-between rounded-full bg-gradient-to-r from-blue-700 to-[#63c2f0] px-5 py-2 text-xl text-white">
           <p>Kehadiran Pelajaran</p>
           {/* <button>
             <Icon path={mdiChevronLeft} size="24px" />
@@ -248,7 +248,7 @@ export default function StudentAbsent() {
                 Warning
               </div>
               <div className="alert-description text-sm text-yellow-600">
-                Tidak dapat mengakses Lokasi ..!
+                Tidak dapat mengakses lokasi!
               </div>
             </div>
           </div>

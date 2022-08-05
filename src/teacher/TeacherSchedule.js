@@ -4,7 +4,6 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import Icon from "@mdi/react";
 import {
-  mdiCalendar,
   mdiCalendarClock,
   mdiChevronRight,
   mdiClockAlertOutline,

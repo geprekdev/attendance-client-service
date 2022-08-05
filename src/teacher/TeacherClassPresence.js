@@ -17,9 +17,12 @@ export default function TeacherClassPresence() {
   const [day, setDay] = useState();
   const [dropdownActive, setDropdownActive] = useState(false);
 
+  // pop keys terbaru
+  // console.log(isSuccess && Object.keys(data.date).shift());
+
   useEffect(() => {
     if (isSuccess) {
-      setDay(Object.keys(data.date).pop());
+      setDay(Object.keys(data.date).shift());
     }
   }, [isSuccess]);
 

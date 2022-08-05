@@ -25,11 +25,6 @@ export default function StudentSchedule() {
       { token: Cookie.getItem("token") },
       { refetchOnReconnect: true }
     );
-
-  console.log(currentDate.toLocaleDateString());
-  console.log(isSuccess && data);
-  console.log(isError && error);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,7 +43,6 @@ export default function StudentSchedule() {
   // Role permission
   if (isError && error.status === 403) {
     console.log(error);
-
     Cookie.deleteItem("token");
     return <Navigate to={"/auth/login"} />;
   }
@@ -106,10 +100,8 @@ export default function StudentSchedule() {
 
           {(() => {
             if (isSuccess) {
-              const lesson = data[dateCalendar.toLocaleDateString()];
-              console.log("get", lesson);
+              const lesson = data[dateCalendar.toLocaleDateString("en-US")];
 
-              // console.log(data);
 
               if (lesson) {
                 const l = [...lesson];

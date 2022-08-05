@@ -44,7 +44,6 @@ export default function StudentSchedule() {
   // Role permission
   if (isError && error.status === 403) {
     console.log(error);
-
     Cookie.deleteItem("token");
     return <Navigate to={"/auth/login"} />;
   }
@@ -102,10 +101,7 @@ export default function StudentSchedule() {
 
           {(() => {
             if (isSuccess) {
-              const lesson = data[dateCalendar.toLocaleDateString()];
-              console.log("get", lesson);
-
-              // console.log(data);
+              const lesson = data[dateCalendar.toLocaleDateString("en-US")];
 
               if (lesson) {
                 const l = [...lesson];

@@ -109,26 +109,26 @@ export default function StudentStatistic() {
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Kehadiran</h5>
                   <span className="text-center">
-                    {Math.floor(data.data.presence * 100)}%
+                    {Math.round(data.data.presence * 100)}%
                   </span>
                 </div>
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Izin</h5>
                   <span className="text-center">
-                    {Math.floor(data.data.leave * 100)}%
+                    {Math.round(data.data.leave * 100)}%
                   </span>
                 </div>
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Sakit</h5>
                   <span className="text-center">
-                    {Math.floor(data.data.leave * 100)}%
+                    {Math.round(data.data.leave * 100)}%
                   </span>
                 </div>
 
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Alpha</h5>
                   <span className="text-center">
-                    {Math.floor(data.data.absent * 100)}%
+                    {Math.round(data.data.absent * 100)}%
                   </span>
                 </div>
               </>

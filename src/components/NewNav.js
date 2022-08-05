@@ -120,22 +120,46 @@ export default function NewNav({ role }) {
           <hr />
 
           <div className="flex justify-evenly p-5">
-            {staffMenu.map(stMenu => (
-              <NavLink
-                to={stMenu.link}
-                className={({ isActive }) =>
-                  `group flex flex-col items-center hover:text-red-500 ${
-                    isActive
-                      ? "text-red-600 after:absolute after:bottom-3 after:h-1 after:w-1 after:rounded-full after:bg-red-400 after:content-['']"
-                      : "text-gray-400"
-                  }`
-                }
-                key={stMenu.text}
-              >
-                <Icon path={stMenu.pathIcon} size="23px" />
-                <p className="mt-2 text-xs">{stMenu.text}</p>
-              </NavLink>
-            ))}
+            <NavLink
+              to="/staff/"
+              className={({ isActive }) =>
+                `group flex flex-col items-center hover:text-red-500 ${
+                  isActive
+                    ? "text-red-600 after:absolute after:bottom-3 after:h-1 after:w-1 after:rounded-full after:bg-red-400 after:content-['']"
+                    : "text-gray-400"
+                }`
+              }
+              key={mdiHomeOutline}
+            >
+              <Icon path={mdiHomeOutline} size="23px" />
+              <p className="mt-2 text-xs">Home</p>
+            </NavLink>
+
+            <a
+              href="https://api.erpeelisme.my.id/admin"
+              target="__blank"
+              rel="noreferrer"
+              className="group flex flex-col items-center text-gray-400 hover:text-red-500"
+              key={mdiViewDashboardOutline}
+            >
+              <Icon path={mdiViewDashboardOutline} size="23px" />
+              <p className="mt-2 text-xs">Admin Panel</p>
+            </a>
+
+            <NavLink
+              to="/staff/account"
+              className={({ isActive }) =>
+                `group flex flex-col items-center hover:text-red-500 ${
+                  isActive
+                    ? "text-red-600 after:absolute after:bottom-3 after:h-1 after:w-1 after:rounded-full after:bg-red-400 after:content-['']"
+                    : "text-gray-400"
+                }`
+              }
+              key={mdiAccountCircleOutline}
+            >
+              <Icon path={mdiAccountCircleOutline} size="23px" />
+              <p className="mt-2 text-xs">Account</p>
+            </NavLink>
           </div>
         </div>
       )}

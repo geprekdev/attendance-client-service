@@ -330,36 +330,30 @@ export default function NewStudentHome() {
             {/* button */}
             <div className="mt-5 w-full rounded-lg bg-white p-4">
               <div className="flex justify-between">
-                <button
-                  onClick={() => {
-                    navigate("/staff/permission/new");
-                  }}
-                  className="inline-flex w-[49%] items-center rounded py-2 pr-3 text-gray-700 hover:bg-gray-200"
-                >
-                  <span>
-                    <Icon
-                      className="mx-2"
-                      path={mdiNoteEditOutline}
-                      size="24px"
-                    />
-                  </span>
-                  <span>Pengajuan Ijin</span>
+                <button className="w-[49%] items-center rounded py-2 pr-3 text-gray-700 hover:bg-gray-200">
+                  <Link to="/staff/permission/new" className="inline-flex">
+                    <span>
+                      <Icon
+                        className="mx-2"
+                        path={mdiNoteEditOutline}
+                        size="24px"
+                      />
+                    </span>
+                    <span>Pengajuan Ijin</span>
+                  </Link>
                 </button>
 
-                <button
-                  onClick={() => {
-                    navigate("/staff/permission");
-                  }}
-                  className="inline-flex w-[49%] items-center rounded py-2 pr-3 text-gray-700 hover:bg-gray-200"
-                >
-                  <span>
-                    <Icon
-                      className="mx-2"
-                      path={mdiNoteTextOutline}
-                      size="24px"
-                    />
-                  </span>
-                  <span>Riwayat Ijin</span>
+                <button className="w-[49%] items-center rounded py-2 pr-3 text-gray-700 hover:bg-gray-200">
+                  <Link to="/staff/permission" className="inline-flex">
+                    <span>
+                      <Icon
+                        className="mx-2"
+                        path={mdiNoteTextOutline}
+                        size="24px"
+                      />
+                    </span>
+                    <span>Riwayat Ijin</span>
+                  </Link>
                 </button>
 
                 {/* <button className="bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded inline-flex items-center"> */}

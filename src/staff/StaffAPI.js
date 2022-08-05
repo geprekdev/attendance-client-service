@@ -20,7 +20,7 @@ export const staffAPI = createApi({
         headers: {
           Authorization: user.token,
         },
-        url: `/v1/staff/`,
+        url: `/v1/staff/?geo=${user.latitude},${user.longitude}`,
       }),
     }),
 
@@ -50,7 +50,16 @@ export const staffAPI = createApi({
         headers: {
           Authorization: user.token,
         },
-        url: " v1/staff/activity/",
+        url: "/v1/staff/activity",
+      }),
+    }),
+
+    getStaffAccountInfo: builder.query({
+      query: user => ({
+        headers: {
+          Authorization: user.token,
+        },
+        url: "/v1/staff/info",
       }),
     }),
   }),
@@ -62,4 +71,5 @@ export const {
   usePostTeacherDashboardMutation,
   usePostStaffAttendanceMutation,
   useGetStaffActivityQuery,
+  useGetStaffAccountInfoQuery,
 } = staffAPI;

@@ -31,6 +31,9 @@ import TeacherPermissionNew from "../teacher/TeacherPermissionNew";
 
 import StaffHome from "../staff/StaffHome";
 import StaffActivity from "../staff/StaffActivity";
+import StaffAccount from "../staff/StaffAccount";
+import StaffPermission from "../staff/StaffPermission";
+import StaffPermissionNew from "../staff/StaffPermissionNew";
 
 export default function router() {
   return (
@@ -70,6 +73,9 @@ export default function router() {
 
           <Route path="/staff/" element={<StaffHome />} />
           <Route path="/staff/activity" element={<StaffActivity />} />
+          <Route path="/staff/account" element={<StaffAccount />} />
+          <Route path="/staff/permission" element={<StaffPermission />} />
+          <Route path="/staff/permission/new" element={<StaffPermissionNew />} />
 
 
         </Route>

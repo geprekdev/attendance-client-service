@@ -8,13 +8,13 @@ import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import {
-  useGetStudentLeaveQuery,
-  usePostStudentLeaveFullMutation,
-} from "../student/StudentAPI";
+  useGetTeacherLeaveQuery,
+  usePostTeacherLeaveFullMutation,
+} from "./TeacherAPI";
 import Cookie from "../util/Cookie";
 
 export default function StudentPermissionNew() {
-  const [triggerPostFull] = usePostStudentLeaveFullMutation();
+  const [triggerPostFull] = usePostTeacherLeaveFullMutation();
   const [attendanceScheduled, setAttendanceScheduled] = useState([]);
   const [days, setDays] = useState([]);
   const [alertForm, setAlertForm] = useState();
@@ -27,7 +27,7 @@ export default function StudentPermissionNew() {
 
   const navigate = useNavigate();
 
-  const { isSuccess, data } = useGetStudentLeaveQuery({
+  const { isSuccess, data } = useGetTeacherLeaveQuery({
     token: Cookie.getItem("token"),
   });
 
@@ -35,10 +35,7 @@ export default function StudentPermissionNew() {
 
   const handleLeaveFullSubmit = async () => {
     console.warn("Leave Full");
-    let formData = new FormData();
-    formData.append("test", "hello");
-    formData.append("image", fileUpload);
-    console.log("formData", formData);
+
     const leave_type = parseInt(
       category === "Ijin" ? 0 : category === "Sakit" ? 1 : 2
     );
@@ -50,35 +47,62 @@ export default function StudentPermissionNew() {
       }
     });
 
-    const res = await triggerPostFull({
-      token: Cookie.getItem("token"),
-      reason,
-      leave_type,
-      attendance_scheduled,
-      attachment: fileUpload,
-    });
+    // const result = await fetch(`${process.env.REACT_APP_API}/v1/leave/`, {
+    //   headers: {
+    //     Authorization: Cookie.getItem("token"),
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    //   method: "POST",
+    //   body: {
+    //     reason,
+    //     leave_type,
+    //     attendance_scheduled,
+    //     attachment: fileUpload,
+    //   },
+    // });
 
-    console.log(res);
+    const formData = new FormData();
 
-    if (res.data) {
-      window.location = "/teacher/permission/";
-    } else {
-      setAlertForm({
-        status: true,
-        message: `Reason field ${res?.error?.data?.reason}`,
-      });
-    }
+    /**
+     * @description
+     * permasalahan ketika upload image, tidak bisa menggunakan multipart/form-data
+     * solusi 1: menggunakan FormData()
+     * permasalahan solusi 1: kita tidak tahu tipe data yang digunakan
+     */
+
+    formData.append("token", Cookie.getItem("token"));
+    formData.append("reason", reason);
+    formData.append("leave_type", leave_type);
+    formData.append("attendance_scheduled", attendanceScheduled);
+    formData.append("attachment", fileUpload);
+
+    console.log(formData.get("attendance_scheduled"));
+
+    // const res = await triggerPostFull({
+    //   formData,
+    // });
+
+    // console.log(res);
+
+    // if (res.data) {
+    //   window.location = "/teacher/permission/";
+    // } else {
+    //   setAlertForm({
+    //     status: true,
+    //     message: `Reason field ${res?.error?.data?.reason}`,
+    //   });
+    // }
   };
 
   const handleDaysClick = position => {
-    setDays(
-      [...days].map((day, idx) => {
+    setAttendanceScheduled(
+      [...attendanceScheduled].map((att, idx) => {
         if (idx === position) {
           return {
-            ...day,
-            isActive: !day.isActive,
+            ...att,
+            isActive: !att.isActive,
           };
-        } else return { ...day };
+        } else return { ...att };
       })
     );
   };
@@ -89,7 +113,7 @@ export default function StudentPermissionNew() {
 
   const onImageChange = event => {
     if (event.target.files && event.target.files[0]) {
-      setFileUpload(event.target.files);
+      setFileUpload(event.target.files[0]);
       setDisplayIMG(URL.createObjectURL(event.target.files[0]));
     }
   };
@@ -99,11 +123,10 @@ export default function StudentPermissionNew() {
       setAttendanceScheduled(
         data.attendanceTimetable.map(att => ({ ...att, isActive: false }))
       );
-      setDays(data.attendanceTimetable.map(d => ({ ...d, isActive: false })));
+
+      // setDays(data.attendanceTimetable.map(d => ({ ...d, isActive: false })));
     }
   }, [isSuccess, data]);
-
-  console.log(fileUpload);
 
   return (
     <Layout title="Teacher" role="TEACHER">
@@ -171,7 +194,7 @@ export default function StudentPermissionNew() {
               )}
               <h3 className="text-lg font-semibold">Pilih Tanggal</h3>
               <div className="mt-3 flex flex-wrap gap-2">
-                {days?.map((day, idx) => (
+                {attendanceScheduled?.map((day, idx) => (
                   <div className={`ml-5 mb-3 text-gray-600`} key={day.name}>
                     <button
                       key={idx}
@@ -239,7 +262,7 @@ export default function StudentPermissionNew() {
               </div>
 
               <div onClick={() => setDropdownActive(false)}>
-                {/* <div className="mt-7">
+                <div className="mt-7">
                   <h3 className="mb-2 text-lg font-semibold">
                     Unggah Surat Izin
                   </h3>
@@ -265,7 +288,7 @@ export default function StudentPermissionNew() {
                     className="hidden"
                     onChange={onImageChange}
                   />
-                </div> */}
+                </div>
 
                 <div
                   onClick={handleLeaveFullSubmit}

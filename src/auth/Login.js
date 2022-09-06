@@ -18,6 +18,10 @@ export default function Login() {
   const handleSubmit = async e => {
     e.preventDefault();
 
+    if (loading) {
+      return;
+    }
+
     setLoading(true);
     const res = await triggerLogin({ username, password });
     if (res.error) {
@@ -150,7 +154,7 @@ export default function Login() {
                 <button
                   className={`inline-flex w-full items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 font-semibold capitalize text-white transition hover:bg-blue-700  focus:outline-none focus:ring focus:ring-blue-200 ${
                     loading &&
-                    "cursor-not-allowed  focus:border-gray-700 focus:bg-gray-500 disabled:opacity-25"
+                    "cursor-not-allowed border-gray-700 bg-gray-500 hover:bg-gray-500 disabled:opacity-25"
                   }`}
                 >
                   Masuk

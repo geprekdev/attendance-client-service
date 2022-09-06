@@ -12,7 +12,6 @@ export default function StudentAccount() {
     useGetStudentAccountQuery({
       token: Cookie.getItem("token"),
     });
-  console.log(data);
 
   const navigate = useNavigate();
 
@@ -127,70 +126,34 @@ export default function StudentAccount() {
                   </>
                 )}
 
-                {/* {isSuccess &&
-                  (() => {
-                    let temp = [];
-                    for (const iterator in data.data) {
-                      const presence = data.data[iterator];
-
-                      temp.push(
-                        <div
-                          className="flex w-full items-center border-t border-gray-100 py-4 pl-6 pr-3 text-gray-600 transition duration-150 hover:bg-gray-100 "
-                          key={iterator}
-                        >
-                          {presence.status === "HADIR" ? (
-                            <Icon
-                              size="19px"
-                              className={`mx-1 text-green-600`}
-                              path={mdiCheckBold}
-                            />
-                          ) : presence.status === "ALPHA" ? (
-                            <Icon
-                              size="19px"
-                              className={`mx-1 text-red-600`}
-                              path={mdiAlphaACircle}
-                            />
-                          ) : (
-                            ""
-                          )}
-                          <p>{presence.subject}</p>
-                          &nbsp;
-                          <p className="text-xs text-gray-500">
-                            {presence.date}
-                          </p>
-                        </div>
-                      );
-                    }
-
-                    return temp;
-                  })()} */}
-
                 {isSuccess &&
-                  data?.["Aug 2022"].slice(0, 5)?.map((presence, idx) => (
-                    <div
-                      className="flex w-full items-center border-t border-gray-100 py-4 pl-6 pr-3 text-gray-600 transition duration-150 hover:bg-gray-100 "
-                      key={idx}
-                    >
-                      {presence.status === "HADIR" ? (
-                        <Icon
-                          size="19px"
-                          className={`mx-1 text-green-600`}
-                          path={mdiCheckBold}
-                        />
-                      ) : presence.status === "ALPHA" ? (
-                        <Icon
-                          size="19px"
-                          className={`mx-1 text-red-600`}
-                          path={mdiAlphaACircle}
-                        />
-                      ) : (
-                        ""
-                      )}
-                      <p>{presence.name}</p>
-                      &nbsp;
-                      <p className="text-xs text-gray-500">{presence.date}</p>
-                    </div>
-                  ))}
+                  Object.entries(data)[1][1]
+                    .slice(0, 5)
+                    ?.map((presence, idx) => (
+                      <div
+                        className="flex w-full items-center border-t border-gray-100 py-4 pl-6 pr-3 text-gray-600 transition duration-150 hover:bg-gray-100 "
+                        key={idx}
+                      >
+                        {presence.status === "HADIR" ? (
+                          <Icon
+                            size="19px"
+                            className={`mx-1 text-green-600`}
+                            path={mdiCheckBold}
+                          />
+                        ) : presence.status === "ALPHA" ? (
+                          <Icon
+                            size="19px"
+                            className={`mx-1 text-red-600`}
+                            path={mdiAlphaACircle}
+                          />
+                        ) : (
+                          ""
+                        )}
+                        <p>{presence.name}</p>
+                        &nbsp;
+                        <p className="text-xs text-gray-500">{presence.date}</p>
+                      </div>
+                    ))}
               </div>
             </div>
           </div>

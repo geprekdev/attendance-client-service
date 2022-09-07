@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import {
-  useGetTeacherLeaveQuery,
+  useGetTeacherLeaveFullQuery,
   usePostTeacherLeaveFullMutation,
 } from "./TeacherAPI";
 import Cookie from "../util/Cookie";
@@ -27,14 +27,14 @@ export default function StudentPermissionNew() {
 
   const navigate = useNavigate();
 
-  const { isSuccess, data } = useGetTeacherLeaveQuery({
+  const { isSuccess, data } = useGetTeacherLeaveFullQuery({
     token: Cookie.getItem("token"),
   });
 
   const categories = ["Sakit", "Izin", "Keperluan Sekolah"];
 
   const handleLeaveFullSubmit = async () => {
-    console.warn("Leave Full");
+    console.warn("Call API _Leave Full_");
 
     const leave_type = parseInt(
       category === "Ijin" ? 0 : category === "Sakit" ? 1 : 2
@@ -47,51 +47,62 @@ export default function StudentPermissionNew() {
       }
     });
 
-    // const result = await fetch(`${process.env.REACT_APP_API}/v1/leave/`, {
-    //   headers: {
-    //     Authorization: Cookie.getItem("token"),
-    //     "Content-Type": "multipart/form-data",
-    //   },
-    //   method: "POST",
-    //   body: {
-    //     reason,
-    //     leave_type,
-    //     attendance_scheduled,
-    //     attachment: fileUpload,
-    //   },
-    // });
-
-    const formData = new FormData();
+    let formData = new FormData();
 
     /**
      * @description
-     * permasalahan ketika upload image, tidak bisa menggunakan multipart/form-data
+     * permasalahan 1: ketika upload image, tidak bisa menggunakan multipart/form-data
      * solusi 1: menggunakan FormData()
      * permasalahan solusi 1: kita tidak tahu tipe data yang digunakan
+     *
+     * permaslahan 2: ketika mengirim post, hasilnya selalu [object, object]
+     *
      */
 
-    formData.append("token", Cookie.getItem("token"));
+    const att_scheduled = attendanceScheduled
+      .map(att => {
+        if (att.isActive) {
+          return att.id;
+        }
+        return null;
+      })
+      .filter(att => att != null);
+
+    console.log(att_scheduled[0]);
+
+    // return;
+
+    // formData.append("token", Cookie.getItem("token"));
     formData.append("reason", reason);
     formData.append("leave_type", leave_type);
-    formData.append("attendance_scheduled", attendanceScheduled);
-    formData.append("attachment", fileUpload);
+    formData.append("attendance_scheduled", att_scheduled[0]);
+    formData.append("attachment", fileUpload[0]);
 
-    console.log(formData.get("attendance_scheduled"));
+    // return;
 
-    // const res = await triggerPostFull({
-    //   formData,
-    // });
+    // token: Cookie.getItem("token"),
+    // reason,
+    // leave_type,
+    // attendance_scheduled,
+    // // formData,
+    // attachment: fileUpload
 
-    // console.log(res);
+    // return;
+    const res = await triggerPostFull({
+      formData,
+      token: Cookie.getItem("token"),
+    });
 
-    // if (res.data) {
-    //   window.location = "/teacher/permission/";
-    // } else {
-    //   setAlertForm({
-    //     status: true,
-    //     message: `Reason field ${res?.error?.data?.reason}`,
-    //   });
-    // }
+    console.log("respponse ->", res);
+
+    if (res.data) {
+      window.location = "/teacher/permission/";
+    } else {
+      setAlertForm({
+        status: true,
+        message: `Tidak dapat mengirim, periksa form anda!`,
+      });
+    }
   };
 
   const handleDaysClick = position => {
@@ -113,7 +124,7 @@ export default function StudentPermissionNew() {
 
   const onImageChange = event => {
     if (event.target.files && event.target.files[0]) {
-      setFileUpload(event.target.files[0]);
+      setFileUpload(event.target.files);
       setDisplayIMG(URL.createObjectURL(event.target.files[0]));
     }
   };

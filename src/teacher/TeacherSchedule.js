@@ -49,7 +49,7 @@ export default function StudentSchedule() {
 
   return (
     <Layout role="TEACHER" title="Student Scheduled">
-      <div className="mx-auto mb-[56px] max-w-[444px] border  px-5 py-3 shadow-lg">
+      <div className="mx-auto mb-[56px] max-w-[444px] border px-5 py-3 shadow-lg">
         <div className="flex items-center justify-between rounded-full bg-gradient-to-r from-red-700 to-[#f48282] px-5 py-2 ">
           <h1 className="text-xl font-bold text-white">Schedule</h1>
           {showCalendar && (
@@ -68,7 +68,10 @@ export default function StudentSchedule() {
           </button>
         </div>
 
-        <div className="h-screen pt-7" onClick={() => setShowCalendar(false)}>
+        <div
+          className="min-h-screen pb-10 pt-7"
+          onClick={() => setShowCalendar(false)}
+        >
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">
               {getDay(dateCalendar.getDay())}, {getFullDate(dateCalendar)}

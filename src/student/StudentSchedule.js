@@ -127,7 +127,7 @@ export default function StudentSchedule() {
                           className={` ml-auto rounded-r-lg ${
                             lsn.on_going
                               ? "w-full cursor-pointer border-4 border-y-transparent border-r-transparent border-l-indigo-500 text-gray-900 shadow-lg"
-                              : "w-[65%] border-[3px] border-y-transparent border-l-red-300 border-r-transparent text-slate-400 shadow"
+                              : "w-[65%] border-[3px] border-y-transparent border-l-gray-300 border-r-transparent text-slate-400 shadow"
                           } px-5 py-3`}
                           onClick={() =>
                             lsn.on_going && navigate("/student/presence")

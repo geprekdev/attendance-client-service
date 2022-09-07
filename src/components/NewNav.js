@@ -21,7 +21,7 @@ export default function NewNav({ role }) {
     },
     {
       pathIcon: mdiSendCircleOutline,
-      text: "Ijin",
+      text: "Permission",
       link: "/student/permission",
     },
     {

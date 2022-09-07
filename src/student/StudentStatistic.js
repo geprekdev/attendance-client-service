@@ -51,8 +51,6 @@ export default function StudentStatistic() {
         token: Cookie.getItem("token"),
       });
 
-      console.log(res);
-
       // Unauthorize
       if (res?.error?.status === 401) {
         Cookie.deleteItem("token");
@@ -66,9 +64,13 @@ export default function StudentStatistic() {
         return;
       }
 
-      bar.animate(res.data.presence);
-
       setData({ ...res });
+
+      if (res.data.presence > 0) {
+        bar.animate(res.data.presence);
+      } else {
+        bar.animate(0.01);
+      }
     }
 
     bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
@@ -91,10 +93,8 @@ export default function StudentStatistic() {
   return (
     <Layout title="Student Statistic" role="STUDENT">
       <div className="mx-auto mb-[56px] h-screen max-w-[444px]  border px-5 py-3 pb-24 shadow-lg">
-        <div className="-m-5 h-[50px] max-w-[150%] bg-[#6A64F1] pt-3 pl-3">
-          <Link to="/student/">
-            <Icon path={mdiChevronLeft} size="1.9em" color="white" />
-          </Link>
+        <div className="flex items-center justify-between rounded-full bg-gradient-to-r from-blue-700 to-[#63c2f0] px-5 py-2 text-xl text-white">
+          <p>Statistic</p>
         </div>
 
         <div
@@ -102,7 +102,7 @@ export default function StudentStatistic() {
           className="relative m-5 mx-auto mt-12 max-h-[270px] max-w-[270px]"
         ></div>
 
-        <div className="relative mt-14  w-full rounded-xl bg-white p-10 shadow-xl">
+        <div className="relative mt-0  w-full rounded-xl bg-white p-10 shadow-xl">
           <div className="mb-5 flex justify-between gap-7">
             {!isEmpty(data) && (
               <>

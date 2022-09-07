@@ -240,7 +240,7 @@ export default function StudentPermissionNew() {
                       classroom.map((classroom, idx) => (
                         <div
                           className={`ml-5 mb-3 text-gray-600 `}
-                          key={classroom.name}
+                          key={classroom.id}
                         >
                           <button
                             className={`${

@@ -98,7 +98,7 @@ export const teacherAPI = createApi({
       }),
     }),
 
-    getTeacherLeave: builder.query({
+    getTeacherLeaveFull: builder.query({
       query: user => ({
         headers: {
           Authorization: user.token,
@@ -114,7 +114,7 @@ export const teacherAPI = createApi({
           // "Content-Type": "multipart/form-data",
         },
         method: "POST",
-        body: user,
+        body: user.formData,
         url: `/v1/leave/`,
       }),
     }),
@@ -133,5 +133,5 @@ export const {
   useGetTeacherJournalAddNewQuery,
   usePostTeacherJournalAddNewMutation,
   usePostTeacherLeaveFullMutation,
-  useGetTeacherLeaveQuery,
+  useGetTeacherLeaveFullQuery,
 } = teacherAPI;

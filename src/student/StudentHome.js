@@ -50,12 +50,16 @@ export default function StudentHome() {
     { pathIcon: mdiTimer, text: "Statistic", link: "/student/statistic" },
     { pathIcon: mdiNoteText, text: "Presence", link: "/student/presence" },
     { pathIcon: mdiNoteCheck, text: "Activity", link: "/student/activity" },
-    { pathIcon: mdiSendCircle, text: "Izin", link: "/student/permission" },
+    {
+      pathIcon: mdiSendCircle,
+      text: "Permission",
+      link: "/student/permission",
+    },
   ];
 
   return (
     <Layout title="Student" role="STUDENT">
-      <div className="mx-auto  mb-10 h-full  max-w-[444px] border px-5 py-3 pb-24 shadow-lg">
+      <div className="mx-auto mb-10 h-full min-h-screen  max-w-[444px] border px-5 py-3 pb-24 shadow-lg">
         {isLoading && (
           <div className="w-[90px]">
             <Skeleton />

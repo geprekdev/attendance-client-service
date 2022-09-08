@@ -7,6 +7,8 @@ import {
   mdiLocationEnter,
   mdiSendCircleOutline,
   mdiViewDashboardOutline,
+  mdiTimerOutline,
+
 } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Link, NavLink } from "react-router-dom";
@@ -20,10 +22,15 @@ export default function NewNav({ role }) {
       link: "/student/schedule",
     },
     {
-      pathIcon: mdiSendCircleOutline,
-      text: "Permission",
-      link: "/student/permission",
+      pathIcon: mdiTimerOutline,
+      text: "Statistic",
+      link: "/student/statistic",
     },
+    // {
+    //   pathIcon: mdiSendCircleOutline,
+    //   text: "Permission",
+    //   link: "/student/permission",
+    // },
     {
       pathIcon: mdiAccountCircleOutline,
       text: "Account",

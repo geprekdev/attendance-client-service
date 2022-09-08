@@ -12,6 +12,24 @@ export const studentAPI = createApi({
         url: "/v1/student/",
       }),
     }),
+    getNewStudentClasses: builder.query({
+      query: user => ({
+        headers: {
+          Authorization: user.token,
+        },
+        url: "/v1/student/new/",
+      }),
+    }),
+
+    postNewStudentClasses: builder.mutation({
+      query: user => ({
+        headers: {
+          Authorization: user.token,
+        },
+        method: "POST",
+        url: `/v1/student/new/`,
+      }),
+    }),
 
     getStudentPresence: builder.query({
       query: user => ({
@@ -145,6 +163,7 @@ export const studentAPI = createApi({
 
 export const {
   useGetStudentClassesQuery,
+  useGetNewStudentClassesQuery,
   useGetStudentPresenceQuery,
   useGetStudentStatisticMutation,
   useGetStudentAccountQuery,
@@ -157,4 +176,5 @@ export const {
   useGetStudentLeaveQuery,
   usePostStudentLeaveHalfMutation,
   usePostStudentLeaveFullMutation,
+  usePostNewStudentClassesMutation,
 } = studentAPI;

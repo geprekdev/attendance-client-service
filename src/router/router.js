@@ -12,6 +12,7 @@ import StudentNotification from "../student/StudentNotification";
 import StudentPermission from "../student/StudentPermission";
 import StudentPermissionNew from "../student/StudentPermissionNew";
 import StudentActivity from "../student/StudentActivity";
+import NewStudentHome from "../student/NewStudentHome";
 
 import Home from "../common/HomePage";
 import ErrorPage from "../common/ErrorPage";
@@ -43,7 +44,7 @@ export default function router() {
         <Route path="/rusakk" element={<ErrorPage />} />
 
         <Route element={<ProtectedRouter />}>
-          <Route path="/student/" element={<StudentHome />} />
+          <Route path="/student/" element={<NewStudentHome />} />
           <Route path="/student/schedule" element={<StudentSchedule />} />
           <Route path="/student/statistic" element={<StudentStatistic />} />
           <Route path="/student/account" element={<StudentAccount />} />

@@ -62,6 +62,27 @@ export const staffAPI = createApi({
         url: "/v1/staff/info",
       }),
     }),
+
+    getStaffLeaveFull: builder.query({
+      query: user => ({
+        headers: {
+          Authorization: user.token,
+        },
+        url: "/v1/leave/",
+      }),
+    }),
+
+    postStaffLeaveFull: builder.mutation({
+      query: user => ({
+        headers: {
+          Authorization: user.token,
+          // "Content-Type": "multipart/form-data",
+        },
+        method: "POST",
+        body: user.formData,
+        url: `/v1/leave/`,
+      }),
+    }),
   }),
 });
 
@@ -72,4 +93,6 @@ export const {
   usePostStaffAttendanceMutation,
   useGetStaffActivityQuery,
   useGetStaffAccountInfoQuery,
+  usePostStaffLeaveFullMutation,
+  useGetStaffLeaveFullQuery,
 } = staffAPI;

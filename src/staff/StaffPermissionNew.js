@@ -1,18 +1,21 @@
-import { mdiCheckCircleOutline, mdiChevronLeft } from "@mdi/js";
+import {
+  mdiCheckCircleOutline,
+  mdiChevronLeft,
+  mdiUploadOutline,
+} from "@mdi/js";
 import Icon from "@mdi/react";
 import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import {
-  useGetStudentLeaveQuery,
-  usePostStudentLeaveFullMutation,
-} from "../student/StudentAPI";
+  useGetStaffLeaveFullQuery,
+  usePostStaffLeaveFullMutation,
+} from "./StaffAPI";
 import Cookie from "../util/Cookie";
 
-export default function StaffPermissionNew() {
-  const [triggerPostFull] = usePostStudentLeaveFullMutation();
+export default function StaffPermission() {
+  const [triggerPostFull] = usePostStaffLeaveFullMutation();
   const [attendanceScheduled, setAttendanceScheduled] = useState([]);
-  const [days, setDays] = useState([]);
   const [alertForm, setAlertForm] = useState();
 
   const [dropdownActive, setDropdownActive] = useState(false);
@@ -23,18 +26,19 @@ export default function StaffPermissionNew() {
 
   const navigate = useNavigate();
 
-  const { isSuccess, data } = useGetStudentLeaveQuery({
+  const { isSuccess, data } = useGetStaffLeaveFullQuery({
     token: Cookie.getItem("token"),
   });
+
+  if (isSuccess) {
+    console.log(data);
+  }
 
   const categories = ["Sakit", "Izin", "Keperluan Sekolah"];
 
   const handleLeaveFullSubmit = async () => {
-    console.warn("Leave Full");
-    let formData = new FormData();
-    formData.append("test", "hello");
-    formData.append("image", fileUpload);
-    console.log("formData", formData);
+    console.log("Mengajukan Izin...");
+
     const leave_type = parseInt(
       category === "Ijin" ? 0 : category === "Sakit" ? 1 : 2
     );
@@ -46,35 +50,50 @@ export default function StaffPermissionNew() {
       }
     });
 
+    let formData = new FormData();
+
+    const att_scheduled = attendanceScheduled
+      .map(att => {
+        if (att.isActive) {
+          return att.id;
+        }
+        return null;
+      })
+      .filter(att => att != null);
+
+    formData.append("reason", reason);
+    formData.append("leave_type", leave_type);
+    formData.append("attendance_scheduled", att_scheduled[0]);
+    formData.append("attachment", fileUpload[0]);
+
     const res = await triggerPostFull({
+      formData,
       token: Cookie.getItem("token"),
-      reason,
-      leave_type,
-      attendance_scheduled,
-      attachment: fileUpload,
     });
 
-    console.log(res);
+    console.log("respponse ->", res);
 
     if (res.data) {
-      window.location = "/teacher/permission/";
+      navigate("/staff/permission", {
+        state: { isSuccess: true },
+      });
     } else {
       setAlertForm({
         status: true,
-        message: `Reason field ${res?.error?.data?.reason}`,
+        message: `Tidak dapat mengirim, periksa form anda!`,
       });
     }
   };
 
   const handleDaysClick = position => {
-    setDays(
-      [...days].map((day, idx) => {
+    setAttendanceScheduled(
+      [...attendanceScheduled].map((att, idx) => {
         if (idx === position) {
           return {
-            ...day,
-            isActive: !day.isActive,
+            ...att,
+            isActive: !att.isActive,
           };
-        } else return { ...day };
+        } else return { ...att };
       })
     );
   };
@@ -95,11 +114,10 @@ export default function StaffPermissionNew() {
       setAttendanceScheduled(
         data.attendanceTimetable.map(att => ({ ...att, isActive: false }))
       );
-      setDays(data.attendanceTimetable.map(d => ({ ...d, isActive: false })));
+
+      // setDays(data.attendanceTimetable.map(d => ({ ...d, isActive: false })));
     }
   }, [isSuccess, data]);
-
-  console.log(fileUpload);
 
   return (
     <Layout title="Staff" role="STAFF">
@@ -167,7 +185,7 @@ export default function StaffPermissionNew() {
               )}
               <h3 className="text-lg font-semibold">Pilih Tanggal</h3>
               <div className="mt-3 flex flex-wrap gap-2">
-                {days?.map((day, idx) => (
+                {attendanceScheduled?.map((day, idx) => (
                   <div className={`ml-5 mb-3 text-gray-600`} key={day.name}>
                     <button
                       key={idx}
@@ -235,7 +253,7 @@ export default function StaffPermissionNew() {
               </div>
 
               <div onClick={() => setDropdownActive(false)}>
-                {/* <div className="mt-7">
+                <div className="mt-7">
                   <h3 className="mb-2 text-lg font-semibold">
                     Unggah Surat Izin
                   </h3>
@@ -261,7 +279,7 @@ export default function StaffPermissionNew() {
                     className="hidden"
                     onChange={onImageChange}
                   />
-                </div> */}
+                </div>
 
                 <div
                   onClick={handleLeaveFullSubmit}

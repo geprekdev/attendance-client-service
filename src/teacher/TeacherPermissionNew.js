@@ -16,7 +16,6 @@ import Cookie from "../util/Cookie";
 export default function StudentPermissionNew() {
   const [triggerPostFull] = usePostTeacherLeaveFullMutation();
   const [attendanceScheduled, setAttendanceScheduled] = useState([]);
-  const [days, setDays] = useState([]);
   const [alertForm, setAlertForm] = useState();
 
   const [dropdownActive, setDropdownActive] = useState(false);
@@ -34,7 +33,7 @@ export default function StudentPermissionNew() {
   const categories = ["Sakit", "Izin", "Keperluan Sekolah"];
 
   const handleLeaveFullSubmit = async () => {
-    console.warn("Call API _Leave Full_");
+    console.log("Mengajukan Izin...");
 
     const leave_type = parseInt(
       category === "Ijin" ? 0 : category === "Sakit" ? 1 : 2
@@ -49,16 +48,6 @@ export default function StudentPermissionNew() {
 
     let formData = new FormData();
 
-    /**
-     * @description
-     * permasalahan 1: ketika upload image, tidak bisa menggunakan multipart/form-data
-     * solusi 1: menggunakan FormData()
-     * permasalahan solusi 1: kita tidak tahu tipe data yang digunakan
-     *
-     * permaslahan 2: ketika mengirim post, hasilnya selalu [object, object]
-     *
-     */
-
     const att_scheduled = attendanceScheduled
       .map(att => {
         if (att.isActive) {
@@ -68,26 +57,11 @@ export default function StudentPermissionNew() {
       })
       .filter(att => att != null);
 
-    console.log(att_scheduled[0]);
-
-    // return;
-
-    // formData.append("token", Cookie.getItem("token"));
     formData.append("reason", reason);
     formData.append("leave_type", leave_type);
     formData.append("attendance_scheduled", att_scheduled[0]);
     formData.append("attachment", fileUpload[0]);
 
-    // return;
-
-    // token: Cookie.getItem("token"),
-    // reason,
-    // leave_type,
-    // attendance_scheduled,
-    // // formData,
-    // attachment: fileUpload
-
-    // return;
     const res = await triggerPostFull({
       formData,
       token: Cookie.getItem("token"),
@@ -96,7 +70,9 @@ export default function StudentPermissionNew() {
     console.log("respponse ->", res);
 
     if (res.data) {
-      window.location = "/teacher/permission/";
+      navigate("/teacher/permission", {
+        state: { isSuccess: true },
+      });
     } else {
       setAlertForm({
         status: true,

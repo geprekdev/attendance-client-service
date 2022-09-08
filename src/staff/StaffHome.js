@@ -19,58 +19,58 @@ import { getDay, getFullDate } from "../util/Date";
 import { useState } from "react";
 
 export default function NewStudentHome() {
-  const [GeoLoc, setGeoLoc] = useState({
-    longitude: "",
-    latitude: "",
-  });
+  // const [GeoLoc, setGeoLoc] = useState({
+  //   longitude: "",
+  //   latitude: "",
+  // });
 
   const navigate = useNavigate();
 
   const [error, setError] = useState(false);
   const [alertShow, setAlertShow] = useState(false);
 
-  const [GPSActive, setGPSActive] = useState(false);
+  // const [GPSActive, setGPSActive] = useState(false);
   const getTeacherDashboard = useGetStaffDashboardQuery(
     {
       token: Cookie.getItem("token"),
-      latitude: GeoLoc.latitude,
-      longitude: GeoLoc.longitude,
-    },
-    { skip: !GPSActive }
+      // latitude: GeoLoc.latitude,
+      // longitude: GeoLoc.longitude,
+    }
+    //   { skip: !GPSActive }
   );
   const [data, setData] = useState(false);
 
   const [triggerPostStudentAttendance] = usePostStaffAttendanceMutation();
   const [triggerPostStaffDashboard] = usePostStaffDashboardMutation();
 
-  const handleGPS = () => {
-    var options = {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0,
-    };
+  // const handleGPS = () => {
+  //   var options = {
+  //     enableHighAccuracy: true,
+  //     timeout: 5000,
+  //     maximumAge: 0,
+  //   };
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        position => {
-          setGeoLoc({
-            longitude: parseFloat(position.coords.longitude),
-            latitude: parseFloat(position.coords.latitude),
-          });
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(
+  //       position => {
+  //         setGeoLoc({
+  //           longitude: parseFloat(position.coords.longitude),
+  //           latitude: parseFloat(position.coords.latitude),
+  //         });
 
-          setGPSActive(true);
-        },
-        null,
-        options
-      );
-    } else {
-      alert("Perangkat anda tidak mendukung GPS!");
-    }
-  };
+  //         setGPSActive(true);
+  //       },
+  //       null,
+  //       options
+  //     );
+  //   } else {
+  //     alert("Perangkat anda tidak mendukung GPS!");
+  //   }
+  // };
 
-  if (GPSActive === false) {
-    handleGPS();
-  }
+  // if (GPSActive === false) {
+  //   handleGPS();
+  // }
 
   if (getTeacherDashboard.isSuccess && data === false) {
     // console.log("Get Teacher", getTeacherDashboard.data);
@@ -80,14 +80,15 @@ export default function NewStudentHome() {
   const handleSubmitForm = async () => {
     const data = await triggerPostStudentAttendance({
       token: Cookie.getItem("token"),
-      latitude: GeoLoc.latitude,
-      longitude: GeoLoc.longitude,
+      // latitude: GeoLoc.latitude,
+      // longitude: GeoLoc.longitude,
     });
     const res = await triggerPostStaffDashboard({
       token: Cookie.getItem("token"),
-      latitude: GeoLoc.latitude,
-      longitude: GeoLoc.longitude,
+      // latitude: GeoLoc.latitude,
+      // longitude: GeoLoc.longitude,
     });
+
     console.log(data.data);
     setAlertShow(true);
     if (data.data?.error) {
@@ -108,22 +109,22 @@ export default function NewStudentHome() {
   // Unauthorize
   if (getTeacherDashboard.isError && getTeacherDashboard.error.status === 401) {
     console.log("Unauthorize");
-    // Cookie.deleteItem("token");
-    // return <Navigate to={"/auth/login"} />;
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
   }
 
   // Role permission
   if (getTeacherDashboard.isError && getTeacherDashboard.error.status === 403) {
     console.log("Role Permission");
-    // Cookie.deleteItem("token");
-    // return <Navigate to={"/auth/login"} />;
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
   }
 
   const date = new Date();
 
   return (
     <Layout title="Staff" role="STAFF">
-      {!GPSActive && (
+      {/* {!GPSActive && (
         <div
           className="relative z-10"
           aria-labelledby="modal-title"
@@ -188,7 +189,7 @@ export default function NewStudentHome() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       <div className="mx-auto min-h-screen max-w-[444px] border pb-24 shadow-lg">
         <div className="bg-[#c52831]">
@@ -227,9 +228,9 @@ export default function NewStudentHome() {
                 <Skeleton />
               </div>
             )}
-            {!GPSActive && (
-              <div className="w-[110px]">{/* <Skeleton /> */}</div>
-            )}
+            {/* {!GPSActive && (
+              <div className="w-[110px]"><Skeleton /></div>
+            )} */}
             <p className="text-gray-100">
               {getTeacherDashboard.isSuccess && data?.greet}
             </p>
@@ -241,22 +242,26 @@ export default function NewStudentHome() {
                     <Skeleton />
                   </div>
                 )}
-                {!GPSActive && (
-                  <div className="w-[200px]">{/* <Skeleton /> */}</div>
-                )}
+                {/* {!GPSActive && (
+                  <div className="w-[200px]">
+                    <Skeleton />
+                  </div>
+                )} */}
                 <h1 className="-mt-5 text-3xl font-semibold">
                   {getTeacherDashboard.isSuccess &&
                     data?.user?.first_name + " " + data?.user?.last_name}
                 </h1>
 
                 {getTeacherDashboard.isLoading && (
-                  <div className="mt-3 w-[60px]">{/* <Skeleton /> */}</div>
-                )}
-                {!GPSActive && (
                   <div className="mt-3 w-[60px]">
                     <Skeleton />
                   </div>
                 )}
+                {/* {!GPSActive && (
+                  <div className="mt-3 w-[60px]">
+                    <Skeleton />
+                  </div>
+                )} */}
 
                 <p>{getTeacherDashboard.isSuccess && ""}</p>
               </div>
@@ -284,8 +289,8 @@ export default function NewStudentHome() {
                 </h4>
                 <p className="text-xl text-gray-500">Jam kerja</p>
               </div>
-
-              <div className="my-4 flex items-center gap-5 border-y py-4">
+              <div className="my-4 flex items-center gap-5 border-t py-4">
+                {/* 
                 <Icon
                   path={mdiMapMarker}
                   size="40px"
@@ -293,9 +298,10 @@ export default function NewStudentHome() {
                 />
                 <p className="text-sm text-gray-500">
                   {!GPSActive && "Antah Berantah"}
-                  {getTeacherDashboard.isLoading && "Antah Berantah . . ."}
+                  {getTeacherDashboard.isLoading && "Lokasi Tidak Ditemukan"}
                   {getTeacherDashboard.isSuccess && data?.user?.address}
                 </p>
+              */}
               </div>
 
               <div className="flex justify-around">
@@ -385,14 +391,19 @@ export default function NewStudentHome() {
             </div>
 
             <div className="group mt-2 border-t ">
-              {getTeacherDashboard.isSuccess &&
-                data?.recent_activity?.map((activity, idx) => (
-                  <div className="flex justify-between border-b py-2" key={idx}>
-                    <p className="text-gray-500">{activity.time}</p>
-                    <p className="ml-16">{activity.type}</p>
-                    <Icon path={mdiChevronRight} size="24px" />
-                  </div>
-                ))}
+              <Link to="/staff/activity" className="cursor-default">
+                {getTeacherDashboard.isSuccess &&
+                  data?.recent_activity?.map((activity, idx) => (
+                    <div
+                      className="flex justify-between border-b py-2"
+                      key={idx}
+                    >
+                      <p className="text-gray-500">{activity.time}</p>
+                      <p className="ml-16">{activity.type}</p>
+                      <Icon path={mdiChevronRight} size="24px" />
+                    </div>
+                  ))}
+              </Link>
 
               {data?.recent_activity?.length === 0 && (
                 <p className="mt-5 text-center text-gray-500">
@@ -411,7 +422,7 @@ export default function NewStudentHome() {
                 </>
               )}
 
-              {!GPSActive && (
+              {/* {!GPSActive && (
                 <>
                   <div className="my-2 py-1">
                     <Skeleton />
@@ -420,7 +431,7 @@ export default function NewStudentHome() {
                     <Skeleton />
                   </div>
                 </>
-              )}
+              )} */}
             </div>
           </div>
         </div>

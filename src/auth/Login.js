@@ -46,7 +46,7 @@ export default function Login() {
       }
 
       navigate("/staff/");
-    }, 2000);
+    }, 500);
 
     console.log(res.data.role);
   };
@@ -64,10 +64,10 @@ export default function Login() {
           <div className="mx-auto w-full p-5 sm:max-w-md">
             <h2 className="mb-12 text-center text-3xl font-semibold">
               {!data?.name ? (
-                "Selamat Datang."
+                "Login"
               ) : (
                 <>
-                  Hi, <span>{data.name}</span>
+                  <span>{data.name}</span>
                 </>
               )}
             </h2>

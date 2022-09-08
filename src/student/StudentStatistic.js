@@ -102,7 +102,7 @@ export default function StudentStatistic() {
           className="relative m-5 mx-auto mt-12 max-h-[270px] max-w-[270px]"
         ></div>
 
-        <div className="relative mt-0  w-full rounded-xl bg-white p-10 shadow-xl">
+        <div className="relative mt-0  w-full rounded-xl border bg-white p-10 shadow-lg">
           <div className="mb-5 flex justify-between gap-7">
             {!isEmpty(data) && (
               <>

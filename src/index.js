@@ -9,6 +9,14 @@ import { store } from "./app/store";
 
 const root = ReactDOM.createRoot(document.getElementById("__next"));
 
+// Remove all console in production
+if (process.env.NODE_ENV === "production") {
+  console.log = () => {};
+  // console.error = () => {};
+  console.debug = () => {};
+  console.info = () => {};
+}
+
 root.render(
   <React.StrictMode>
     <Provider store={store}>

@@ -1,4 +1,4 @@
-import { mdiAlphaACircle, mdiCheckBold, mdiLogout } from "@mdi/js";
+import { mdiClose, mdiCheckBold, mdiLogout } from "@mdi/js";
 import Icon from "@mdi/react";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +22,10 @@ export default function StudentAccount() {
       navigate("/auth/login");
     }
   };
+
+  if (isSuccess) {
+    console.log(Object.entries(data));
+  }
 
   useEffect(() => {
     // Unauthorize
@@ -144,7 +148,7 @@ export default function StudentAccount() {
                           <Icon
                             size="19px"
                             className={`mx-1 text-red-600`}
-                            path={mdiAlphaACircle}
+                            path={mdiClose}
                           />
                         ) : (
                           ""

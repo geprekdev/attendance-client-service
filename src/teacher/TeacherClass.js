@@ -1,4 +1,3 @@
-import { mdiFilePresentationBox } from "@mdi/js";
 import Icon from "@mdi/react";
 import Layout from "../components/Layout";
 import { useGetTeacherClasslistQuery } from "./TeacherAPI";
@@ -12,7 +11,9 @@ export default function TeacherClass() {
       token: Cookie.getItem("token"),
     });
 
-  console.log("disni");
+  if (isSuccess) {
+    console.log(data.classrooms == null);
+  }
 
   // Unauthorize
   if (isError && error.status === 401) {
@@ -26,23 +27,31 @@ export default function TeacherClass() {
     return <Navigate to={"/auth/login"} />;
   }
 
+  if (isError) {
+    console.log(error.status === "FETCH_ERROR" && "Server Rusak");
+  }
+
   return (
     <Layout role="TEACHER">
       <div className="mx-auto min-h-screen max-w-[444px] border px-5 py-3 shadow-lg ">
         <div className="flex items-center justify-between rounded-full bg-gradient-to-r from-red-700 to-[#f48282] px-5 py-2 ">
           <h1 className="text-xl text-white">Classroom</h1>
-
-          <Icon
-            path={mdiFilePresentationBox}
-            size="24px"
-            className="text-white"
-          />
         </div>
 
         <div className="my-5 w-full">
           <h3 className="text-bold px-6 text-left text-sm text-gray-900"> </h3>
 
           <div className="mt-5 flex flex-wrap justify-between px-6">
+            {isSuccess && data.classrooms == null && (
+              <div className="mx-auto mt-5">
+                <img src="/no-class.svg" alt="Tidak Ada Kelas" width="200px" />
+
+                <h1 className="mt-10 text-center text-xl text-gray-400">
+                  Tidak Ada Kelas
+                </h1>
+              </div>
+            )}
+
             {isSuccess &&
               data.classrooms.map((classroom, idx) => (
                 <div className="my-2 w-[48%]" key={idx}>

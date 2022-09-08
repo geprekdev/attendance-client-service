@@ -32,6 +32,9 @@ export default function StudentPermissionNew() {
   const [reason, setReason] = useState("");
   const navigate = useNavigate();
 
+  const [fileUpload, setFileUpload] = useState({});
+  const [displayIMG, setDisplayIMG] = useState([]);
+
   const { isSuccess, data, isError, error } = useGetStudentLeaveQuery({
     token: Cookie.getItem("token"),
   });
@@ -72,9 +75,19 @@ export default function StudentPermissionNew() {
     }
   };
 
+  const onImageChange = event => {
+    if (event.target.files && event.target.files[0]) {
+      setFileUpload(event.target.files);
+      setDisplayIMG(URL.createObjectURL(event.target.files[0]));
+    }
+  };
+
   const handleLeaveFullSubmit = async () => {
-    console.warn("Leave Full");
-    const leave_type = category === "Ijin" ? 0 : category === "Sakit" ? 1 : 2;
+    console.log("Mengajukan Izin...");
+
+    const leave_type = parseInt(
+      category === "Ijin" ? 0 : category === "Sakit" ? 1 : 2
+    );
     const attendance_scheduled = [];
 
     attendanceScheduled.forEach(att => {
@@ -83,37 +96,53 @@ export default function StudentPermissionNew() {
       }
     });
 
+    let formData = new FormData();
+
+    const att_scheduled = attendanceScheduled
+      .map(att => {
+        if (att.isActive) {
+          return att.id;
+        }
+        return null;
+      })
+      .filter(att => att != null);
+
+    formData.append("reason", reason);
+    formData.append("leave_type", leave_type);
+    formData.append("attendance_scheduled", att_scheduled[0]);
+    formData.append("attachment", fileUpload[0]);
+
     const res = await triggerPostFull({
+      formData,
       token: Cookie.getItem("token"),
-      reason,
-      leave_type,
-      attendance_scheduled,
     });
-    console.log(res);
+
+    console.log("respponse ->", res);
 
     if (res.data) {
-      window.location = "/student/permission/";
+      navigate("/student/permission", {
+        state: { isSuccess: true },
+      });
     } else {
       setAlertForm({
         status: true,
-        message: `Reason field ${res?.error?.data?.reason}`,
+        message: `Tidak dapat mengirim, periksa form anda!`,
       });
     }
   };
 
   const handleDaysClick = position => {
-    setDays(
-      [...days].map((day, idx) => {
+    setAttendanceScheduled(
+      [...attendanceScheduled].map((att, idx) => {
         if (idx === position) {
           return {
-            ...day,
-            isActive: !day.isActive,
+            ...att,
+            isActive: !att.isActive,
           };
-        } else return { ...day };
+        } else return { ...att };
       })
     );
   };
-
   const handleClassroomClick = position => {
     setClassroom(
       [...classroom].map((c, idx) => {
@@ -147,10 +176,8 @@ export default function StudentPermissionNew() {
   return (
     <Layout title="Student" role="STUDENT">
       <div className="relative mx-auto max-w-[444px] border px-5 py-3 pb-12 shadow-lg">
-        <div className="-m-5 h-[50px] max-w-[150%] bg-[#6A64F1] pt-3 pl-3">
-          <Link to="/student/permission">
-            <Icon path={mdiChevronLeft} size="1.9em" color="white" />
-          </Link>
+        <div className="flex items-center justify-between rounded-full bg-gradient-to-r from-blue-700 to-[#63c2f0] px-5 py-2 text-xl text-white">
+          <p>New Permission</p>
         </div>
 
         <div className="mt-7">
@@ -310,28 +337,36 @@ export default function StudentPermissionNew() {
                   ></textarea>
                 </div>
 
-                <div className="mt-3">
+                <div className="mt-7">
                   <h3 className="mb-2 text-lg font-semibold">
                     Unggah Surat Izin
                   </h3>
                   <label htmlFor="upFile">
                     <div className="flex  cursor-pointer items-center justify-center gap-2 rounded-lg bg-gray-200 py-2">
                       <Icon
-                        path={mdiUploadOutline}
+                        path={fileUpload[0] ? " " : mdiUploadOutline}
                         size="24px"
                         className="text-gray-800"
                       />
-                      <p>Tambahkan FIle</p>
+                      <p>{fileUpload?.name || "Tambahkan File"}</p>
                     </div>
                   </label>
+
+                  <div className="mt-5">
+                    <img
+                      src={displayIMG && displayIMG}
+                      alt="Pratinjau"
+                      width="300px"
+                      className="mx-auto"
+                    />
+                  </div>
 
                   <input
                     type="file"
                     id="upFile"
-                    accept="image/*"
+                    accept="image/"
                     className="hidden"
-                    value={attachment}
-                    // onChange={e => setAttachment(e.target.files)}
+                    onChange={onImageChange}
                   />
                 </div>
 
@@ -368,7 +403,7 @@ export default function StudentPermissionNew() {
                 )}
                 <h3 className="text-lg font-semibold">Pilih Tanggal</h3>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {days.map((day, idx) => (
+                  {attendanceScheduled?.map((day, idx) => (
                     <div className={`ml-5 mb-3 text-gray-600`} key={day.name}>
                       <button
                         key={idx}
@@ -443,26 +478,35 @@ export default function StudentPermissionNew() {
                     <label htmlFor="upFile">
                       <div className="flex  cursor-pointer items-center justify-center gap-2 rounded-lg bg-gray-200 py-2">
                         <Icon
-                          path={mdiUploadOutline}
+                          path={fileUpload[0] ? " " : mdiUploadOutline}
                           size="24px"
                           className="text-gray-800"
                         />
-                        <p>Tambahkan FIle</p>
+                        <p>{fileUpload?.name || "Tambahkan File"}</p>
                       </div>
                     </label>
+
+                    <div className="mt-5">
+                      <img
+                        src={displayIMG && displayIMG}
+                        alt="Pratinjau"
+                        width="300px"
+                        className="mx-auto"
+                      />
+                    </div>
 
                     <input
                       type="file"
                       id="upFile"
-                      accept=".png .jpg .jpeg "
+                      accept="image/"
                       className="hidden"
+                      onChange={onImageChange}
                     />
                   </div>
 
                   <div
                     onClick={handleLeaveFullSubmit}
-                    className="mt-7 w-full cursor-pointer bg-indigo-500 px-5
-                    py-2 text-center text-white"
+                    className="mt-7 w-full cursor-pointer bg-blue-500 px-5 py-2 text-center text-white"
                   >
                     <button type="submit">Ajukan</button>
                   </div>

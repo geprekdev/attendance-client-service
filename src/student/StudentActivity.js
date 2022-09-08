@@ -1,4 +1,4 @@
-import { mdiAlphaACircle, mdiCheckBold } from "@mdi/js";
+import { mdiClose, mdiCheckBold } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Fragment } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -93,7 +93,7 @@ export default function StudentActivity() {
                                 <Icon
                                   size="19px"
                                   className={`mx-1 text-red-600`}
-                                  path={mdiAlphaACircle}
+                                  path={mdiClose}
                                 />
                               ) : (
                                 ""

@@ -30,6 +30,15 @@ export const teacherAPI = createApi({
         url: `/v1/teacher/?geo=${user.latitude},${user.longitude}`,
       }),
     }),
+    postAttendace: builder.mutation({
+      query: user => ({
+        headers: {
+          Authorization: user.token,
+        },
+        method: "POST",
+        url: `/v1/general-attendance/`,
+      }),
+    }),
 
     getTeacherAccountInfo: builder.query({
       query: user => ({
@@ -134,4 +143,5 @@ export const {
   usePostTeacherJournalAddNewMutation,
   usePostTeacherLeaveFullMutation,
   useGetTeacherLeaveFullQuery,
+  usePostAttendaceMutation,
 } = teacherAPI;

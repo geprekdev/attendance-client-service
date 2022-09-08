@@ -1,103 +1,119 @@
-import { mdiChevronRight, mdiInformationOutline, mdiMapMarker,mdiNoteEditOutline, mdiNoteTextOutline} from "@mdi/js";
+import {
+  mdiChevronRight,
+  mdiInformationOutline,
+  mdiMapMarker,
+  mdiNoteEditOutline,
+  mdiNoteTextOutline,
+} from "@mdi/js";
 import Icon from "@mdi/react";
 import Layout from "../components/Layout";
 import {
   useGetTeacherDashboardQuery,
-  usePostTeacherDashboardMutation,
+  // usePostTeacherDashboardMutation,
 } from "./TeacherAPI";
 import Cookie from "../util/Cookie";
 import Skeleton from "../components/Skeleton";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { getDay, getFullDate } from "../util/Date";
 import { useState } from "react";
-import { usePostStudentAttendanceMutation } from "../student/StudentAPI";
+// import { usePostStudentAttendanceMutation } from "../student/StudentAPI";
+import { usePostAttendaceMutation } from "./TeacherAPI";
 
-export default function NewStudentHome() {
-  const [GeoLoc, setGeoLoc] = useState({
-    longitude: "",
-    latitude: "",
-  });
+export default function TeacherHome() {
+  // const [GeoLoc, setGeoLoc] = useState({
+  //   longitude: "",
+  //   latitude: "",
+  // });
 
   const navigate = useNavigate();
 
   const [error, setError] = useState(false);
   const [alertShow, setAlertShow] = useState(false);
 
-  const [GPSActive, setGPSActive] = useState(false);
+  // const [GPSActive, setGPSActive] = useState(false);
   const getTeacherDashboard = useGetTeacherDashboardQuery(
     {
       token: Cookie.getItem("token"),
-      latitude: GeoLoc.latitude,
-      longitude: GeoLoc.longitude,
-    },
-    { skip: !GPSActive }
+      latitude: 0,
+      longitude: 0,
+    }
+    // { skip: !GPSActive }
   );
   const [data, setData] = useState(false);
 
-  const [triggerPostStudentAttendance] = usePostStudentAttendanceMutation();
-  const [triggerPostTeacherDashboard] = usePostTeacherDashboardMutation();
+  // console.log("data -> ", data);
+  // console.log("getTeacherDashboard -> ", getTeacherDashboard.data);
 
-  const handleGPS = () => {
-    var options = {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0,
-    };
+  // const [triggerPostStudentAttendance] = usePostStudentAttendanceMutation();
+  // const [triggerPostTeacherDashboard] = usePostTeacherDashboardMutation();
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        position => {
-          setGeoLoc({
-            longitude: parseFloat(position.coords.longitude),
-            latitude: parseFloat(position.coords.latitude),
-          });
+  // const handleGPS = () => {
+  //   var options = {
+  //     enableHighAccuracy: true,
+  //     timeout: 5000,
+  //     maximumAge: 0,
+  //   };
 
-          setGPSActive(true);
-        },
-        null,
-        options
-      );
-    } else {
-      alert("Perangkat anda tidak mendukung GPS!");
-    }
-  };
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(
+  //       position => {
+  //         setGeoLoc({
+  //           longitude: parseFloat(position.coords.longitude),
+  //           latitude: parseFloat(position.coords.latitude),
+  //         });
 
-  if (GPSActive === false) {
-    handleGPS();
-  }
+  //         setGPSActive(true);
+  //       },
+  //       null,
+  //       options
+  //     );
+  //   } else {
+  //     alert("Perangkat anda tidak mendukung GPS!");
+  //   }
+  // };
+
+  // if (GPSActive === false) {
+  //   handleGPS();
+  // }
 
   if (getTeacherDashboard.isSuccess && data === false) {
     // console.log("Get Teacher", getTeacherDashboard.data);
     setData(getTeacherDashboard.data);
   }
 
-  const handleSubmitForm = async () => {
-    const data = await triggerPostStudentAttendance({
-      token: Cookie.getItem("token"),
-      latitude: GeoLoc.latitude,
-      longitude: GeoLoc.longitude,
-    });
-    const res = await triggerPostTeacherDashboard({
-      token: Cookie.getItem("token"),
-      latitude: GeoLoc.latitude,
-      longitude: GeoLoc.longitude,
+  const [triggerPostAttendance] = usePostAttendaceMutation();
 
+  const handleSubmitForm = async () => {
+    const res = await triggerPostAttendance({
+      token: Cookie.getItem("token"),
     });
-    console.log(data.data);
+    console.log("Clock Out=> ", res.data);
+
+    // const data = await triggerPostStudentAttendance({
+    //   token: Cookie.getItem("token"),
+    //   latitude: 0,
+    //   longitude: 0,
+    // });
+    // const res_get = await triggerPostTeacherDashboard({
+    //   token: Cookie.getItem("token"),
+    //   latitude: 0,
+    //   longitude: 0,
+    // });
+    // console.log(data.data);
     setAlertShow(true);
-    if (data.data?.error) {
+    if (res.data?.error) {
       setError({
         error: true,
-        message: data.data?.error?.message,
+        message: res.data?.error_description,
       });
     } else {
       setError({
         error: false,
-        message: data.data?.success?.message,
+        message: res.data?.success?.message,
       });
     }
-
-    setData(res?.data);
+    // setData(res?.data.data);
+    console.log(error);
   };
 
   // Unauthorize
@@ -116,7 +132,7 @@ export default function NewStudentHome() {
 
   return (
     <Layout title="Teacher" role="TEACHER">
-      {!GPSActive && (
+      {/* {!GPSActive && (
         <div
           className="relative z-10"
           aria-labelledby="modal-title"
@@ -155,7 +171,8 @@ export default function NewStudentHome() {
                       </h3>
                       <div className="mt-2">
                         <p className=" text-sm text-gray-500">
-                          1. Pastikan anda mengkaktifkan GPS untuk dapat melakukan{" "}
+                          1. Pastikan anda mengkaktifkan GPS untuk dapat
+                          melakukan{" "}
                           <span className="font-semibold text-gray-700">
                             Clock In{" "}
                           </span>
@@ -169,7 +186,6 @@ export default function NewStudentHome() {
                           2. Pastikan browser mengizinkan akses lokasi{" "}
                         </p>
 
-
                         <p className=" text-sm text-gray-500">
                           3. Jika belum berhasil silahkan refresh{" "}
                         </p>
@@ -181,7 +197,7 @@ export default function NewStudentHome() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       <div className="mx-auto min-h-screen max-w-[444px] border pb-24 shadow-lg">
         <div className="bg-[#c52831]">
@@ -220,9 +236,7 @@ export default function NewStudentHome() {
                 <Skeleton />
               </div>
             )}
-            {!GPSActive && (
-              <div className="w-[110px]">{/* <Skeleton /> */}</div>
-            )}
+
             <p className="text-gray-100">
               {getTeacherDashboard.isSuccess && data?.greet}
             </p>
@@ -234,9 +248,6 @@ export default function NewStudentHome() {
                     <Skeleton />
                   </div>
                 )}
-                {!GPSActive && (
-                  <div className="w-[200px]">{/* <Skeleton /> */}</div>
-                )}
                 <h1 className="-mt-5 text-3xl font-semibold">
                   {getTeacherDashboard.isSuccess &&
                     data?.user?.first_name + " " + data?.user?.last_name}
@@ -245,21 +256,7 @@ export default function NewStudentHome() {
                 {getTeacherDashboard.isLoading && (
                   <div className="mt-3 w-[60px]">{/* <Skeleton /> */}</div>
                 )}
-                {!GPSActive && (
-                  <div className="mt-3 w-[60px]">
-                    <Skeleton />
-                  </div>
-                )}
-
-                <p>{getTeacherDashboard.isSuccess && ""}</p>
               </div>
-              {/* <div>
-                <img
-                  src="https://i.ytimg.com/vi/VeiwR4PvYwM/maxresdefault.jpg"
-                  alt="Xien Lim"
-                  className="h-16 w-16 transform rounded-full border-4 border-white shadow-md"
-                />
-              </div> */}
             </div>
 
             <div className="mt-5 w-full rounded-lg bg-white p-4">
@@ -278,17 +275,15 @@ export default function NewStudentHome() {
                 <p className="text-xl text-gray-500">Jam kerja</p>
               </div>
 
-              <div className="my-4 flex items-center gap-5 border-y py-4">
-                <Icon
+              <div className="my-4 flex items-center gap-5 border-t py-4">
+                {/* <Icon
                   path={mdiMapMarker}
                   size="40px"
                   className="text-green-600"
                 />
                 <p className="text-sm text-gray-500">
-                  {!GPSActive && "Antah Berantah"}
-                  {getTeacherDashboard.isLoading && "Antah Berantah . . ."}
                   {getTeacherDashboard.isSuccess && data?.user?.address}
-                </p>
+                </p> */}
               </div>
 
               <div className="flex justify-around">
@@ -305,59 +300,69 @@ export default function NewStudentHome() {
                   </button>
                 )}
 
-                {data?.status_button?.clockOut ? (
-                  <button
-                    onClick={handleSubmitForm}
-                    className="rounded bg-blue-600 py-3 px-7 text-white hover:bg-blue-700"
-                  >
-                    Clock out
-                  </button>
-                ) : (
-                  <button className="cursor-not-allowed rounded bg-gray-200 py-3 px-7 text-gray-500">
-                    Clock out
-                  </button>
-                )}
+                <button
+                  onClick={
+                    data?.status_button?.clockOut ? handleSubmitForm : () => {}
+                  }
+                  className={`rounded  py-3 px-7 ${
+                    data?.status_button?.clockOut
+                      ? "bg-blue-600 text-white hover:bg-blue-700"
+                      : "cursor-not-allowed bg-gray-200 text-gray-500"
+                  }`}
+                >
+                  Clock Out
+                </button>
               </div>
             </div>
-                    
+
             {/* button */}
             <div className="mt-5 w-full rounded-lg bg-white p-4">
               <div className="flex justify-between">
-              <button onClick={() => {
-                navigate("/teacher/permission/new")
-              }}
-                    className="rounded text-gray-700 w-[49%] py-2 pr-3 hover:bg-gray-200 inline-flex items-center"
-                  >
-                    <span><Icon className="mx-2" path={mdiNoteEditOutline} size="24px" /></span>
-                    <span>Pengajuan Ijin</span>
-                  </button>
+                <button
+                  onClick={() => {
+                    navigate("/teacher/permission/new");
+                  }}
+                  className="inline-flex w-[49%] items-center rounded py-2 pr-3 text-gray-700 hover:bg-gray-200"
+                >
+                  <span>
+                    <Icon
+                      className="mx-2"
+                      path={mdiNoteEditOutline}
+                      size="24px"
+                    />
+                  </span>
+                  <span>Pengajuan Ijin</span>
+                </button>
 
+                <button
+                  onClick={() => {
+                    navigate("/teacher/permission");
+                  }}
+                  className="inline-flex w-[49%] items-center rounded py-2 pr-3 text-gray-700 hover:bg-gray-200"
+                >
+                  <span>
+                    <Icon
+                      className="mx-2"
+                      path={mdiNoteTextOutline}
+                      size="24px"
+                    />
+                  </span>
+                  <span>Riwayat Ijin</span>
+                </button>
 
-              
-                <button onClick={() => {
-                navigate("/teacher/permission")
-              }}
-                    className="rounded text-gray-700 w-[49%] py-2 pr-3 hover:bg-gray-200 inline-flex items-center"
-                  >
-                    <span><Icon className="mx-2" path={mdiNoteTextOutline} size="24px" /></span>
-                    <span>Riwayat Ijin</span>
-                  </button>
-
-
-                  {/* <button className="bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded inline-flex items-center"> */}
-                  {/* w-4 h-4 mr-2 */}
-                  {/* <Icon className="w-4 h-4 mr-2" path={mdiNoteEditOutline} size="24px" />
+                {/* <button className="bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded inline-flex items-center"> */}
+                {/* w-4 h-4 mr-2 */}
+                {/* <Icon className="w-4 h-4 mr-2" path={mdiNoteEditOutline} size="24px" />
                     <span>Download</span>
                   </button> */}
-{/* 
+                {/* 
                   <button
                     className="rounded text-gray-700 py-1 w-[49%] hover:bg-gray-200"
                   >
                   <Icon path={mdiNoteTextOutline} size="24px" />
                     Riwayat Ijin
                   </button> */}
-                  
-                </div>
+              </div>
             </div>
             {/* end button */}
           </div>
@@ -366,7 +371,7 @@ export default function NewStudentHome() {
             <div className="flex justify-between">
               <h4 className="font-semibold">Aktivitas Terkini</h4>
               <Link
-                className="rounded px-2 py-0.5 text-blue-700 hover:bg-gray-100"
+                className="rounded px-3 py-0.5 text-blue-500 hover:bg-gray-100"
                 to="/teacher/activity"
               >
                 Log Absensi
@@ -374,14 +379,19 @@ export default function NewStudentHome() {
             </div>
 
             <div className="group mt-2 border-t ">
-              {getTeacherDashboard.isSuccess &&
-                data?.recent_activity?.map((activity, idx) => (
-                  <div className="flex justify-between border-b py-2" key={idx}>
-                    <p className="text-gray-500">{activity.time}</p>
-                    <p className="ml-16">{activity.type}</p>
-                    <Icon path={mdiChevronRight} size="24px" />
-                  </div>
-                ))}
+              <Link to="/teacher/activity" className="cursor-default">
+                {getTeacherDashboard.isSuccess &&
+                  data?.recent_activity?.map((activity, idx) => (
+                    <div
+                      className="flex justify-between border-b py-2"
+                      key={idx}
+                    >
+                      <p className="text-gray-500">{activity.time}</p>
+                      <p className="ml-16">{activity.type}</p>
+                      <Icon path={mdiChevronRight} size="24px" />
+                    </div>
+                  ))}
+              </Link>
 
               {data?.recent_activity?.length === 0 && (
                 <p className="mt-5 text-center text-gray-500">
@@ -390,17 +400,6 @@ export default function NewStudentHome() {
               )}
 
               {getTeacherDashboard.isLoading && (
-                <>
-                  <div className="my-2 py-1">
-                    <Skeleton />
-                  </div>
-                  <div className="my-2 py-1">
-                    <Skeleton />
-                  </div>
-                </>
-              )}
-
-              {!GPSActive && (
                 <>
                   <div className="my-2 py-1">
                     <Skeleton />

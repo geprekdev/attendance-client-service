@@ -1,4 +1,4 @@
-import { mdiAlphaACircle, mdiCheckBold } from "@mdi/js";
+import { mdiCheckBold, mdiClose } from "@mdi/js";
 import Icon from "@mdi/react";
 import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
@@ -126,9 +126,7 @@ export default function TeacherClassPresence() {
             >
               <span>{idx + 1}</span>
               <Icon
-                path={
-                  student.status === "ALPHA" ? mdiAlphaACircle : mdiCheckBold
-                }
+                path={student.status === "ALPHA" ? mdiClose : mdiCheckBold}
                 size="16px"
                 className={`${
                   student.status === "ALPHA" ? "text-red-500" : "text-green-600"

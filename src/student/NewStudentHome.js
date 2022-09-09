@@ -28,6 +28,25 @@ export default function NewStudentHome() {
   const dataStudent = useGetNewStudentClassesQuery({
     token: Cookie.getItem("token"),
   });
+  useEffect(() => {
+    // Unauthorize
+    if (dataStudent.isError && dataStudent.error.status === 401) {
+      Cookie.deleteItem("token");
+      window.location = "/auth/login";
+      return;
+    }
+
+    // Role permission
+    if (dataStudent.isError && dataStudent.error.status === 403) {
+      navigate("/teacher/");
+      return;
+    }
+
+    // Server Error
+    if (dataStudent.isError && dataStudent.error.status === 502) {
+      navigate("/rusakk");
+    }
+  }, [dataStudent.isError]);
   const [triggerPostNewStudentClasses] = usePostNewStudentClassesMutation();
   const [triggerPostStudentAttendance] = usePostStudentAttendanceMutation();
 
@@ -35,6 +54,8 @@ export default function NewStudentHome() {
   if (dataStudent.isSuccess && data === false) {
     setData(dataStudent.data);
   }
+
+
   const handleSubmitForm = async () => {
     const sendData = await triggerPostStudentAttendance({
       token: Cookie.getItem("token"),

@@ -141,7 +141,7 @@ export const studentAPI = createApi({
       query: user => ({
         headers: {
           Authorization: user.token,
-          "Content-Type": "multipart/form-data",
+          // "Content-Type": "multipart/form-data",
         },
         method: "POST",
         body: {

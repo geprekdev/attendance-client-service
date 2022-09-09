@@ -16,6 +16,8 @@ import {
   usePostStudentAttendanceMutation,
 } from "./StudentAPI";
 import Cookie from "../util/Cookie";
+import { useEffect } from "react";
+
 
 export default function NewStudentHome() {
   const date = new Date();

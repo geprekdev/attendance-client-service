@@ -4,193 +4,61 @@ import {
   mdiMapMarker,
   mdiNoteEditOutline,
   mdiNoteTextOutline,
+  mdiCheckCircleOutline
 } from "@mdi/js";
 import Icon from "@mdi/react";
 import Layout from "../components/Layout";
-import {
-  useGetStaffDashboardQuery,
-  usePostStaffDashboardMutation,
-  usePostStaffAttendanceMutation,
-} from "./StaffAPI";
 import Cookie from "../util/Cookie";
 import Skeleton from "../components/Skeleton";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { getDay, getFullDate } from "../util/Date";
 import { useState } from "react";
+import { useGetAttendanceQuery,usePostAttendanceMutation} from "../core/API";
 
-export default function NewStudentHome() {
-  // const [GeoLoc, setGeoLoc] = useState({
-  //   longitude: "",
-  //   latitude: "",
-  // });
-
-  const navigate = useNavigate();
-
-  const [error, setError] = useState(false);
-  const [alertShow, setAlertShow] = useState(false);
-
-  // const [GPSActive, setGPSActive] = useState(false);
-  const getTeacherDashboard = useGetStaffDashboardQuery(
+export default function StaffHome() {
+  const date = new Date();
+  const [submitPost, setSubmitPost] = useState(false);
+  const {isSuccess, isError, isLoading ,data, refecth} = useGetAttendanceQuery(
     {
       token: Cookie.getItem("token"),
-      // latitude: GeoLoc.latitude,
-      // longitude: GeoLoc.longitude,
+      latitude: 0,
+      longitude: 0,
     }
-    //   { skip: !GPSActive }
   );
-  const [data, setData] = useState(false);
+  const navigate = useNavigate();
+  const [statusButton, setStatusButton] = useState(false);
+  const [recentActivity, setRecentActivity] = useState([]);
+  const [error, setError] = useState(false);
+  const [alertShow, setAlertShow] = useState(false);
+  const [triggerPostAttendance] = usePostAttendanceMutation();
 
-  const [triggerPostStudentAttendance] = usePostStaffAttendanceMutation();
-  const [triggerPostStaffDashboard] = usePostStaffDashboardMutation();
-
-  // const handleGPS = () => {
-  //   var options = {
-  //     enableHighAccuracy: true,
-  //     timeout: 5000,
-  //     maximumAge: 0,
-  //   };
-
-  //   if (navigator.geolocation) {
-  //     navigator.geolocation.getCurrentPosition(
-  //       position => {
-  //         setGeoLoc({
-  //           longitude: parseFloat(position.coords.longitude),
-  //           latitude: parseFloat(position.coords.latitude),
-  //         });
-
-  //         setGPSActive(true);
-  //       },
-  //       null,
-  //       options
-  //     );
-  //   } else {
-  //     alert("Perangkat anda tidak mendukung GPS!");
-  //   }
-  // };
-
-  // if (GPSActive === false) {
-  //   handleGPS();
-  // }
-
-  if (getTeacherDashboard.isSuccess && data === false) {
-    // console.log("Get Teacher", getTeacherDashboard.data);
-    setData(getTeacherDashboard.data);
+  if (isSuccess && statusButton === false){
+    setStatusButton(data.status_button);
+    setRecentActivity(data.recent_activity);
   }
-
   const handleSubmitForm = async () => {
-    const data = await triggerPostStudentAttendance({
+    const res = await triggerPostAttendance({
       token: Cookie.getItem("token"),
-      // latitude: GeoLoc.latitude,
-      // longitude: GeoLoc.longitude,
     });
-    const res = await triggerPostStaffDashboard({
-      token: Cookie.getItem("token"),
-      // latitude: GeoLoc.latitude,
-      // longitude: GeoLoc.longitude,
-    });
-
-    console.log(data.data);
+    setStatusButton(res.data.status_button);
+    setRecentActivity(recentActivity=> [res.data.activity,...recentActivity]);
     setAlertShow(true);
-    if (data.data?.error) {
+    if (res.data?.error) {
       setError({
         error: true,
-        message: data.data?.error?.message,
+        message: res.data?.error.message,
       });
     } else {
       setError({
         error: false,
-        message: data.data?.success?.message,
+        message: res.data?.success?.message,
       });
     }
-
-    setData(res?.data);
   };
 
-  // Unauthorize
-  if (getTeacherDashboard.isError && getTeacherDashboard.error.status === 401) {
-    console.log("Unauthorize");
-    Cookie.deleteItem("token");
-    return <Navigate to={"/auth/login"} />;
-  }
-
-  // Role permission
-  if (getTeacherDashboard.isError && getTeacherDashboard.error.status === 403) {
-    console.log("Role Permission");
-    Cookie.deleteItem("token");
-    return <Navigate to={"/auth/login"} />;
-  }
-
-  const date = new Date();
 
   return (
     <Layout title="Staff" role="STAFF">
-      {/* {!GPSActive && (
-        <div
-          className="relative z-10"
-          aria-labelledby="modal-title"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
-          <div className="fixed top-[15vh] right-0 left-0  z-10 overflow-y-auto">
-            <div className="flex min-h-full items-end justify-center p-4 text-center">
-              <div className="relative w-[380px] transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all">
-                <div className="bg-white px-4 pt-5 pb-4">
-                  <div className="flex items-center gap-5">
-                    <div className="mx-0 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-red-100  ">
-                      <svg
-                        className="h-6 w-6 text-red-600"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="2"
-                        stroke="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                        />
-                      </svg>
-                    </div>
-                    <div className="mt-3  sm:mt-0 sm:ml-4 sm:text-left">
-                      <h3
-                        className="text-lg font-medium leading-6 text-gray-900"
-                        id="modal-title"
-                      >
-                        GPS Tidak Aktif
-                      </h3>
-                      <div className="mt-2">
-                        <p className=" text-sm text-gray-500">
-                          1. Pastikan anda mengkaktifkan GPS untuk dapat
-                          melakukan{" "}
-                          <span className="font-semibold text-gray-700">
-                            Clock In{" "}
-                          </span>
-                          dan{" "}
-                          <span className="font-semibold text-gray-700">
-                            Clock Out
-                          </span>
-                        </p>
-
-                        <p className=" text-sm text-gray-500">
-                          2. Pastikan browser mengizinkan akses lokasi{" "}
-                        </p>
-
-                        <p className=" text-sm text-gray-500">
-                          3. Jika belum berhasil silahkan refresh{" "}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )} */}
-
       <div className="mx-auto min-h-screen max-w-[444px] border pb-24 shadow-lg">
         <div className="bg-[#c52831]">
           <div className="mb-8 w-full  px-5 pt-7">
@@ -223,55 +91,32 @@ export default function NewStudentHome() {
             )}
             {/* End Message Allert */}
 
-            {getTeacherDashboard.isLoading && (
+            {isLoading && (
               <div className="w-[110px]">
                 <Skeleton />
               </div>
             )}
-            {/* {!GPSActive && (
-              <div className="w-[110px]"><Skeleton /></div>
-            )} */}
+
             <p className="text-gray-100">
-              {getTeacherDashboard.isSuccess && data?.greet}
+              {isSuccess && data?.greet}
             </p>
 
             <div className="mt-5 flex justify-between text-white">
               <div>
-                {getTeacherDashboard.isLoading && (
+                {isLoading && (
                   <div className="w-[200px]">
                     <Skeleton />
                   </div>
                 )}
-                {/* {!GPSActive && (
-                  <div className="w-[200px]">
-                    <Skeleton />
-                  </div>
-                )} */}
                 <h1 className="-mt-5 text-3xl font-semibold">
-                  {getTeacherDashboard.isSuccess &&
+                  {isSuccess &&
                     data?.user?.first_name + " " + data?.user?.last_name}
                 </h1>
 
-                {getTeacherDashboard.isLoading && (
-                  <div className="mt-3 w-[60px]">
-                    <Skeleton />
-                  </div>
+                {isLoading && (
+                  <div className="mt-3 w-[60px]">{/* <Skeleton /> */}</div>
                 )}
-                {/* {!GPSActive && (
-                  <div className="mt-3 w-[60px]">
-                    <Skeleton />
-                  </div>
-                )} */}
-
-                <p>{getTeacherDashboard.isSuccess && ""}</p>
               </div>
-              {/* <div>
-                <img
-                  src="https://i.ytimg.com/vi/VeiwR4PvYwM/maxresdefault.jpg"
-                  alt="Xien Lim"
-                  className="h-16 w-16 transform rounded-full border-4 border-white shadow-md"
-                />
-              </div> */}
             </div>
 
             <div className="mt-5 w-full rounded-lg bg-white p-4">
@@ -283,29 +128,26 @@ export default function NewStudentHome() {
               </div>
               <div className="mt-4 text-center">
                 <h4 className="text-3xl font-bold">
-                  {getTeacherDashboard.isSuccess && data?.work_time
+                  {isSuccess && data?.work_time
                     ? data?.work_time + " - " + data?.home_time + " WIB"
                     : "Tidak Ada Jadwal"}
                 </h4>
                 <p className="text-xl text-gray-500">Jam kerja</p>
               </div>
+
               <div className="my-4 flex items-center gap-5 border-t py-4">
-                {/* 
-                <Icon
+                {/* <Icon
                   path={mdiMapMarker}
                   size="40px"
                   className="text-green-600"
                 />
                 <p className="text-sm text-gray-500">
-                  {!GPSActive && "Antah Berantah"}
-                  {getTeacherDashboard.isLoading && "Lokasi Tidak Ditemukan"}
-                  {getTeacherDashboard.isSuccess && data?.user?.address}
-                </p>
-              */}
+                  {isSuccess && data?.user?.address}
+                </p> */}
               </div>
 
               <div className="flex justify-around">
-                {data?.status_button?.clockIn ? (
+                {statusButton?.clockIn ? (
                   <button
                     onClick={handleSubmitForm}
                     className="rounded bg-blue-600 py-3 px-7 text-white hover:bg-blue-700"
@@ -317,17 +159,16 @@ export default function NewStudentHome() {
                     Clock In
                   </button>
                 )}
-
-                {data?.status_button?.clockOut ? (
+                {statusButton?.clockOut === true ? (
                   <button
                     onClick={handleSubmitForm}
                     className="rounded bg-blue-600 py-3 px-7 text-white hover:bg-blue-700"
                   >
-                    Clock out
+                    Clock Out
                   </button>
                 ) : (
                   <button className="cursor-not-allowed rounded bg-gray-200 py-3 px-7 text-gray-500">
-                    Clock out
+                    Clock Out
                   </button>
                 )}
               </div>
@@ -336,30 +177,36 @@ export default function NewStudentHome() {
             {/* button */}
             <div className="mt-5 w-full rounded-lg bg-white p-4">
               <div className="flex justify-between">
-                <button className="w-[49%] items-center rounded py-2 pr-3 text-gray-700 hover:bg-gray-200">
-                  <Link to="/staff/permission/new" className="inline-flex">
-                    <span>
-                      <Icon
-                        className="mx-2"
-                        path={mdiNoteEditOutline}
-                        size="24px"
-                      />
-                    </span>
-                    <span>Pengajuan Ijin</span>
-                  </Link>
+                <button
+                  onClick={() => {
+                    navigate("/staff/permission/new");
+                  }}
+                  className="inline-flex w-[49%] items-center rounded py-2 pr-3 text-gray-700 hover:bg-gray-200"
+                >
+                  <span>
+                    <Icon
+                      className="mx-2"
+                      path={mdiNoteEditOutline}
+                      size="24px"
+                    />
+                  </span>
+                  <span>Pengajuan Ijin</span>
                 </button>
 
-                <button className="w-[49%] items-center rounded py-2 pr-3 text-gray-700 hover:bg-gray-200">
-                  <Link to="/staff/permission" className="inline-flex">
-                    <span>
-                      <Icon
-                        className="mx-2"
-                        path={mdiNoteTextOutline}
-                        size="24px"
-                      />
-                    </span>
-                    <span>Riwayat Ijin</span>
-                  </Link>
+                <button
+                  onClick={() => {
+                    navigate("/staff/permission");
+                  }}
+                  className="inline-flex w-[49%] items-center rounded py-2 pr-3 text-gray-700 hover:bg-gray-200"
+                >
+                  <span>
+                    <Icon
+                      className="mx-2"
+                      path={mdiNoteTextOutline}
+                      size="24px"
+                    />
+                  </span>
+                  <span>Riwayat Ijin</span>
                 </button>
 
                 {/* <button className="bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded inline-flex items-center"> */}
@@ -383,7 +230,7 @@ export default function NewStudentHome() {
             <div className="flex justify-between">
               <h4 className="font-semibold">Aktivitas Terkini</h4>
               <Link
-                className="rounded px-2 py-0.5 text-blue-700 hover:bg-gray-100"
+                className="rounded px-3 py-0.5 text-blue-500 hover:bg-gray-100"
                 to="/staff/activity"
               >
                 Log Absensi
@@ -392,8 +239,8 @@ export default function NewStudentHome() {
 
             <div className="group mt-2 border-t ">
               <Link to="/staff/activity" className="cursor-default">
-                {getTeacherDashboard.isSuccess &&
-                  data?.recent_activity?.map((activity, idx) => (
+                {isSuccess &&
+                  recentActivity.map((activity, idx) => (
                     <div
                       className="flex justify-between border-b py-2"
                       key={idx}
@@ -405,13 +252,13 @@ export default function NewStudentHome() {
                   ))}
               </Link>
 
-              {data?.recent_activity?.length === 0 && (
+              {recentActivity.length === 0 && (
                 <p className="mt-5 text-center text-gray-500">
                   Tidak Ada Aktivitas Terkini
                 </p>
               )}
 
-              {getTeacherDashboard.isLoading && (
+              {isLoading && (
                 <>
                   <div className="my-2 py-1">
                     <Skeleton />
@@ -421,17 +268,6 @@ export default function NewStudentHome() {
                   </div>
                 </>
               )}
-
-              {/* {!GPSActive && (
-                <>
-                  <div className="my-2 py-1">
-                    <Skeleton />
-                  </div>
-                  <div className="my-2 py-1">
-                    <Skeleton />
-                  </div>
-                </>
-              )} */}
             </div>
           </div>
         </div>

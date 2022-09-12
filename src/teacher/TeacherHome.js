@@ -39,9 +39,11 @@ export default function TeacherHome() {
   const handleSubmitForm = async () => {
     const res = await triggerPostAttendance({
       token: Cookie.getItem("token"),
-    });
-    setStatusButton(res.data.status_button);
-    setRecentActivity(recentActivity=> [res.data.activity,...recentActivity]);
+    });    
+    if (res.data?.success){
+        setStatusButton(res.data.status_button);
+        setRecentActivity(recentActivity=> [res.data.activity,...recentActivity]);
+    }
     setAlertShow(true);
     if (res.data?.error) {
       setError({

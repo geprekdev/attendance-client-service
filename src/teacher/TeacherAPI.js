@@ -36,7 +36,7 @@ export const teacherAPI = createApi({
         headers: {
           Authorization: user.token,
         },
-        url: `/v1/teacher/c/?id=${user.idClass}`,
+        url: `/v1/teacher/c/${user.idClass}`,
       }),
     }),
 

@@ -127,7 +127,7 @@ export default function StudentAccount() {
                     </div>
                   </>
                 )}
-
+                {/*
                 {isSuccess && data['Sep 2022'].slice(0, 5)
                     ?.map((presence, idx) => (
                       <div
@@ -153,7 +153,7 @@ export default function StudentAccount() {
                         &nbsp;
                         <p className="text-xs text-gray-500">{presence.date}</p>
                       </div>
-                    ))}
+                    ))} */}
               </div>
             </div>
           </div>

@@ -98,7 +98,7 @@ export default function StudentAbsent() {
     }
   }, [isError]);
  
-
+  console.log(timetableForm);
   return (
     <Layout title="Absen" role="STUDENT">
       <div className="mx-auto mb-20 min-h-screen max-w-[444px] border px-5 py-3 shadow-lg ">
@@ -235,10 +235,13 @@ export default function StudentAbsent() {
                 className="w-full rounded-md border bg-gray-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                 name="status"
               >
+                <option>Pilih Jam Pelajaran</option>
+
                 {isSuccess &&
                   data.timetable.map((timetable, idx) => (
                     <option
                       key={idx}
+        
                       value={timetable.id}
                       onClick={(e) => setTimetableForm(parseInt(e.target.value))}
                     >

@@ -17,7 +17,7 @@ export default function StudentAbsent() {
     latitude: 1,
   });
 
-  const [timetableForm, setTimetableForm] = useState("");
+  const [timetableForm, setTimetableForm] = useState(0);
   const [tokenForm, setTokenForm] = useState("");
   const [detailForm, setDetailForm] = useState("");
   const [subRes, setSubRes] = useState({});
@@ -74,11 +74,12 @@ export default function StudentAbsent() {
     } else {
       setSubRes({success: {message: 'Anda Berhasil Melakukan Presensi!'}});
     }
-    e.target.reset()
+    // e.target.reset()
     // setTokenForm('');
     // setDetailForm('');
 
   };
+
 
 
 
@@ -235,6 +236,8 @@ export default function StudentAbsent() {
               <select
                 className="w-full rounded-md border bg-gray-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                 name="status"
+                value={timetableForm}
+                onChange={e => setTimetableForm(e.target.value)}
               >
                 <option>Pilih Jam Pelajaran</option>
 
@@ -244,7 +247,6 @@ export default function StudentAbsent() {
                       key={idx}
         
                       value={timetable.id}
-                      onClick={(e) => setTimetableForm(parseInt(e.target.value))}
                     >
                       {timetable.name}
                     </option>

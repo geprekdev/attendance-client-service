@@ -12,6 +12,7 @@ export default function StudentStatistic() {
   const myRef = useRef(null);
   const [data, setData] = useState({});
   const [triggerStudentStatistic] = useGetStudentStatisticMutation();
+  console.log(data);
   function instanceProgressBar() {
     return new ProgressBar.Circle(myRef.current, {
       color: "#aaa",
@@ -139,18 +140,22 @@ export default function StudentStatistic() {
             Kehadiranmu telah mencapai zona&nbsp;
             {data.data?.presence > 0.8 ? (
               <>
-                <strong className="text-green-700">Aman</strong>, tingkatkan
-                kedisiplinan mu.
+                <strong className="text-green-700">
+                  {data.data?.indicator}
+                </strong>
+                , tingkatkan kedisiplinan mu.
               </>
             ) : data.data?.presence > 0.5 ? (
               <>
-                <strong className="text-yellow-600">Rentan</strong>, jangan lupa
-                absen!
+                <strong className="text-yellow-600">
+                  {data.data?.indicator}
+                </strong>
+                , jangan lupa absen!
               </>
             ) : (
               <>
-                <strong className="text-red-600">Bahaya</strong>, jangan lupa
-                absen!
+                <strong className="text-red-600">{data.data?.indicator}</strong>
+                , jangan lupa absen!
               </>
             )}
           </p>

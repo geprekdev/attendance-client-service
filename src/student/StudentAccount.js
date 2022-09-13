@@ -12,9 +12,7 @@ export default function StudentAccount() {
     useGetStudentAccountQuery({
       token: Cookie.getItem("token").slice(0, -1),
     });
-
   const navigate = useNavigate();
-
   const handleLogout = () => {
     const yes = window.confirm("Apakah anda ingin keluar ?");
     if (yes) {
@@ -121,6 +119,8 @@ export default function StudentAccount() {
                 {/* {isSuccess &&
                   Object.entries(data)[1][1]
                     .slice(0, 5)
+                {/*
+                {isSuccess && data['Sep 2022'].slice(0, 5)
                     ?.map((presence, idx) => (
                       <div
                         className="flex w-full items-center border-t border-gray-100 py-4 pl-6 pr-3 text-gray-600 transition duration-150 hover:bg-gray-100 "

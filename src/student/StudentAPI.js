@@ -101,7 +101,7 @@ export const studentAPI = createApi({
         headers: {
           Authorization: user.token,
         },
-        body: { token: user.bakso, lat: user.lat, lng: user.lng },
+        body: { token: user.bakso, lat: user.lat, lng: user.lng , timetable: user.timetable},
         method: "POST",
         url: "/v1/student/submit/",
       }),

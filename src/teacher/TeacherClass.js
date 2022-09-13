@@ -12,7 +12,7 @@ export default function TeacherClass() {
     });
 
   if (isSuccess) {
-    console.log(data.classrooms == null);
+    console.log(data == null);
   }
 
   // Unauthorize
@@ -38,7 +38,7 @@ export default function TeacherClass() {
           <h3 className="text-bold px-6 text-left text-sm text-gray-900"> </h3>
 
           <div className="mt-5 flex flex-wrap justify-between px-6">
-            {isSuccess && data.classrooms == null && (
+            {isSuccess && data == null && (
               <div className="mx-auto mt-5">
                 <img src="/no-class.svg" alt="Tidak Ada Kelas" width="200px" />
 
@@ -49,7 +49,7 @@ export default function TeacherClass() {
             )}
 
             {isSuccess &&
-              data.classrooms.map((classroom, idx) => (
+              data.map((classroom, idx) => (
                 <div className="my-2 w-[48%]" key={idx}>
                   <Link to={`/teacher/class/${classroom.id}/presence`}>
                     <div

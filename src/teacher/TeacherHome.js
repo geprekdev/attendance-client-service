@@ -43,10 +43,7 @@ export default function TeacherHome() {
     const res = await triggerPostAttendance({
       token: Cookie.getItem("token").slice(0, -1),
     });
-
-    console.log(res);
-
-    if (!res.data.error) {
+    if (res.data?.success) {
       setStatusButton(res.data.status_button);
       setRecentActivity(recentActivity => [
         res.data.activity,

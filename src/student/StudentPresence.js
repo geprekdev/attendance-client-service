@@ -70,7 +70,7 @@ export default function StudentAbsent() {
     });
     console.log(res);
     if (res?.error) {
-      setSubRes({error: {message: "Token Anda Salah"} });
+      setSubRes({error: {message: res.error.data} });
     } else {
       setSubRes({success: {message: 'Anda Berhasil Melakukan Presensi!'}});
     }

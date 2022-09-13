@@ -31,8 +31,12 @@ export default function StudentPermissionNew() {
   const [reason, setReason] = useState("");
   const navigate = useNavigate();
 
+
   const [fileUpload, setFileUpload] = useState({});
   const [displayIMG, setDisplayIMG] = useState([]);
+  console.log(reason);
+console.log(category);
+console.log(fileUpload[0])
 
   const { isSuccess, data, isError, error } = useGetLeaveQuery({
     token: Cookie.getItem("token").slice(0, -1),
@@ -46,8 +50,9 @@ export default function StudentPermissionNew() {
   const categories = ["Sakit", "Izin", "Keperluan Sekolah"];
 
   const handleLeaveHalfSubmit = async () => {
+    console.warn("Menagjukan Leave Half");
+    const leave_type = category === "Ijin" ? 0 : category === "Sakit" ? 1 : 2;
     const classroom_scheduled = [];
-    console.warn("Leave Half");
 
     classroom.forEach(c => {
       if (c.isActive) {
@@ -55,21 +60,27 @@ export default function StudentPermissionNew() {
       }
     });
 
-    const leave_type = category === "Ijin" ? 0 : category === "Sakit" ? 1 : 2;
+    let formData = new FormData();
+    formData.append("reason", reason);
+    formData.append("leave_type", leave_type);
+    formData.append("classroom_scheduled", classroom_scheduled);
+    formData.append("attachment", fileUpload[0]);
 
     const res = await triggerPostHalf({
       token: Cookie.getItem("token").slice(0, -1),
-      leave_type,
-      classroom_scheduled,
-      reason,
+      formData
     });
 
+    console.log("respponse ->", res);
+
     if (res.data) {
-      window.location = "/student/permission/";
+      navigate("/student/permission", {
+        state: { isSuccess: true },
+      });
     } else {
       setAlertForm({
         status: true,
-        message: `Reason field ${res?.error?.data?.reason}`,
+        message: `Tidak dapat mengirim, periksa form anda!`,
       });
     }
   };

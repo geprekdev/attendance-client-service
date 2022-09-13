@@ -123,12 +123,7 @@ export const studentAPI = createApi({
           // "Content-Type": "multipart/form-data",
         },
         method: "POST",
-        body: {
-          leave_type: user.leave_type,
-          classroom_scheduled: user.attendance_scheduled,
-          reason: user.reason,
-          attachment: user.attachment,
-        },
+        body: user.formData,
         url: `/v1/leave/?type=half`,
       }),
     }),

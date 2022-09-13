@@ -80,7 +80,24 @@ export default function ProtectedRoute({ role }) {
   // }
 
   if (token) {
-    return <Outlet />;
+    const _r = token.substring(token.length - 1);
+    const role =
+      _r === "0"
+        ? "student"
+        : _r === "1"
+        ? "teacher"
+        : _r === "2"
+        ? "staff"
+        : "";
+
+    const url = window.location.pathname;
+
+    if (url.includes(role)) {
+      return <Outlet />;
+    }
+
+    Cookie.deleteItem("token");
+    return <Navigate to="/auth/login" />;
   }
 
   Cookie.deleteItem("token");

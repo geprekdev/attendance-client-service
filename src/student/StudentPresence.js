@@ -68,6 +68,7 @@ export default function StudentAbsent() {
       bakso: tokenForm,
       timetable: timetableForm
     });
+    console.log(res);
     if (res?.error) {
       setSubRes({error: {message: "Token Anda Salah"} });
     } else {

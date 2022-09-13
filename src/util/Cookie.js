@@ -36,7 +36,6 @@ const cookie = {
    */
   deleteItem: cookieName => {
     document.cookie = `${cookieName}=;expires=Thu, 01 Jan 1970;path=/;SameSite=secure`;
-    console.clear();
   },
 };
 

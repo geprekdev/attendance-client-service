@@ -13,7 +13,7 @@ export default function TeacherJournal() {
   const { data, isSuccess, isLoading, isError, error } =
     useGetTeacherJournalQuery(
       {
-        token: Cookie.getItem("token"),
+        token: Cookie.getItem("token").slice(0, -1),
         id,
       },
       { refetchOnFocus: true }

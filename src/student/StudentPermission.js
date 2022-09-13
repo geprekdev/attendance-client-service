@@ -4,16 +4,16 @@ import Icon from "@mdi/react";
 import { Link, Navigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import Cookie from "../util/Cookie";
-import { useGetStudentLeaveQuery } from "./StudentAPI";
 import isEmpty from "../util/EmptyObj";
 import Skeleton from "../components/Skeleton";
+import { useGetLeaveQuery } from "../core/API";
 
 export default function StudentPermission() {
-  const { isSuccess, data, isError, error, isLoading } =
-    useGetStudentLeaveQuery({
-      token: Cookie.getItem("token"),
-    });
+  const { isSuccess, data, isError, error, isLoading } = useGetLeaveQuery({
+    token: Cookie.getItem("token").slice(0, -1),
+  });
 
+  // Unauthorize
   if (isError && error.status === 401) {
     Cookie.deleteItem("token");
     return <Navigate to={"/auth/login"} />;
@@ -21,7 +21,6 @@ export default function StudentPermission() {
 
   // Role permission
   if (isError && error.status === 403) {
-    console.log(error);
     Cookie.deleteItem("token");
     return <Navigate to={"/auth/login"} />;
   }

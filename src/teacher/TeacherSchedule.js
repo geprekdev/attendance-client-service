@@ -21,7 +21,7 @@ export default function StudentSchedule() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const { isSuccess, isLoading, data, isError, error } =
     useGetTeacherScheduleClassQuery(
-      { token: Cookie.getItem("token") },
+      { token: Cookie.getItem("token").slice(0, -1) },
       { refetchOnReconnect: true }
     );
 

@@ -29,9 +29,9 @@ export default function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (Cookie.getItem("token")) {
-      navigate("/auth/login");
-    }
+    // if (Cookie.getItem("token")) {
+    navigate("/auth/login");
+    // }
   }, []);
 
   return (

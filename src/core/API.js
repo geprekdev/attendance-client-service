@@ -21,14 +21,31 @@ export const coreAPI = createApi({
         url: `v1/general-attendance/`,
       }),
     }),
-
-
-
-    // -------------
+    postLeaveFull: builder.mutation({
+      query: user => ({
+        headers: {
+          Authorization: user.token,
+          // "Content-Type": "multipart/form-data",
+        },
+        method: "POST",
+        body: user.formData,
+        url: `/v1/leave/`,
+      }),
+    }),
+    getLeave: builder.query({
+      query: user => ({
+        headers: {
+          Authorization: user.token,
+        },
+        url: "/v1/leave/",
+      }),
+    }),
   }),
 });
 
 export const {
   useGetAttendanceQuery,
   usePostAttendanceMutation,
+  usePostLeaveFullMutation,
+  useGetLeaveQuery,
 } = coreAPI;

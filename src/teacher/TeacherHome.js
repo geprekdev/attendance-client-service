@@ -4,7 +4,7 @@ import {
   mdiMapMarker,
   mdiNoteEditOutline,
   mdiNoteTextOutline,
-  mdiCheckCircleOutline
+  mdiCheckCircleOutline,
 } from "@mdi/js";
 import Icon from "@mdi/react";
 import Layout from "../components/Layout";
@@ -13,49 +13,71 @@ import Skeleton from "../components/Skeleton";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { getDay, getFullDate } from "../util/Date";
 import { useState } from "react";
-import { useGetAttendanceQuery,usePostAttendanceMutation} from "../core/API";
+import { useGetAttendanceQuery, usePostAttendanceMutation } from "../core/API";
 
 export default function TeacherHome() {
   const date = new Date();
   const [submitPost, setSubmitPost] = useState(false);
-  const {isSuccess, isError, isLoading ,data, refecth} = useGetAttendanceQuery(
-    {
-      token: Cookie.getItem("token"),
-      latitude: 0,
-      longitude: 0,
-    }
-  );
+  const { isSuccess, isError, isLoading, data, error } = useGetAttendanceQuery({
+    token: Cookie.getItem("token").slice(0, -1),
+    latitude: 0,
+    longitude: 0,
+  });
+
+  console.log(isError && error);
+
   const navigate = useNavigate();
   const [statusButton, setStatusButton] = useState(false);
   const [recentActivity, setRecentActivity] = useState([]);
-  const [error, setError] = useState(false);
+  const [alertError, setAlertError] = useState(false);
   const [alertShow, setAlertShow] = useState(false);
   const [triggerPostAttendance] = usePostAttendanceMutation();
 
-  if (isSuccess && statusButton === false){
+  if (isSuccess && statusButton === false) {
+    console.log(data);
+
     setStatusButton(data.status_button);
     setRecentActivity(data.recent_activity);
   }
   const handleSubmitForm = async () => {
     const res = await triggerPostAttendance({
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").slice(0, -1),
     });
-    setStatusButton(res.data.status_button);
-    setRecentActivity(recentActivity=> [res.data.activity,...recentActivity]);
+
+    console.log(res);
+
+    if (!res.data.error) {
+      setStatusButton(res.data.status_button);
+      setRecentActivity(recentActivity => [
+        res.data.activity,
+        ...recentActivity,
+      ]);
+    }
     setAlertShow(true);
     if (res.data?.error) {
-      setError({
+      setAlertError({
         error: true,
         message: res.data?.error.message,
       });
     } else {
-      setError({
+      setAlertError({
         error: false,
         message: res.data?.success?.message,
       });
     }
   };
 
+  // Unauthorize
+  if (isError && error.status === 401) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
+
+  // Role permission
+  if (isError && error.status === 403) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
 
   return (
     <Layout title="Teacher" role="TEACHER">
@@ -68,7 +90,7 @@ export default function TeacherHome() {
                 className={`${
                   alertShow ? "flex" : "hidden"
                 } justify-between rounded ${
-                  error.error
+                  alertError.error
                     ? "bg-yellow-500 text-yellow-100"
                     : "bg-green-600 text-green-200"
                 } p-3  shadow-inner`}
@@ -82,7 +104,7 @@ export default function TeacherHome() {
                       size="20px"
                     />
                   </strong>
-                  {error.message}
+                  {alertError.message}
                 </p>
                 <strong className="align-center alert-del cursor-pointer text-xl">
                   &times;
@@ -97,9 +119,7 @@ export default function TeacherHome() {
               </div>
             )}
 
-            <p className="text-gray-100">
-              {isSuccess && data?.greet}
-            </p>
+            <p className="text-gray-100">{isSuccess && data?.greet}</p>
 
             <div className="mt-5 flex justify-between text-white">
               <div>

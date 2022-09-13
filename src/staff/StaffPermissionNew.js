@@ -26,8 +26,8 @@ export default function StaffPermission() {
 
   const navigate = useNavigate();
 
-  const { isSuccess, data } = useGetStaffLeaveFullQuery({
-    token: Cookie.getItem("token"),
+  const { isSuccess, data, isError, error } = useGetStaffLeaveFullQuery({
+    token: Cookie.getItem("token").slice(0, -1),
   });
 
   if (isSuccess) {
@@ -68,7 +68,7 @@ export default function StaffPermission() {
 
     const res = await triggerPostFull({
       formData,
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").slice(0, -1),
     });
 
     console.log("respponse ->", res);
@@ -118,6 +118,18 @@ export default function StaffPermission() {
       // setDays(data.attendanceTimetable.map(d => ({ ...d, isActive: false })));
     }
   }, [isSuccess, data]);
+
+  // Unauthorize
+  if (isError && error.status === 401) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
+
+  // Role permission
+  if (isError && error.status === 403) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
 
   return (
     <Layout title="Staff" role="STAFF">

@@ -10,10 +10,8 @@ import { useGetStudentActivityQuery } from "./StudentAPI";
 export default function StudentActivity() {
   const { data, isSuccess, isLoading, error, isError } =
     useGetStudentActivityQuery({
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").slice(0, -1),
     });
-
-  const navigate = useNavigate();
 
   // Unauthorize
   if (isError && error.status === 401) {

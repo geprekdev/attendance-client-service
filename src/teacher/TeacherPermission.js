@@ -1,15 +1,15 @@
 import { mdiCalendar, mdiChevronLeft } from "@mdi/js";
 import Icon from "@mdi/react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import Layout from "../components/Layout";
 import Skeleton from "../components/Skeleton";
+import { useGetLeaveQuery } from "../core/API";
 import Cookie from "../util/Cookie";
 import isEmpty from "../util/EmptyObj";
-import { useGetStudentLeaveQuery } from "./../student/StudentAPI";
 
 export default function TeacherPermission() {
-  const { isSuccess, data, isLoading } = useGetStudentLeaveQuery({
-    token: Cookie.getItem("token"),
+  const { isSuccess, data, isLoading, isError, error } = useGetLeaveQuery({
+    token: Cookie.getItem("token").slice(0, -1),
   });
 
   const location = useLocation();
@@ -20,6 +20,18 @@ export default function TeacherPermission() {
 
   if (location) {
     console.log(location.state);
+  }
+
+  // Unauthorize
+  if (isError && error.status === 401) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
+
+  // Role permission
+  if (isError && error.status === 403) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
   }
 
   return (

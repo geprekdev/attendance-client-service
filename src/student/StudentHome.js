@@ -4,7 +4,7 @@ import {
   mdiMapMarker,
   mdiNoteEditOutline,
   mdiNoteTextOutline,
-  mdiCheckCircleOutline
+  mdiCheckCircleOutline,
 } from "@mdi/js";
 import Icon from "@mdi/react";
 import Layout from "../components/Layout";
@@ -13,18 +13,17 @@ import Skeleton from "../components/Skeleton";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { getDay, getFullDate } from "../util/Date";
 import { useState } from "react";
-import { useGetAttendanceQuery,usePostAttendanceMutation} from "../core/API";
+
+import { useGetAttendanceQuery, usePostAttendanceMutation } from "../core/API";
 
 export default function StudentHome() {
   const date = new Date();
-  const [submitPost, setSubmitPost] = useState(false);
-  const {isSuccess, isError, isLoading ,data, refecth} = useGetAttendanceQuery(
-    {
-      token: Cookie.getItem("token"),
-      latitude: 0,
-      longitude: 0,
-    }
-  );
+  // const [submitPost, setSubmitPost] = useState(false);
+  const { isSuccess, isError, isLoading, data } = useGetAttendanceQuery({
+    token: Cookie.getItem("token"),
+    latitude: 0,
+    longitude: 0,
+  });
   const navigate = useNavigate();
   const [statusButton, setStatusButton] = useState(false);
   const [recentActivity, setRecentActivity] = useState([]);
@@ -32,16 +31,16 @@ export default function StudentHome() {
   const [alertShow, setAlertShow] = useState(false);
   const [triggerPostAttendance] = usePostAttendanceMutation();
 
-  if (isSuccess && statusButton === false){
+  if (isSuccess && statusButton === false) {
     setStatusButton(data.status_button);
     setRecentActivity(data.recent_activity);
   }
   const handleSubmitForm = async () => {
     const res = await triggerPostAttendance({
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").slice(0, -1),
     });
     setStatusButton(res.data.status_button);
-    setRecentActivity(recentActivity=> [res.data.activity,...recentActivity]);
+    setRecentActivity(recentActivity => [res.data.activity, ...recentActivity]);
     setAlertShow(true);
     if (res.data?.error) {
       setError({
@@ -56,6 +55,17 @@ export default function StudentHome() {
     }
   };
 
+  // Unauthorize
+  if (isError && error.status === 401) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
+
+  // Role permission
+  if (isError && error.status === 403) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
 
   return (
     <Layout title="Student" role="STUDENT">
@@ -97,9 +107,7 @@ export default function StudentHome() {
               </div>
             )}
 
-            <p className="text-gray-100">
-              {isSuccess && data?.greet}
-            </p>
+            <p className="text-gray-100">{isSuccess && data?.greet}</p>
 
             <div className="mt-5 flex justify-between text-white">
               <div>
@@ -276,7 +284,6 @@ export default function StudentHome() {
   );
 }
 
-
 // import {
 //   mdiAlarm,
 //   mdiBookVariant,
@@ -301,7 +308,7 @@ export default function StudentHome() {
 // export default function StudentHome() {
 //   const { isSuccess, isLoading, data, isError, error } =
 //     useGetStudentClassesQuery({
-//       token: Cookie.getItem("token"),
+//     token: Cookie.getItem("token").slice(0, -1),
 //     });
 //   const navigate = useNavigate();
 

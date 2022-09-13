@@ -48,19 +48,19 @@ export default function StudentStatistic() {
 
     async function getData() {
       const res = await triggerStudentStatistic({
-        token: Cookie.getItem("token"),
+        token: Cookie.getItem("token").slice(0, -1),
       });
 
       // Unauthorize
       if (res?.error?.status === 401) {
         Cookie.deleteItem("token");
-        window.location = "/auth/login";
+        navigate("/auth/login");
         return;
       }
 
       // Role permission
       if (res?.error?.status === 403) {
-        navigate("/teacher/");
+        navigate("/auth/login");
         return;
       }
 
@@ -137,12 +137,12 @@ export default function StudentStatistic() {
 
           <p className="text-justify text-sm">
             Kehadiranmu telah mencapai zona&nbsp;
-            {data.data?.presence > 80 ? (
+            {data.data?.presence > 0.8 ? (
               <>
                 <strong className="text-green-700">Aman</strong>, tingkatkan
                 kedisiplinan mu.
               </>
-            ) : data.data?.presence > 50 ? (
+            ) : data.data?.presence > 0.5 ? (
               <>
                 <strong className="text-yellow-600">Rentan</strong>, jangan lupa
                 absen!

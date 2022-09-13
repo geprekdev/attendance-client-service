@@ -88,18 +88,6 @@ export const teacherAPI = createApi({
         url: "/v1/leave/",
       }),
     }),
-
-    postTeacherLeaveFull: builder.mutation({
-      query: user => ({
-        headers: {
-          Authorization: user.token,
-          // "Content-Type": "multipart/form-data",
-        },
-        method: "POST",
-        body: user.formData,
-        url: `/v1/leave/`,
-      }),
-    }),
   }),
 });
 
@@ -112,6 +100,5 @@ export const {
   useGetTeacherJournalQuery,
   useGetTeacherJournalAddNewQuery,
   usePostTeacherJournalAddNewMutation,
-  usePostTeacherLeaveFullMutation,
   useGetTeacherLeaveFullQuery,
 } = teacherAPI;

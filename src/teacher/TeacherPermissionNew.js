@@ -7,14 +7,12 @@ import Icon from "@mdi/react";
 import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
-import {
-  useGetTeacherLeaveFullQuery,
-  usePostTeacherLeaveFullMutation,
-} from "./TeacherAPI";
+import { useGetLeaveQuery, usePostLeaveFullMutation } from "../core/API";
+
 import Cookie from "../util/Cookie";
 
 export default function StudentPermissionNew() {
-  const [triggerPostFull] = usePostTeacherLeaveFullMutation();
+  const [triggerPostFull] = usePostLeaveFullMutation();
   const [attendanceScheduled, setAttendanceScheduled] = useState([]);
   const [alertForm, setAlertForm] = useState();
 
@@ -26,8 +24,8 @@ export default function StudentPermissionNew() {
 
   const navigate = useNavigate();
 
-  const { isSuccess, data } = useGetTeacherLeaveFullQuery({
-    token: Cookie.getItem("token"),
+  const { isSuccess, data, isError, error } = useGetLeaveQuery({
+    token: Cookie.getItem("token").slice(0, -1),
   });
 
   const categories = ["Sakit", "Izin", "Keperluan Sekolah"];
@@ -64,7 +62,7 @@ export default function StudentPermissionNew() {
 
     const res = await triggerPostFull({
       formData,
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").slice(0, -1),
     });
 
     console.log("respponse ->", res);
@@ -114,6 +112,18 @@ export default function StudentPermissionNew() {
       // setDays(data.attendanceTimetable.map(d => ({ ...d, isActive: false })));
     }
   }, [isSuccess, data]);
+
+  // Unauthorize
+  if (isError && error.status === 401) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
+
+  // Role permission
+  if (isError && error.status === 403) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
 
   return (
     <Layout title="Teacher" role="TEACHER">

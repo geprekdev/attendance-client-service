@@ -6,7 +6,7 @@ import { useGetStaffAccountInfoQuery } from "./StaffAPI";
 export default function StaffAccount() {
   const navigate = useNavigate();
   const { data, isError, isSuccess, error } = useGetStaffAccountInfoQuery({
-    token: Cookie.getItem("token"),
+    token: Cookie.getItem("token").slice(0, -1),
   });
 
   const handleLogout = () => {

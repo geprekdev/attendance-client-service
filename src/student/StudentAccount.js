@@ -1,7 +1,7 @@
 import { mdiClose, mdiCheckBold, mdiLogout } from "@mdi/js";
 import Icon from "@mdi/react";
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import Skeleton from "../components/Skeleton";
 import Cookie from "../util/Cookie";
@@ -10,7 +10,7 @@ import { useGetStudentAccountQuery } from "./StudentAPI";
 export default function StudentAccount() {
   const { isLoading, isSuccess, data, isError, error } =
     useGetStudentAccountQuery({
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").slice(0, -1),
     });
 
   const navigate = useNavigate();
@@ -23,29 +23,17 @@ export default function StudentAccount() {
     }
   };
 
-  if (isSuccess) {
-    console.log(Object.entries(data));
+  // Unauthorize
+  if (isError && error.status === 401) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
   }
 
-  useEffect(() => {
-    // Unauthorize
-    if (isError && error.status === 401) {
-      Cookie.deleteItem("token");
-      window.location = "/auth/login";
-      return;
-    }
-
-    // Role permission
-    if (isError && error.status === 403) {
-      navigate("/teacher/");
-      return;
-    }
-
-    // Server Error
-    if (isError && error.status === 502) {
-      navigate("/rusakk");
-    }
-  }, [isError]);
+  // Role permission
+  if (isError && error.status === 403) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
 
   return (
     <Layout title="Student Account" role="STUDENT">
@@ -130,7 +118,7 @@ export default function StudentAccount() {
                   </>
                 )}
 
-                {isSuccess &&
+                {/* {isSuccess &&
                   Object.entries(data)[1][1]
                     .slice(0, 5)
                     ?.map((presence, idx) => (
@@ -157,7 +145,7 @@ export default function StudentAccount() {
                         &nbsp;
                         <p className="text-xs text-gray-500">{presence.date}</p>
                       </div>
-                    ))}
+                    ))} */}
               </div>
             </div>
           </div>

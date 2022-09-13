@@ -11,7 +11,7 @@ export default function TeacherClassPresence() {
 
   const { isLoading, data, isSuccess, isError, error } =
     useGetTeacherClassDetailQuery({
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").slice(0, -1),
       idClass: id,
     });
   const [day, setDay] = useState();

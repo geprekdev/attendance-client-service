@@ -10,7 +10,7 @@ export default function TeacherAccount() {
   const navigate = useNavigate();
   const { data, isError, isSuccess, error, isLoading } =
     useGetTeacherAccountInfoQuery({
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").slice(0, -1),
     });
 
   const handleLogout = () => {

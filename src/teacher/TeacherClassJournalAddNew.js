@@ -9,7 +9,7 @@ import {
 export default function TeacherClassJournalAddNew() {
   const { data, isSuccess, isLoading, isError, error } =
     useGetTeacherJournalAddNewQuery({
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").slice(0, -1),
     });
 
   const { id } = useParams();
@@ -23,7 +23,7 @@ export default function TeacherClassJournalAddNew() {
     e.preventDefault();
 
     const res = await triggerPost({
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").slice(0, -1),
       description,
     });
 

@@ -27,7 +27,8 @@ export const store = configureStore({
       .concat(authAPI.middleware)
       .concat(studentAPI.middleware)
       .concat(teacherAPI.middleware)
-      .concat(staffAPI.middleware),
+      .concat(staffAPI.middleware)
+      .concat(coreAPI.middleware),
 });
 
 setupListeners(store.dispatch);

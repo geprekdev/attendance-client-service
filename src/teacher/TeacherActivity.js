@@ -7,7 +7,7 @@ import { Navigate } from "react-router-dom";
 
 export default function TeacherActivity() {
   const { isSuccess, data, isError, error } = useGetTeacherActivityQuery({
-    token: Cookie.getItem("token"),
+    token: Cookie.getItem("token").slice(0, -1),
   });
 
   // Unauthorize

@@ -8,7 +8,7 @@ import { getDay, getFullDate } from "../util/Date";
 import { useGetScheduleClassQuery } from "./StudentAPI";
 import Cookie from "../util/Cookie";
 import Skeleton from "../components/Skeleton";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export default function StudentSchedule() {
   const [dateCalendar, setDateCalendar] = useState(new Date());
@@ -16,7 +16,7 @@ export default function StudentSchedule() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const { isSuccess, isLoading, data, isError, error } =
     useGetScheduleClassQuery(
-      { token: Cookie.getItem("token") },
+      { token: Cookie.getItem("token").slice(0, -1) },
       { refetchOnReconnect: true }
     );
 
@@ -32,19 +32,13 @@ export default function StudentSchedule() {
   // Unauthorize
   if (isError && error.status === 401) {
     Cookie.deleteItem("token");
-    window.location = "/auth/login";
-    return;
+    return <Navigate to={"/auth/login"} />;
   }
 
   // Role permission
   if (isError && error.status === 403) {
-    navigate("/teacher/");
-    return;
-  }
-
-  // Server Error
-  if (isError && error.status === 502) {
-    navigate("/rusakk");
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
   }
 
   return (

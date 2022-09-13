@@ -8,7 +8,7 @@ import { Link, Navigate } from "react-router-dom";
 export default function TeacherClass() {
   const { isSuccess, data, isLoading, isError, error } =
     useGetTeacherClasslistQuery({
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").slice(0, -1),
     });
 
   if (isSuccess) {
@@ -25,10 +25,6 @@ export default function TeacherClass() {
   if (isError && error.status === 403) {
     Cookie.deleteItem("token");
     return <Navigate to={"/auth/login"} />;
-  }
-
-  if (isError) {
-    console.log(error.status === "FETCH_ERROR" && "Server Rusak");
   }
 
   return (

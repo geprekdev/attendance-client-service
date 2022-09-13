@@ -6,7 +6,7 @@ import { useGetStaffActivityQuery } from "./StaffAPI";
 
 export default function StaffActivity() {
   const { isSuccess, data, isError, error } = useGetStaffActivityQuery({
-    token: Cookie.getItem("token"),
+    token: Cookie.getItem("token").slice(0, -1),
   });
 
   // Unauthorize

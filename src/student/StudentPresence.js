@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { mdiChevronLeft, mdiRefresh, mdiCrosshairsGps } from "@mdi/js";
 import Icon from "@mdi/react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Skeleton from "../components/Skeleton";
 import {
   useGetStudentSubmitGeoQuery,
@@ -23,7 +23,7 @@ export default function StudentAbsent() {
 
   const { isLoading, isSuccess, data, isError, error } =
     useGetStudentSubmitGeoQuery({
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").slice(0, -1),
       latitude: GeoLoc.latitude,
       longitude: GeoLoc.longitude,
     });
@@ -57,11 +57,11 @@ export default function StudentAbsent() {
   //   }
   // };
 
-  const handleSubmitForm = async (e) => {
+  const handleSubmitForm = async e => {
     e.preventDefault();
 
     const res = await triggerPresenceClass({
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").slice(0, -1),
       lat: GeoLoc.latitude,
       lng: GeoLoc.longitude,
       bakso: tokenForm,
@@ -76,20 +76,17 @@ export default function StudentAbsent() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Unauthorize
-    if (isError && error.status === 401) {
-      Cookie.deleteItem("token");
-      window.location = "/auth/login";
-      return;
-    }
+  // Unauthorize
+  if (isError && error.status === 401) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
 
-    // Role permission
-    if (isError && error.status === 403) {
-      navigate("/teacher/");
-      return;
-    }
-  }, [isError]);
+  // Role permission
+  if (isError && error.status === 403) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
 
   return (
     <Layout title="Absen" role="STUDENT">
@@ -256,7 +253,7 @@ export default function StudentAbsent() {
                   maxLength="4"
                   className="w-full rounded-md border bg-gray-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                   value={tokenForm}
-                  onChange={(e) => setTokenForm(e.target.value.toUpperCase())}
+                  onChange={e => setTokenForm(e.target.value.toUpperCase())}
                 />
                 <textarea
                   type="text"
@@ -264,7 +261,7 @@ export default function StudentAbsent() {
                   required
                   className="mt-5 w-full rounded-md border bg-gray-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                   value={detailForm}
-                  onChange={(e) => setDetailForm(e.target.value)}
+                  onChange={e => setDetailForm(e.target.value)}
                 />
                 <button className="ease focus:shadow-outline mt-3 w-full select-none rounded-md border border-indigo-500 bg-indigo-500 py-3 text-white transition duration-500 hover:bg-indigo-600 focus:outline-none">
                   Submit

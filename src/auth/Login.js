@@ -2,7 +2,8 @@ import Layout from "../components/Layout";
 import { useEffect, useState } from "react";
 import { useLoginMutation } from "./AuthAPI";
 import Cookie from "../util/Cookie";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import CheckRole from "../util/CheckRole";
 
 export default function Login() {
   const [triggerLogin] = useLoginMutation();
@@ -30,30 +31,52 @@ export default function Login() {
       return;
     }
 
-    Cookie.setItem("token", `Token ${res.data.token}`);
     setData(res.data);
     setLoading(false);
 
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       if (res.data.role === "student") {
-        navigate("/student/");
+        Cookie.setItem("token", `Token ${res.data.token}0`);
+
+        navigate("/student/", { state: true });
         return;
       }
 
       if (res.data.role === "teacher") {
-        navigate("/teacher/");
+        Cookie.setItem("token", `Token ${res.data.token}1`);
+
+        navigate("/teacher/", { state: true });
         return;
       }
 
-      navigate("/staff/");
-    }, 500);
+      Cookie.setItem("token", `Token ${res.data.token}2`);
+      navigate("/staff/", { state: true });
 
-    console.log(res.data.role);
+      clearTimeout(timer);
+    }, 500);
   };
 
   useEffect(() => {
-    if (Cookie.getItem("token")) {
-      navigate("/student/");
+    const token = Cookie.getItem("token");
+    const role = token.substring(token.length - 1);
+
+    switch (role) {
+      case "0":
+        // console.log("Student,l -> ", role);
+        navigate("/student/", { state: true });
+        break;
+      case "1":
+        // console.log("Teacher,l -> ", role);
+        navigate("/teacher/", { state: true });
+        break;
+      case "2":
+        // console.log("Staff,l -> ", role);
+        navigate("/staff/", { state: true });
+        break;
+      default:
+        // console.log("Default,l ->", role);
+        navigate("/auth/login", { state: true });
+        break;
     }
   }, []);
 

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import { Icon } from "@mdi/react";
 import L from "leaflet";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import {
   mdiArrowLeft,
   mdiInformationOutline,
@@ -18,6 +18,7 @@ import {
   usePostStudentAttendanceMutation,
 } from "./StudentAPI";
 import Cookie from "../util/Cookie";
+
 export default function StudentAttendance() {
   const [GPSActive, setGPSActive] = useState(false);
   const [GeoLoc, setGeoLoc] = useState({
@@ -34,34 +35,12 @@ export default function StudentAttendance() {
 
   const { isSuccess, data, isError, error } = useGetStudentAttendanceQuery(
     {
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").slice(0, -1),
       latitude: GeoLoc.latitude,
       longitude: GeoLoc.longitude,
     },
     { skip: !GPSActive }
   );
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // Unauthorize
-    if (isError && error.status === 401) {
-      Cookie.deleteItem("token");
-      window.location = "/auth/login";
-      return;
-    }
-
-    // Role permission
-    if (isError && error.status === 403) {
-      navigate("/teacher/");
-      return;
-    }
-
-    // Server Error
-    if (isError && error.status === 502) {
-      navigate("/rusakk");
-    }
-  }, [isError]);
 
   if (isSuccess && clock === false) {
     setClock({
@@ -73,7 +52,7 @@ export default function StudentAttendance() {
 
   const handleSubmitForm = async () => {
     const data = await triggerPostStudentAttendance({
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").slice(0, -1),
       latitude: GeoLoc.latitude,
       longitude: GeoLoc.longitude,
     });

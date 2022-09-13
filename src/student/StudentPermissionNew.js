@@ -9,17 +9,16 @@ import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import { getFullDate } from "../util/Date";
-import {
-  useGetStudentLeaveQuery,
-  usePostStudentLeaveFullMutation,
-  usePostStudentLeaveHalfMutation,
-} from "./StudentAPI";
+import { usePostStudentLeaveHalfMutation } from "./StudentAPI";
+
+import { usePostLeaveFullMutation, useGetLeaveQuery } from "../core/API";
+
 import Cookie from "../util/Cookie";
 import isEmpty from "../util/EmptyObj";
 
 export default function StudentPermissionNew() {
   const [triggerPostHalf] = usePostStudentLeaveHalfMutation();
-  const [triggerPostFull] = usePostStudentLeaveFullMutation();
+  const [triggerPostFull] = usePostLeaveFullMutation();
   const [classroom, setClassroom] = useState([]);
   const [attendanceScheduled, setAttendanceScheduled] = useState([]);
   const [days, setDays] = useState({});
@@ -35,8 +34,8 @@ export default function StudentPermissionNew() {
   const [fileUpload, setFileUpload] = useState({});
   const [displayIMG, setDisplayIMG] = useState([]);
 
-  const { isSuccess, data, isError, error } = useGetStudentLeaveQuery({
-    token: Cookie.getItem("token"),
+  const { isSuccess, data, isError, error } = useGetLeaveQuery({
+    token: Cookie.getItem("token").slice(0, -1),
   });
 
   const menus = [
@@ -59,7 +58,7 @@ export default function StudentPermissionNew() {
     const leave_type = category === "Ijin" ? 0 : category === "Sakit" ? 1 : 2;
 
     const res = await triggerPostHalf({
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").slice(0, -1),
       leave_type,
       classroom_scheduled,
       reason,
@@ -114,7 +113,7 @@ export default function StudentPermissionNew() {
 
     const res = await triggerPostFull({
       formData,
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").slice(0, -1),
     });
 
     console.log("respponse ->", res);
@@ -172,6 +171,18 @@ export default function StudentPermissionNew() {
       setDays(data.attendanceTimetable.map(d => ({ ...d, isActive: false })));
     }
   }, [isSuccess, data]);
+
+  // Unauthorize
+  if (isError && error.status === 401) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
+
+  // Role permission
+  if (isError && error.status === 403) {
+    Cookie.deleteItem("token");
+    return <Navigate to={"/auth/login"} />;
+  }
 
   return (
     <Layout title="Student" role="STUDENT">

@@ -16,7 +16,7 @@ export default function TeacherClass() {
   const { id } = useParams();
   const { isLoading, data, isSuccess, isError, error } =
     useGetTeacherClassDetailQuery({
-      token: Cookie.getItem("token"),
+      token: Cookie.getItem("token").slice(0, -1),
       idClass: id,
     });
   console.log(data);
@@ -86,10 +86,13 @@ export default function TeacherClass() {
           ))}
         </div>
 
-        {isEmpty(data) ? 
-          (<div className="mx-auto mt-10 text-center text-xl font-semibold text-red-600">
+        {isEmpty(data) ? (
+          <div className="mx-auto mt-10 text-center text-xl font-semibold text-red-600">
             <p>Daftar Hadir Kosong</p>
-          </div>) : <Outlet />}
+          </div>
+        ) : (
+          <Outlet />
+        )}
       </div>
     </Layout>
   );

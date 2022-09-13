@@ -69,13 +69,13 @@ export default function StudentAbsent() {
       timetable: timetableForm
     });
     if (res?.error) {
-      setSubRes({error: {message: res.error.data} });
+      setSubRes({error: {message: "Token Anda Salah"} });
     } else {
       setSubRes({success: {message: 'Anda Berhasil Melakukan Presensi!'}});
     }
     e.target.reset()
-    setTokenForm('');
-    setDetailForm('');
+    // setTokenForm('');
+    // setDetailForm('');
 
   };
 

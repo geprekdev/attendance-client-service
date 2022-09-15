@@ -1,19 +1,19 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "SiamaWolu",
+  "name": "Sistem Presensi SMKN 8 Semarang",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "logo_rpl.jpg",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "logo_rpl.jpg",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
+      "src": "logo_rpl.jpg",
       "type": "image/png",
       "sizes": "512x512"
     }

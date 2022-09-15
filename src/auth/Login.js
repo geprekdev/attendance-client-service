@@ -80,20 +80,34 @@ export default function Login() {
     }
   }, []);
 
+  console.log("Follow bang @nduuadi \ncemas kau dek bek bek bek...");
+
   return (
     <Layout title="Login">
       <div className="mx-auto h-screen  max-w-[444px] border shadow-lg">
         <div className=" -mt-10 flex min-h-screen w-full flex-col items-center justify-center">
           <div className="mx-auto w-full p-5 sm:max-w-md">
-            <h2 className="mb-12 text-center text-3xl font-semibold">
+            <h2 className="text-center text-3xl font-semibold text-gray-800">
               {!data?.name ? (
-                "Login"
+                <>
+                  <span>SiAmaWolu</span>
+                  <span className="block text-base text-gray-300">
+                    @RPLTeam
+                  </span>
+                </>
               ) : (
                 <>
-                  <span>{data.name}</span>
+                  <span className="text-2xl text-gray-600">{data.name}</span>
                 </>
               )}
             </h2>
+
+            <img
+              src="/logo_rpl.jpg"
+              alt="SMKN 8 Semarang"
+              width="100px"
+              className="mx-auto mt-7 mb-10"
+            />
 
             {data?.data?.non_field_errors && (
               <div

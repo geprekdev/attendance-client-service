@@ -79,7 +79,7 @@ export default function TeacherHome() {
   return (
     <Layout title="Teacher" role="TEACHER">
       <div className="mx-auto min-h-screen max-w-[444px] border pb-24 shadow-lg">
-        <div className="bg-[#c52831]">
+        <div className="bg-gradient-to-r from-red-700 to-[#f48282]">
           <div className="mb-8 w-full  px-5 pt-7">
             {/* Message Alert */}
             {alertShow !== false && (

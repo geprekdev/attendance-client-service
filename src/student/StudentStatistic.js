@@ -98,39 +98,28 @@ export default function StudentStatistic() {
           <p>Statistic</p>
         </div>
 
-        <div
-          ref={myRef}
-          className="relative m-5 mx-auto mt-12 max-h-[270px] max-w-[270px]"
-        ></div>
+        <div ref={myRef} className="relative m-5 mx-auto mt-12 max-h-[270px] max-w-[270px]"></div>
 
-        <div className="relative mt-0  w-full rounded-xl border bg-white p-10 shadow-lg">
+        <div className="relative mt-0  w-full rounded-xl border bg-white p-10 shadow">
           <div className="mb-5 flex justify-between gap-7">
             {!isEmpty(data) && (
               <>
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Kehadiran</h5>
-                  <span className="text-center">
-                    {Math.round(data.data.presence * 100)}%
-                  </span>
+                  <span className="text-center">{Math.round(data.data.presence * 100)}%</span>
                 </div>
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Izin</h5>
-                  <span className="text-center">
-                    {Math.round(data.data.leave * 100)}%
-                  </span>
+                  <span className="text-center">{Math.round(data.data.leave * 100)}%</span>
                 </div>
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Sakit</h5>
-                  <span className="text-center">
-                    {Math.round(data.data.leave * 100)}%
-                  </span>
+                  <span className="text-center">{Math.round(data.data.leave * 100)}%</span>
                 </div>
 
                 <div className="flex flex-col">
                   <h5 className="text-gray-400">Alpha</h5>
-                  <span className="text-center">
-                    {Math.round(data.data.absent * 100)}%
-                  </span>
+                  <span className="text-center">{Math.round(data.data.absent * 100)}%</span>
                 </div>
               </>
             )}
@@ -140,22 +129,15 @@ export default function StudentStatistic() {
             Kehadiranmu telah mencapai zona&nbsp;
             {data.data?.presence > 0.8 ? (
               <>
-                <strong className="text-green-700">
-                  {data.data?.indicator}
-                </strong>
-                , tingkatkan kedisiplinan mu.
+                <strong className="text-green-700">{data.data?.indicator}</strong>, tingkatkan kedisiplinan mu.
               </>
             ) : data.data?.presence > 0.5 ? (
               <>
-                <strong className="text-yellow-600">
-                  {data.data?.indicator}
-                </strong>
-                , jangan lupa absen!
+                <strong className="text-yellow-600">{data.data?.indicator}</strong>, jangan lupa absen!
               </>
             ) : (
               <>
-                <strong className="text-red-600">{data.data?.indicator}</strong>
-                , jangan lupa absen!
+                <strong className="text-red-600">{data.data?.indicator}</strong>, jangan lupa absen!
               </>
             )}
           </p>

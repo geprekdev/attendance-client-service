@@ -40,11 +40,20 @@ export const coreAPI = createApi({
         url: "/v1/leave/",
       }),
     }),
+    getActivity: builder.query({
+      query: user => ({
+        headers: {
+          Authorization: user.token,
+        },
+        url: "/v1/activity/",
+      }),
+    }),
   }),
 });
 
 export const {
   useGetAttendanceQuery,
+  useGetActivityQuery,
   usePostAttendanceMutation,
   usePostLeaveFullMutation,
   useGetLeaveQuery,

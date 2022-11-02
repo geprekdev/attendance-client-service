@@ -9,22 +9,38 @@ import Skeleton from "../components/Skeleton";
 export default function TeacherClassPresence() {
   const { id } = useParams();
 
-  const { isLoading, data, isSuccess, isError, error } =
-    useGetTeacherClassDetailQuery({
-      token: Cookie.getItem("token").slice(0, -1),
-      idClass: id,
-    });
+  const { isLoading, data, isSuccess, isError, error } = useGetTeacherClassDetailQuery({
+    token: Cookie.getItem("token").slice(0, -1),
+    idClass: id,
+  });
   const [day, setDay] = useState();
   const [dropdownActive, setDropdownActive] = useState(false);
-
-  // pop keys terbaru
-  // console.log(isSuccess && Object.keys(data.date).shift());
+  const [alphaPresenceCount, setAlphaPresenceCount] = useState({});
 
   useEffect(() => {
+    document.title = "Teacher Class";
     if (isSuccess) {
       setDay(Object.keys(data.date).shift());
     }
   }, [isSuccess]);
+
+  useEffect(() => {
+    let alphaCount = 0;
+    let presenceCount = 0;
+
+    data?.date[day]?.forEach(d => {
+      if (d.status === "ALPHA") {
+        alphaCount += 1;
+      } else {
+        presenceCount += 1;
+      }
+    });
+
+    setAlphaPresenceCount({
+      alpha: alphaCount,
+      presence: presenceCount,
+    });
+  }, [data?.date, day]);
 
   const handleDayClicked = e => {
     setDay(e.target.textContent);
@@ -69,7 +85,6 @@ export default function TeacherClassPresence() {
             />
           </svg>
         </button>
-
         {/* Isi Dropdown */}
         {dropdownActive && (
           <div
@@ -106,6 +121,8 @@ export default function TeacherClassPresence() {
           </div>
         )}
       </div>
+      <p className="text-gray-600">Hadir: {alphaPresenceCount.presence}</p>
+      <p className="text-gray-600">Alpha: {alphaPresenceCount.alpha} </p>
       <div className="mx-5 mt-3">
         {isLoading && (
           <>
@@ -128,9 +145,7 @@ export default function TeacherClassPresence() {
               <Icon
                 path={student.status === "ALPHA" ? mdiClose : mdiCheckBold}
                 size="16px"
-                className={`${
-                  student.status === "ALPHA" ? "text-red-500" : "text-green-600"
-                }`}
+                className={`${student.status === "ALPHA" ? "text-red-500" : "text-green-600"}`}
               />
 
               <p>{student.name}</p>

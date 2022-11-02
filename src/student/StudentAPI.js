@@ -67,7 +67,7 @@ export const studentAPI = createApi({
       }),
     }),
 
-    getStudentActivity: builder.query({
+    getStudentHistory: builder.query({
       query: user => ({
         headers: {
           Authorization: user.token,
@@ -101,7 +101,7 @@ export const studentAPI = createApi({
         headers: {
           Authorization: user.token,
         },
-        body: { token: user.bakso, lat: user.lat, lng: user.lng , timetable: user.timetable},
+        body: { token: user.bakso, lat: user.lat, lng: user.lng, timetable: user.timetable },
         method: "POST",
         url: "/v1/student/submit/",
       }),
@@ -141,7 +141,7 @@ export const {
   useGetStudentAttendanceQuery,
   usePostStudentAttendanceMutation,
   useGetScheduleClassQuery,
-  useGetStudentActivityQuery,
   usePostStudentLeaveHalfMutation,
   usePostNewStudentClassesMutation,
+  useGetStudentHistoryQuery,
 } = studentAPI;

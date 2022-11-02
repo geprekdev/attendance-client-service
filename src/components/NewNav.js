@@ -8,7 +8,6 @@ import {
   mdiSendCircleOutline,
   mdiViewDashboardOutline,
   mdiTimerOutline,
-
 } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Link, NavLink } from "react-router-dom";
@@ -62,7 +61,7 @@ export default function NewNav({ role }) {
     {
       pathIcon: mdiViewDashboardOutline,
       text: "Admin Panel",
-      link: "https://api.erpeelisme.my.id/admin",
+      link: "https://admin.erpeelisme.my.id",
     },
     {
       pathIcon: mdiAccountCircleOutline,
@@ -143,7 +142,7 @@ export default function NewNav({ role }) {
             </NavLink>
 
             <a
-              href="https://api.erpeelisme.my.id/admin"
+              href="https://admin.erpeelisme.my.id"
               target="__blank"
               rel="noreferrer"
               className="group flex flex-col items-center text-gray-400 hover:text-red-500"

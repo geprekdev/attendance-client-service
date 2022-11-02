@@ -40,15 +40,6 @@ export const teacherAPI = createApi({
       }),
     }),
 
-    getTeacherActivity: builder.query({
-      query: user => ({
-        headers: {
-          Authorization: user.token,
-        },
-        url: `/v1/teacher/activity`,
-      }),
-    }),
-
     getTeacherJournal: builder.query({
       query: user => ({
         headers: {
@@ -96,7 +87,6 @@ export const {
   useGetTeacherAccountInfoQuery,
   useGetTeacherClasslistQuery,
   useGetTeacherClassDetailQuery,
-  useGetTeacherActivityQuery,
   useGetTeacherJournalQuery,
   useGetTeacherJournalAddNewQuery,
   usePostTeacherJournalAddNewMutation,

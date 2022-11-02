@@ -1,8 +1,4 @@
-import {
-  mdiCheckCircleOutline,
-  mdiChevronLeft,
-  mdiUploadOutline,
-} from "@mdi/js";
+import { mdiCheckCircleOutline, mdiChevronLeft, mdiUploadOutline } from "@mdi/js";
 import Icon from "@mdi/react";
 import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
@@ -33,9 +29,7 @@ export default function StudentPermissionNew() {
   const handleLeaveFullSubmit = async () => {
     console.log("Mengajukan Izin...");
 
-    const leave_type = parseInt(
-      category === "Ijin" ? 0 : category === "Sakit" ? 1 : 2
-    );
+    const leave_type = parseInt(category === "Ijin" ? 0 : category === "Sakit" ? 1 : 2);
     const attendance_scheduled = [];
 
     attendanceScheduled.forEach(att => {
@@ -105,9 +99,7 @@ export default function StudentPermissionNew() {
 
   useEffect(() => {
     if (isSuccess) {
-      setAttendanceScheduled(
-        data.attendanceTimetable.map(att => ({ ...att, isActive: false }))
-      );
+      setAttendanceScheduled(data.attendanceTimetable.map(att => ({ ...att, isActive: false })));
 
       // setDays(data.attendanceTimetable.map(d => ({ ...d, isActive: false })));
     }
@@ -143,14 +135,10 @@ export default function StudentPermissionNew() {
 
           <div className="mx-auto w-[80%] text-center">
             {/* <h3 className="text-xl">Pilih jenis izin</h3> */}
-            <p className="text-sm text-gray-500">
-              Surat keterangan harus diunggah dalam bentuk JPG, PNG, PDF
-            </p>
+            <p className="text-sm text-gray-500">Surat keterangan harus diunggah dalam bentuk JPG, PNG, PDF</p>
           </div>
 
-          <div
-            className={`mx-auto mt-7 w-[80%] cursor-pointer rounded border-2 border-red-500 text-center`}
-          >
+          <div className={`mx-auto mt-7 w-[80%] cursor-pointer rounded border-2 border-red-500 text-center`}>
             <div className="px-5 py-3">
               <h1 className="text-2xl font-semibold">Full Day</h1>
               <p className="mt-2 text-sm text-gray-500">Izin untuk full day</p>
@@ -159,21 +147,14 @@ export default function StudentPermissionNew() {
               className={`w-full cursor-pointer border-t
                 bg-red-500 py-1.5 text-center text-lg font-semibold`}
             >
-              <Icon
-                path={mdiCheckCircleOutline}
-                size="28px"
-                className={`mx-auto rounded-full text-white`}
-              />
+              <Icon path={mdiCheckCircleOutline} size="28px" className={`mx-auto rounded-full text-white`} />
             </div>
           </div>
 
           <div className="mt-10 mb-[56px]">
             <>
               {alertForm?.status && (
-                <div
-                  className="mb-4 flex rounded-lg bg-yellow-100 p-4 text-sm text-yellow-700"
-                  role="alert"
-                >
+                <div className="mb-4 flex rounded-lg bg-yellow-100 p-4 text-sm text-yellow-700" role="alert">
                   <svg
                     className="mr-3 inline h-5 w-5"
                     fill="currentColor"
@@ -260,16 +241,10 @@ export default function StudentPermissionNew() {
 
               <div onClick={() => setDropdownActive(false)}>
                 <div className="mt-7">
-                  <h3 className="mb-2 text-lg font-semibold">
-                    Unggah Surat Izin
-                  </h3>
+                  <h3 className="mb-2 text-lg font-semibold">Unggah Surat Izin</h3>
                   <label htmlFor="upFile">
                     <div className="flex  cursor-pointer items-center justify-center gap-2 rounded-lg bg-gray-200 py-2">
-                      <Icon
-                        path={fileUpload[0] ? " " : mdiUploadOutline}
-                        size="24px"
-                        className="text-gray-800"
-                      />
+                      <Icon path={fileUpload[0] ? " " : mdiUploadOutline} size="24px" className="text-gray-800" />
                       <p>{fileUpload?.name || "Tambahkan File"}</p>
                     </div>
                   </label>
@@ -278,13 +253,7 @@ export default function StudentPermissionNew() {
                     <img src={displayIMG && displayIMG} alt="Pratinjau" />
                   </div>
 
-                  <input
-                    type="file"
-                    id="upFile"
-                    accept="image/"
-                    className="hidden"
-                    onChange={onImageChange}
-                  />
+                  <input type="file" id="upFile" accept="image/" className="hidden" onChange={onImageChange} />
                 </div>
 
                 <div

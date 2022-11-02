@@ -1,12 +1,11 @@
-import Icon from "@mdi/react";
 import Layout from "../components/Layout";
 import { getMonthYear } from "../util/Date";
-import { useGetTeacherActivityQuery } from "./TeacherAPI";
 import Cookie from "../util/Cookie";
 import { Navigate } from "react-router-dom";
+import { useGetActivityQuery } from "../core/API";
 
 export default function TeacherActivity() {
-  const { isSuccess, data, isError, error } = useGetTeacherActivityQuery({
+  const { isSuccess, data, isError, error } = useGetActivityQuery({
     token: Cookie.getItem("token").slice(0, -1),
   });
 
@@ -33,9 +32,7 @@ export default function TeacherActivity() {
         <div className="mt-3">
           <h3 className="text-lg font-semibold">{getMonthYear(new Date())}</h3>
 
-          <h3 className="text-lg font-semibold text-blue-600">
-            Presensi Harian Anda
-          </h3>
+          <h3 className="text-lg font-semibold text-blue-600">Presensi Harian Anda</h3>
 
           <div className="mt-3 mb-[100px]">
             <table className="w-full text-center">

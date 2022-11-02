@@ -80,7 +80,7 @@ export default function Login() {
     }
   }, []);
 
-  console.log("Follow bang @nduuadi \ncemas kau dek bek bek bek...");
+  // console.log("Follow bang @nduuadi \ncemas kau dek bek bek bek...");
 
   return (
     <Layout title="Login">
@@ -91,9 +91,7 @@ export default function Login() {
               {!data?.name ? (
                 <>
                   <span>SiAmaWolu</span>
-                  <span className="block text-base text-gray-300">
-                    @RPLTeam
-                  </span>
+                  <span className="block text-base text-gray-300">@RPLTeam</span>
                 </>
               ) : (
                 <>
@@ -102,12 +100,7 @@ export default function Login() {
               )}
             </h2>
 
-            <img
-              src="/logo_rpl.jpg"
-              alt="SMKN 8 Semarang"
-              width="100px"
-              className="mx-auto mt-7 mb-10"
-            />
+            <img src="/logo_rpl.jpg" alt="SMKN 8 Semarang" width="100px" className="mx-auto mt-7 mb-10" />
 
             {data?.data?.non_field_errors && (
               <div
@@ -115,12 +108,7 @@ export default function Login() {
                 role="alert"
               >
                 <div className="mr-2 w-4">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -139,12 +127,7 @@ export default function Login() {
                 role="alert"
               >
                 <div className="mr-2 w-4">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -190,8 +173,7 @@ export default function Login() {
               <div className="mt-6">
                 <button
                   className={`inline-flex w-full items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 font-semibold capitalize text-white transition hover:bg-blue-700  focus:outline-none focus:ring focus:ring-blue-200 ${
-                    loading &&
-                    "cursor-not-allowed border-gray-700 bg-gray-500 hover:bg-gray-500 disabled:opacity-25"
+                    loading && "cursor-not-allowed border-gray-700 bg-gray-500 hover:bg-gray-500 disabled:opacity-25"
                   }`}
                 >
                   Masuk

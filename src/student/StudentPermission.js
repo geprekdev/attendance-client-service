@@ -1,50 +1,56 @@
-import { mdiCalendar, mdiPlus, mdiSendOutline } from "@mdi/js";
-import Icon from "@mdi/react";
+import { mdiCalendar, mdiPlus } from '@mdi/js'
+import Icon from '@mdi/react'
 // import Calendar from "react-calendar";
-import { Link, Navigate } from "react-router-dom";
-import Layout from "../components/Layout";
-import Cookie from "../util/Cookie";
-import isEmpty from "../util/EmptyObj";
-import Skeleton from "../components/Skeleton";
-import { useGetLeaveQuery } from "../core/API";
+import { Link, Navigate, useLocation } from 'react-router-dom'
+import Layout from '../components/Layout'
+import Cookie from '../util/Cookie'
+import isEmpty from '../util/EmptyObj'
+import Skeleton from '../components/Skeleton'
+import { useGetLeaveQuery } from '../core/API'
 
 export default function StudentPermission() {
-  const { isSuccess, data, isError, error, isLoading } = useGetLeaveQuery({
-    token: Cookie.getItem("token").slice(0, -1),
-  });
+  const { isSuccess, data, isError, error, isLoading, refetch } = useGetLeaveQuery({
+    token: Cookie.getItem('token').slice(0, -1),
+  })
+
+  const location = useLocation()
+
+  if (location?.state?.isSuccess) {
+    refetch()
+  }
 
   // Unauthorize
   if (isError && error.status === 401) {
-    Cookie.deleteItem("token");
-    return <Navigate to={"/auth/login"} />;
+    Cookie.deleteItem('token')
+    return <Navigate to={'/auth/login'} />
   }
 
   // Role permission
   if (isError && error.status === 403) {
-    Cookie.deleteItem("token");
-    return <Navigate to={"/auth/login"} />;
+    Cookie.deleteItem('token')
+    return <Navigate to={'/auth/login'} />
   }
 
   return (
-    <Layout role="STUDENT" title="Student Permission">
-      <div className=" mx-auto mb-[56px] min-h-screen max-w-[444px] border px-5 py-3 pb-24 shadow">
-        <div className="flex items-center justify-between rounded-full bg-gradient-to-r from-blue-700 to-[#63c2f0] px-5 py-2 text-xl text-white">
+    <Layout role='STUDENT' title='Student Permission'>
+      <div className=' mx-auto mb-[56px] min-h-screen max-w-[444px] border px-5 py-3 pb-24 shadow'>
+        <div className='flex items-center justify-between rounded-full bg-gradient-to-r from-blue-700 to-[#63c2f0] px-5 py-2 text-xl text-white'>
           <p>Permission</p>
 
           {/* <Icon path={mdiSendOutline} size="24px" /> */}
         </div>
 
-        <div className="mt-10">
+        <div className='mt-10'>
           {isLoading && (
             <>
               <div>
-                <Skeleton height="20px" />
+                <Skeleton height='20px' />
               </div>
-              <div className="my-4">
-                <Skeleton height="20px" />
+              <div className='my-4'>
+                <Skeleton height='20px' />
               </div>
               <div>
-                <Skeleton height="20px" />
+                <Skeleton height='20px' />
               </div>
             </>
           )}
@@ -54,71 +60,56 @@ export default function StudentPermission() {
               if (isEmpty(data.history)) {
                 return (
                   <div>
-                    <img
-                      src="/no-permission-student.svg"
-                      width="200px"
-                      alt="Tidak Ada Riwayat"
-                      className="mx-auto"
-                    />
-                    <h1 className="mt-20 text-center text-xl text-gray-400">
-                      Tidak Ada Riwayat
-                    </h1>
+                    <img src='/no-permission-student.svg' width='200px' alt='Tidak Ada Riwayat' className='mx-auto' />
+                    <h1 className='mt-20 text-center text-xl text-gray-400'>Tidak Ada Riwayat</h1>
                   </div>
-                );
+                )
               }
-              let temp = [];
-              let i = 100;
+              let temp = []
+              let i = 100
 
               for (const obj in data.history) {
-                i++;
+                i++
                 temp.push(
                   <>
                     <div
                       key={i}
-                      className="mb-4 w-full rounded-lg bg-gradient-to-r from-blue-700 to-[#63c2f0] px-5 py-2 font-semibold text-white shadow-lg"
+                      className='mb-4 w-full rounded-lg bg-gradient-to-r from-blue-700 to-[#63c2f0] px-5 py-2 font-semibold text-white shadow-lg'
                     >
                       {obj}
                     </div>
 
                     <div>
                       {data.history[obj].map((d, idx) => (
-                        <div
-                          className="mb-2 rounded-xl border px-5 py-2 shadow-lg"
-                          key={idx}
-                        >
-                          <div className="flex justify-between">
+                        <div className='mb-2 rounded-xl border px-5 py-2 shadow-lg' key={idx}>
+                          <div className='flex justify-between'>
                             <div>
-                              <h4 className="font-semibold">
+                              <h4 className='font-semibold'>
                                 {d.type} ({d.mode})
                               </h4>
-                              <p className="text-gray-600">{d.desc}</p>
-                              <div className="mt-4 mb-2 flex items-center gap-2">
-                                <Icon
-                                  path={mdiCalendar}
-                                  size="24px"
-                                  className="text-blue-500"
-                                />
-                                <p className=" rounded-lg bg-gray-200 px-3 py-1 font-semibold">
-                                  {d.date}
-                                </p>
+                              <p className='text-gray-600'>{d.desc}</p>
+                              <div className='mt-4 mb-2 flex items-center gap-2'>
+                                <Icon path={mdiCalendar} size='24px' className='text-blue-500' />
+                                <p className=' rounded-lg bg-gray-200 px-3 py-1 font-semibold'>{d.date}</p>
                               </div>
                               <p>{d.reason}</p>
                             </div>
-                            <div>
-                              <img
-                                src="/logo_sekolah.jpg"
-                                alt="surat izin"
-                                width="60px"
-                              />
-                            </div>
+                            <div
+                              style={{
+                                backgroundImage: `url(${process.env.REACT_APP_API}${d.img})`,
+                                backgroundSize: 'cover',
+                                width: '150px',
+                                height: '100px',
+                              }}
+                            />
                           </div>
                           <button
                             className={`mt-2 ml-auto block cursor-default rounded-lg border-2 px-4 py-1 font-semibold  ${
                               d.status_code === 0
-                                ? "border-red-500 text-red-600"
+                                ? 'border-red-500 text-red-600'
                                 : d.status_code === 1
-                                ? "border-green-500 text-green-600"
-                                : "border-[#fdb13e] text-[#ae6a04]"
+                                ? 'border-green-500 text-green-600'
+                                : 'border-[#fdb13e] text-[#ae6a04]'
                             }`}
                           >
                             {d.status}
@@ -127,24 +118,24 @@ export default function StudentPermission() {
                       ))}
                     </div>
                   </>
-                );
+                )
 
-                temp.push();
+                temp.push()
               }
-              return temp;
+              return temp
             }
           })()}
         </div>
 
         {/* Add new journal */}
-        <div className="sticky">
-          <div className="ml-auto mt-10 flex h-14 w-14 cursor-pointer items-center rounded-full bg-blue-500 shadow-xl hover:bg-blue-600">
-            <Link to="new" className="flex justify-center">
-              <Icon path={mdiPlus} className="text-gray-100" size="78%" />
+        <div className='sticky'>
+          <div className='ml-auto mt-10 flex h-14 w-14 cursor-pointer items-center rounded-full bg-blue-500 shadow-xl hover:bg-blue-600'>
+            <Link to='new' className='flex justify-center'>
+              <Icon path={mdiPlus} className='text-gray-100' size='78%' />
             </Link>
           </div>
         </div>
       </div>
     </Layout>
-  );
+  )
 }

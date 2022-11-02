@@ -14,11 +14,10 @@ export default function StudentSchedule() {
   const [dateCalendar, setDateCalendar] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
-  const { isSuccess, isLoading, data, isError, error } =
-    useGetScheduleClassQuery(
-      { token: Cookie.getItem("token").slice(0, -1) },
-      { refetchOnReconnect: true }
-    );
+  const { isSuccess, isLoading, data, isError, error } = useGetScheduleClassQuery(
+    { token: Cookie.getItem("token").slice(0, -1) },
+    { refetchOnReconnect: true }
+  );
 
   const navigate = useNavigate();
 
@@ -48,12 +47,7 @@ export default function StudentSchedule() {
           <h1 className="text-xl text-white">Schedule</h1>
           {showCalendar && (
             <div className="fixed top-4 z-20 w-[280px] sm:w-[500px] xs:w-[490px]">
-              <Calendar
-                onChange={setDateCalendar}
-                value={dateCalendar}
-                className="p-3"
-                minDate={new Date("2022-06-01")}
-              />
+              <Calendar onChange={setDateCalendar} value={dateCalendar} className="p-3" minDate={new Date("2022-06-01")} />
             </div>
           )}
 
@@ -62,19 +56,14 @@ export default function StudentSchedule() {
           </button>
         </div>
 
-        <div
-          className="min-h-screen pt-7"
-          onClick={() => setShowCalendar(false)}
-        >
+        <div className="min-h-screen pt-7" onClick={() => setShowCalendar(false)}>
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">
               {getDay(dateCalendar.getDay())}, {getFullDate(dateCalendar)}
             </h3>
 
             <p className="text-slate-500">{`${currentDate.getHours()}:${
-              currentDate.getUTCMinutes() < 10
-                ? "0" + currentDate.getUTCMinutes()
-                : currentDate.getUTCMinutes()
+              currentDate.getUTCMinutes() < 10 ? "0" + currentDate.getUTCMinutes() : currentDate.getUTCMinutes()
             }`}</p>
           </div>
 
@@ -103,13 +92,9 @@ export default function StudentSchedule() {
 
                 return l
                   .sort((a, b) => {
-                    const _a =
-                      a.start_time.split(":")[0] * 60 +
-                      a.start_time.split(":")[1];
+                    const _a = a.start_time.split(":")[0] * 60 + a.start_time.split(":")[1];
 
-                    const _b =
-                      b.start_time.split(":")[0] * 60 +
-                      b.start_time.split(":")[1];
+                    const _b = b.start_time.split(":")[0] * 60 + b.start_time.split(":")[1];
 
                     return _a - _b;
                   })
@@ -123,24 +108,15 @@ export default function StudentSchedule() {
                               ? "w-full cursor-pointer border-4 border-y-transparent border-r-transparent border-l-indigo-500 text-gray-900 shadow-lg"
                               : "w-[65%] border-[3px] border-y-transparent border-l-gray-300 border-r-transparent text-slate-400 shadow"
                           } px-5 py-3`}
-                          onClick={() => navigate("/student/presence")
-                          }
+                          onClick={() => navigate("/student/presence")}
                         >
                           <div className="flex items-center justify-between">
-                            <h4 className="font-semibold xs:text-lg">
-                              {lsn.subject}
-                            </h4>
+                            <h4 className="font-semibold xs:text-lg">{lsn.subject}</h4>
                             {lsn.on_going && (
-                              <Icon
-                                path={mdiChevronRight}
-                                size="24px"
-                                className="hidden text-gray-400 xs:block"
-                              />
+                              <Icon path={mdiChevronRight} size="24px" className="hidden text-gray-400 xs:block" />
                             )}
                           </div>
-                          <div
-                            className={`${lsn.on_going && "text-slate-700"} `}
-                          >
+                          <div className={`${lsn.on_going && "text-slate-700"} `}>
                             <div className="flex items-center gap-1">
                               <Icon path={mdiClockOutline} size="16px" />
                               <p className="text-sm xs:text-base">

@@ -1,11 +1,4 @@
-import { useEffect, useState } from "react";
-import {
-  Navigate,
-  NavLink,
-  Outlet,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { Navigate, NavLink, Outlet, useParams } from "react-router-dom";
 import Layout from "../components/Layout";
 import Cookie from "../util/Cookie";
 import { useGetTeacherClassDetailQuery } from "./TeacherAPI";
@@ -14,14 +7,11 @@ import isEmpty from "../util/EmptyObj";
 
 export default function TeacherClass() {
   const { id } = useParams();
-  const { isLoading, data, isSuccess, isError, error } =
-    useGetTeacherClassDetailQuery({
-      token: Cookie.getItem("token").slice(0, -1),
-      idClass: id,
-    });
-  console.log(data);
+  const { isLoading, data, isSuccess, isError, error } = useGetTeacherClassDetailQuery({
+    token: Cookie.getItem("token").slice(0, -1),
+    idClass: id,
+  });
 
-  const navigate = useNavigate();
   const menus = [
     { text: "Kehadiran", link: `/teacher/class/${id}/presence` },
     { text: "Jurnal", link: `/teacher/class/${id}/journal` },
@@ -52,9 +42,7 @@ export default function TeacherClass() {
               <Skeleton />
             </div>
           )}
-          <h1 className="pt-5 text-2xl font-semibold">
-            {isSuccess && data.subject}
-          </h1>
+          <h1 className="pt-5 text-2xl font-semibold">{isSuccess && data.subject}</h1>
 
           {isLoading && (
             <div className="w-[30%]">
@@ -66,10 +54,7 @@ export default function TeacherClass() {
 
         <div className="flex w-full justify-evenly border-b p-3">
           {menus.map(menu => (
-            <div
-              className="group px-5 py-2 text-gray-500 hover:text-gray-600"
-              key={menu.text}
-            >
+            <div className="group px-5 py-2 text-gray-500 hover:text-gray-600" key={menu.text}>
               <NavLink
                 to={menu.link}
                 className={({ isActive }) =>

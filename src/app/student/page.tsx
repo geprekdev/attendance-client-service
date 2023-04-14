@@ -24,18 +24,18 @@ export default function page() {
         </div>
 
         <div className="flex justify-between gap-5 mt-7">
-          <button className="py-3 w-1/2 rounded-full bg-[#CECEF3]">
-            <Link href="/student/permission" className="gap-2 w-fit mx-auto flex">
+          <Link href="/student/permission/new" className="py-3 w-1/2 rounded-full bg-[#CECEF3]">
+            <span className="gap-2 w-fit mx-auto flex">
               <DocumentTextIcon className="w-6 h-6 text-[#1F1F7A]" />
               Pengajuan Izin
-            </Link>
-          </button>
-          <button className="py-3 w-1/2 rounded-full bg-[#CECEF3]">
+            </span>
+          </Link>
+          <Link href="/student/permission/history" className="py-3 w-1/2 rounded-full bg-[#CECEF3]">
             <span className="gap-2 w-fit mx-auto flex">
               <DocumentArrowDownIcon className="w-6 h-6 text-[#1F1F7A]" />
               Riwayat Izin
             </span>
-          </button>
+          </Link>
         </div>
 
         <div className="bg-[#FAFAFA] rounded-t-3xl px-5 pt-2 pb-10 mt-7 absolute w-full left-0 right-0 mx-auto">

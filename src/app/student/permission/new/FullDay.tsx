@@ -1,6 +1,6 @@
 import { ArrowUpTrayIcon } from '@heroicons/react/24/solid';
 
-export default function HalfDay() {
+export default function FullDay() {
   return (
     <div className="mt-5">
       <form>

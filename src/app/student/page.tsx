@@ -1,4 +1,5 @@
 import { DocumentArrowDownIcon, DocumentTextIcon } from '@heroicons/react/24/solid';
+import Link from 'next/link';
 import AppBar from '~/components/AppBar';
 
 export default function page() {
@@ -23,10 +24,10 @@ export default function page() {
 
         <div className="flex justify-between gap-5 mt-7">
           <button className="py-3 w-1/2 rounded-full bg-[#CECEF3]">
-            <span className="gap-2 w-fit mx-auto flex">
+            <Link href="/student/permission" className="gap-2 w-fit mx-auto flex">
               <DocumentTextIcon className="w-6 h-6 text-[#1F1F7A]" />
               Pengajuan Izin
-            </span>
+            </Link>
           </button>
           <button className="py-3 w-1/2 rounded-full bg-[#CECEF3]">
             <span className="gap-2 w-fit mx-auto flex">
@@ -39,7 +40,9 @@ export default function page() {
         <div className="bg-[#FAFAFA] rounded-t-3xl px-5 pt-2 pb-10 mt-7 absolute w-full left-0 right-0 mx-auto">
           <div className="flex justify-between">
             <h2 className="text-gray-700 text-xl font-semibold">Aktivitas Terkini</h2>
-            <span className="text-[#3D3D8F] underline font-semibold">Log Absensi</span>
+            <Link href="/student/log" className="text-[#3D3D8F] underline font-semibold">
+              Log Absensi
+            </Link>
           </div>
           {/*  */}
           <div className="mt-5">

@@ -1,7 +1,16 @@
-import { ArrowLeftIcon, ArrowUpTrayIcon, CalendarDaysIcon, ClockIcon } from '@heroicons/react/24/solid';
-import Link from 'next/link';
+'use client';
 
-export default function page() {
+import { useState } from 'react';
+import Link from 'next/link';
+import { ArrowLeftIcon, CalendarDaysIcon, ClockIcon } from '@heroicons/react/24/solid';
+
+import HalfDay from './HalfDay';
+import FullDay from './FullDay';
+
+export default function Page() {
+  const [permissionType, setPermissionType] = useState<'HalfDay' | 'FullDay'>('HalfDay');
+  const activeClass = 'bg-white outline outline-[#BABAE8]';
+
   return (
     <div className="max-w-[444px] min-h-screen mx-auto bg-[#EBEBFF] relative">
       <div className="w-full py-3 px-5 flex gap-3 items-center">
@@ -16,43 +25,28 @@ export default function page() {
         <h4 className="text-lg text-[#525252] font-medium mt-5">Jenis Izin</h4>
 
         <div className="flex justify-around mt-2">
-          <button className="p-2 px-3 bg-white outline outline-[#BABAE8] flex gap-2 rounded-full w-2/5">
+          <button
+            className={`${
+              permissionType == 'HalfDay' ? activeClass : 'bg-[#CECEF3]'
+            } p-2 px-3 flex gap-2 rounded-full w-2/5`}
+            onClick={() => setPermissionType('HalfDay')}
+          >
             <ClockIcon width={24} className="text-[#1F1F7A]" />
             <span>Half Day</span>
           </button>
-          <button className="p-2 px-3 bg-[#CECEF3] flex gap-2 rounded-full w-2/5">
+          <button
+            className={`${
+              permissionType == 'FullDay' ? activeClass : 'bg-[#CECEF3]'
+            } p-2 px-3 flex gap-2 rounded-full w-2/5`}
+            onClick={() => setPermissionType('FullDay')}
+          >
             <CalendarDaysIcon width={24} className="text-[#1F1F7A]" />
             <span>Full Day</span>
           </button>
         </div>
 
-        <div className="mt-5">
-          <form>
-            <div>
-              <h4 className="text-lg text-[#525252] font-medium mt-5">Kategori</h4>
-
-              <select className="w-full bg-white py-2 px-5 rounded">
-                <option value="">Sakit</option>
-                <option value="">Izin</option>
-              </select>
-            </div>
-
-            <div>
-              <h4 className="text-lg text-[#525252] font-medium mt-5">Alasan</h4>
-
-              <textarea className="w-full h-20 rounded py-2 px-5 text-sm"></textarea>
-            </div>
-
-            <div>
-              <h4 className="text-lg text-[#525252] font-medium mt-5">Upload Surat Izin</h4>
-
-              <button className="bg-white flex gap-5 py-2 px-5 w-full rounded">
-                <ArrowUpTrayIcon width={24} />
-                <span>Tambah File</span>
-              </button>
-            </div>
-          </form>
-        </div>
+        {permissionType == 'HalfDay' && <HalfDay />}
+        {permissionType == 'FullDay' && <FullDay />}
 
         <div className="absolute bottom-10 left-0 right-0">
           <button className="bg-[#1F1F7A] text-center block mx-auto px-32 py-3 font-semibold text-white">Ajukan Izin</button>

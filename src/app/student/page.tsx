@@ -108,7 +108,7 @@ export default function page() {
         </div>
       </div>
 
-      <AppBar />
+      <AppBar active="home" />
     </div>
   );
 }

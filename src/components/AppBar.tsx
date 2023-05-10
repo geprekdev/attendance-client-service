@@ -16,11 +16,11 @@ export default function AppBar({ active }: { active: string }) {
         <CalendarIcon className={`w-6 h-6 ${active == 'schedule' ? 'text-[#1F1F7A]' : 'text-gray-500'}`} />
         <span className={`${active == 'schedule' ? 'text-[#1F1F7A]' : 'text-gray-500'}`}>Schedule</span>
       </Link>
-      <Link href="/" className="flex flex-col items-center">
+      <Link href="/student/statistic" className="flex flex-col items-center">
         <ChartPieIcon className={`w-6 h-6 ${active == 'statistic' ? 'text-[#1F1F7A]' : 'text-gray-500'}`} />
         <span className={`${active == 'statistic' ? 'text-[#1F1F7A]' : 'text-gray-500'}`}>Statistic</span>
       </Link>
-      <Link href="/" className="flex flex-col items-center">
+      <Link href="/student/account" className="flex flex-col items-center">
         <UserCircleIcon className={`w-6 h-6 ${active == 'account' ? 'text-[#1F1F7A]' : 'text-gray-500'}`} />
         <span className={`${active == 'account' ? 'text-[#1F1F7A]' : 'text-gray-500'}`}>Account</span>
       </Link>

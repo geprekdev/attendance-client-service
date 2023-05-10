@@ -6,6 +6,7 @@ import AppBar from '~/components/AppBar';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function Page() {
   const calendarState = useState(new Date());
@@ -32,7 +33,7 @@ export default function Page() {
         <div>
           <div className="flex justify-between mb-5">
             <p>07.00</p>
-            <div className="bg-[#1F1F7A] w-9/12 p-5 rounded-2xl">
+            <Link href="/student/schedule/presence" className="bg-[#1F1F7A] w-9/12 p-5 rounded-2xl">
               <div className="flex justify-between">
                 <h3 className="text-[#FAFAFA] font-semibold text-xl">PDS</h3>
                 <ChevronRightIcon width={24} className="text-[#FAFAFA]" />
@@ -43,7 +44,7 @@ export default function Page() {
                 <span className="text-gray-300">07.00 - 10.00</span>
               </div>
               <h3 className="text-gray-300">Azriel Sebastian, S. Kom</h3>
-            </div>
+            </Link>
           </div>
 
           <div className="flex justify-between mb-5">

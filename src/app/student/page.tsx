@@ -2,20 +2,35 @@ import { DocumentArrowDownIcon, DocumentTextIcon } from '@heroicons/react/24/sol
 import Link from 'next/link';
 
 import AppBar from '~/components/AppBar';
+import { Attendance } from '~/interfaces/Attendance';
+import { getClock, getFullDate } from '~/lib/Date';
 
-export default function page() {
+async function getAttendance<TResponse>() {
+  const res = await fetch('http://localhost:3001/attendance', { cache: 'force-cache', next: { revalidate: 10 } });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
+  return res.json() as TResponse;
+}
+
+export default async function Page() {
+  const result = await getAttendance<Attendance>();
+
   return (
     <div className="max-w-[444px] min-h-screen mx-auto bg-[#EBEBFF] relative">
       <div className="px-5 pt-7">
         <span className="text-gray-600 mb-2">Selamat pagi,</span>
-        <h1 className="text-4xl font-bold max-w-[70%] text-[#171717]">Calvin Samuel Simbolon</h1>
+        <h1 className="text-4xl font-bold max-w-[70%] text-[#171717]">{result.success && result.data.user.name}</h1>
 
         <div className="bg-white rounded-xl p-5 mt-10">
           <div className="flex justify-between mb-3">
             <h4 className="font-semibold">Jadwal Sekolah</h4>
-            <h4 className="text-[#262626]">Rabu, 14 Desember 2022</h4>
+            <h4 className="text-[#262626]">{result.success && result.data.schedule.date}</h4>
           </div>
-          <h2 className="font-bold text-3xl text-center">07:00 - 15:30 WIB</h2>
+          <h2 className="font-bold text-3xl text-center">
+            {result.success && `${result.data.schedule.start_time} - ${result.data.schedule.end_time}`} WIB
+          </h2>
           <hr className="my-5" />
           <div className="px-4 py-2 mx-auto flex justify-between">
             <button className="bg-[#1F1F7A] text-white rounded py-3 px-10 font-bold">Clock in</button>
@@ -46,65 +61,28 @@ export default function page() {
             </Link>
           </div>
           {/*  */}
-          <div className="mt-5">
-            <h5 className="text-gray-500 px-2 font-semibold">13 Desember 2022</h5>
-            <div className="bg-white p-2 rounded">
-              <div className="flex justify-between">
-                <div className="flex gap-5 text-gray-500">
-                  <span>08.21</span>
-                  <span>Clock in</span>
+          {result.success &&
+            result.data.recent_activity.map((activity, idx) => (
+              <div className="mt-5" key={idx + ''}>
+                <h5 className="text-gray-500 px-2 font-semibold">{getFullDate(activity.datetime)}</h5>
+                <div className="bg-white p-2 rounded">
+                  <div className="flex justify-between">
+                    <div className="flex gap-5 text-gray-500">
+                      <span>{getClock(activity.datetime)}</span>
+                      <span>{activity.type}</span>
+                    </div>
+                    <span>X</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <div className="flex gap-5 text-gray-500">
+                      <span>{getClock(activity.datetime)}</span>
+                      <span>{activity.type}</span>
+                    </div>
+                    <span>O</span>
+                  </div>
                 </div>
-                <span>X</span>
               </div>
-              <div className="flex justify-between">
-                <div className="flex gap-5 text-gray-500">
-                  <span>15.48</span>
-                  <span>Clock out</span>
-                </div>
-                <span>O</span>
-              </div>
-            </div>
-          </div>
-          {/*  */}
-          <div className="mt-5">
-            <h5 className="text-gray-500 px-2 font-semibold">12 Desember 2022</h5>
-            <div className="bg-white p-2 rounded">
-              <div className="flex justify-between">
-                <div className="flex gap-5 text-gray-500">
-                  <span>08.21</span>
-                  <span>Clock in</span>
-                </div>
-                <span>X</span>
-              </div>
-              <div className="flex justify-between">
-                <div className="flex gap-5 text-gray-500">
-                  <span>15.48</span>
-                  <span>Clock out</span>
-                </div>
-                <span>O</span>
-              </div>
-            </div>
-          </div>
-          {/*  */}
-          <div className="mt-5">
-            <h5 className="text-gray-500 px-2 font-semibold">11 Desember 2022</h5>
-            <div className="bg-white p-2 rounded">
-              <div className="flex justify-between">
-                <div className="flex gap-5 text-gray-500">
-                  <span>08.21</span>
-                  <span>Clock in</span>
-                </div>
-                <span>X</span>
-              </div>
-              <div className="flex justify-between">
-                <div className="flex gap-5 text-gray-500">
-                  <span>15.48</span>
-                  <span>Clock out</span>
-                </div>
-                <span>O</span>
-              </div>
-            </div>
-          </div>
+            ))}
         </div>
       </div>
 
@@ -112,3 +90,7 @@ export default function page() {
     </div>
   );
 }
+
+// export const metadata = {
+//   title: 'Student',
+// };

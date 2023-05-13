@@ -1,0 +1,27 @@
+{
+  "success": true,
+  "data": {
+    "timetables": [
+      {
+        "date": "2023-04-13",
+        "on_going": true,
+        "subject": "WPB",
+        "start_time": "07:00",
+        "end_time": "13:15",
+        "teacher": {
+          "name": "SUNAR ADI CAHYONO, S.KOM"
+        }
+      },
+      {
+        "date": "2023-04-13",
+        "on_going": false,
+        "subject": "MAT",
+        "start_time": "07:00",
+        "end_time": "13:15",
+        "teacher": {
+          "name": "SUNAR ADI CAHYONO, S.KOM"
+        }
+      }
+    ]
+  }
+}

@@ -91,6 +91,6 @@ export default async function Page() {
   );
 }
 
-// export const metadata = {
-//   title: 'Student',
-// };
+export const metadata = {
+  title: 'Student',
+};

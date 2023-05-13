@@ -21,5 +21,7 @@ export function getFullDate(date: Date): string {
 
 export function getClock(date: Date): string {
   const clock = new Date(date);
-  return `${clock.getHours()}.${clock.getMinutes()}`;
+  return `${clock.getHours() < 10 ? '0' + clock.getHours() : clock.getHours()}.${
+    clock.getMinutes() < 10 ? '0' + clock.getMinutes() : clock.getMinutes()
+  }`;
 }
